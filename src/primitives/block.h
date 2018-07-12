@@ -21,6 +21,10 @@ public:
     static const int32_t CURRENT_VERSION=1;
     int32_t nVersion;
     uint256 hashPrevBlock;
+	/*popchain ghost*/
+	uint256 hashUncles;//the hash256 of uncles or uncle block header
+	uint160 coinbaseAddress;//the autor address of this block header
+	/*popchain ghost*/
     uint256 hashMerkleRoot;
     uint256 hashClaimTrie; 							   // for claim operation
     uint32_t nTime;
@@ -39,6 +43,10 @@ public:
         READWRITE(this->nVersion);
         nVersion = this->nVersion;
         READWRITE(hashPrevBlock);
+		/*popchain ghost*/
+		READWRITE(hashUncles);
+		READWRITE(coinbaseAddress);
+		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
         READWRITE(hashClaimTrie);
         READWRITE(nTime);
@@ -84,6 +92,11 @@ public:
     mutable CTxOut txoutFound; 			// Found  payment
     mutable bool fChecked;
 
+	/*popchain ghost*/
+	std::vector<CBlockHeader> vuh;//vector of uncles or uncle block header
+	uint256 td;//total difficulty of this block header
+	/*popchain ghost*/
+
     CBlock()
     {
         SetNull();
@@ -101,6 +114,10 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(*(CBlockHeader*)this);
         READWRITE(vtx);
+		/*popchain ghost*/
+		READWRITE(vuh);
+		READWRITE(td);
+		/*popchain ghost*/
     }
 
     void SetNull()
@@ -115,6 +132,10 @@ public:
         CBlockHeader block;
         block.nVersion       = nVersion;
         block.hashPrevBlock  = hashPrevBlock;
+		/*popchain ghost*/
+		block.hashUncles = hashUncles;
+		block.coinbaseAddress = coinbaseAddress;
+		/*popchian ghost*/
         block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
         block.nTime          = nTime;

@@ -21,15 +21,18 @@ uint256 CBlockHeader::GetHash() const
 
 std::string CBlockHeader::ToString() const                                                                                                                                                                                                                                   
 {
+/*popchain ghost*/
     std::stringstream s;
     s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s)\n",
 		GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
+        hashUncles.ToString(),
+        coinbaseAddress.ToString(),/*change by base58 ?*/
         hashMerkleRoot.ToString(),
         hashClaimTrie.ToString(),
         nTime, nBits, nNonce.ToString());
-
+/*popchain ghost*/
     return s.str();
 }
 
@@ -40,10 +43,13 @@ std::string CBlock::ToString() const
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
+        hashUncles.ToString(),/*popchain ghost*/
+        coinbaseAddress.ToString(),/*popchain ghost*/
         hashMerkleRoot.ToString(),
         hashClaimTrie.ToString(),
         nTime, nBits, nNonce.ToString(),
-        vtx.size());
+        vtx.size(),
+        vuh.size()/*popchain ghost*/);
     for (unsigned int i = 0; i < vtx.size(); i++)
     {
         s << "  " << vtx[i].ToString() << "\n";
