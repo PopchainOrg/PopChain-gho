@@ -135,6 +135,10 @@ public:
 
     //! block header
     int nVersion;
+	/*popchain ghost*/
+	uint256 hashUncles;//the hash256 of uncles or uncle block header
+	uint160 coinbaseAddress;//the autor address of this block header
+	/*popchain ghost*/
     uint256 hashMerkleRoot;
 	uint256 hashClaimTrie;
     unsigned int nTime;
@@ -160,6 +164,10 @@ public:
         nSequenceId = 0;
 
         nVersion       = 0;
+		/*popchain ghost*/
+		hashUncles = uint256();
+		coinbaseAddress = uint160();
+		/*popchain ghost*/
         hashMerkleRoot = uint256();
 		hashClaimTrie   = uint256();
         nTime          = 0;
@@ -177,6 +185,10 @@ public:
         SetNull();
 
         nVersion       = block.nVersion;
+		/*popchain ghost*/
+		hashUncles = block.hashUncles;
+		coinbaseAddress = block.coinbaseAddress;
+		/*popchain ghost*/
         hashMerkleRoot = block.hashMerkleRoot;
 		hashClaimTrie  = block.hashClaimTrie;
         nTime          = block.nTime;
@@ -208,7 +220,11 @@ public:
         block.nVersion       = nVersion;
         if (pprev)
             block.hashPrevBlock = pprev->GetBlockHash();
-        block.hashMerkleRoot = hashMerkleRoot;
+		/*popchain ghost*/
+		block.hashUncles = hashUncles;
+		block.coinbaseAddress = coinbaseAddress;
+		/*popchain ghost*/
+		block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
         block.nTime          = nTime;
         block.nBits          = nBits;
@@ -244,11 +260,15 @@ public:
 
     std::string ToString() const
     {
-        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, merkle=%s, claimtrie=%s, hashBlock=%s)",
+    /*popchain ghost*/
+        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, coinbaseAddress=%s, merkle=%s, claimtrie=%s, hashBlock=%s)",
             pprev, nHeight,
+            hashUncles.ToString(),
+            coinbaseAddress.ToString(),
             hashMerkleRoot.ToString(),
             hashClaimTrie.ToString(),
             GetBlockHash().ToString());
+	/*popchain ghost*/
     }
 
     //! Check whether this block index entry is valid up to the passed validity level.
@@ -321,6 +341,10 @@ public:
         // block header
         READWRITE(this->nVersion);
         READWRITE(hashPrev);
+		/*popchain ghost*/
+		READWRITE(hashUncles);
+		READWRITE(coinbaseAddress);
+		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
 		READWRITE(hashClaimTrie);
         READWRITE(nTime);
@@ -335,6 +359,10 @@ public:
         CBlockHeader block;
         block.nVersion        = nVersion;
         block.hashPrevBlock   = hashPrev;
+		/*popchain ghost*/
+		block.hashUncles = hashUncles;
+		block.coinbaseAddress = coinbaseAddress;
+		/*popchain ghost*/
         block.hashMerkleRoot  = hashMerkleRoot;
 		block.hashClaimTrie    = hashClaimTrie;
         block.nTime           = nTime;
