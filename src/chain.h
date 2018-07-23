@@ -138,6 +138,7 @@ public:
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 coinbaseAddress;//the autor address of this block header
+	unsigned int number;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
 	uint256 hashClaimTrie;
@@ -167,6 +168,7 @@ public:
 		/*popchain ghost*/
 		hashUncles = uint256();
 		coinbaseAddress = uint160();
+		number = 0;
 		/*popchain ghost*/
         hashMerkleRoot = uint256();
 		hashClaimTrie   = uint256();
@@ -188,6 +190,7 @@ public:
 		/*popchain ghost*/
 		hashUncles = block.hashUncles;
 		coinbaseAddress = block.coinbaseAddress;
+		number = block.number;
 		/*popchain ghost*/
         hashMerkleRoot = block.hashMerkleRoot;
 		hashClaimTrie  = block.hashClaimTrie;
@@ -223,6 +226,7 @@ public:
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
 		block.coinbaseAddress = coinbaseAddress;
+		block.number = number;
 		/*popchain ghost*/
 		block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
@@ -261,10 +265,11 @@ public:
     std::string ToString() const
     {
     /*popchain ghost*/
-        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, coinbaseAddress=%s, merkle=%s, claimtrie=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, coinbaseAddress=%s, number=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
             pprev, nHeight,
             hashUncles.ToString(),
             coinbaseAddress.ToString(),
+            number,
             hashMerkleRoot.ToString(),
             hashClaimTrie.ToString(),
             GetBlockHash().ToString());
@@ -343,7 +348,8 @@ public:
         READWRITE(hashPrev);
 		/*popchain ghost*/
 		READWRITE(hashUncles);
-		READWRITE(coinbaseAddress);
+		READWRITE(coinbaseAddress);
+		READWRITE(number);
 		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
 		READWRITE(hashClaimTrie);
@@ -362,6 +368,7 @@ public:
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
 		block.coinbaseAddress = coinbaseAddress;
+		block.number = number;
 		/*popchain ghost*/
         block.hashMerkleRoot  = hashMerkleRoot;
 		block.hashClaimTrie    = hashClaimTrie;

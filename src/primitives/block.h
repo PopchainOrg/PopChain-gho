@@ -24,6 +24,7 @@ public:
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 coinbaseAddress;//the autor address of this block header
+	uint32_t number;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
     uint256 hashClaimTrie; 							   // for claim operation
@@ -46,6 +47,7 @@ public:
 		/*popchain ghost*/
 		READWRITE(hashUncles);
 		READWRITE(coinbaseAddress);
+		READWRITE(number);
 		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
         READWRITE(hashClaimTrie);
@@ -58,6 +60,11 @@ public:
     {
         nVersion = CBlockHeader::CURRENT_VERSION;
         hashPrevBlock.SetNull();
+		/*popchain ghost*/
+		hashUncles.SetNull();
+		coinbaseAddress.SetNull();
+		number=0;
+		/*popchain ghost*/
         hashMerkleRoot.SetNull();
         hashClaimTrie.SetNull();
         nTime = 0;
@@ -135,6 +142,7 @@ public:
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
 		block.coinbaseAddress = coinbaseAddress;
+		block.number = number;
 		/*popchian ghost*/
         block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
