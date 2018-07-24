@@ -78,6 +78,10 @@ public:
     bool WriteFlag(const std::string &name, bool fValue);
     bool ReadFlag(const std::string &name, bool &fValue);
     bool LoadBlockIndexGuts();
+	/*popchain ghost*/
+	bool WriteTd(const uint256 &hash, uint256 td);
+	bool ReadTd(const uint256 &hash, uint256 &td) ;
+	/*popchain ghost*/
 };
 
 #endif // BITCOIN_TXDB_H

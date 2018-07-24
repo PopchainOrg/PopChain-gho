@@ -29,6 +29,9 @@ static const char DB_FLAG = 'F';
 static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
+/*popchain ghost*/
+static const char DB_TOTALDIFFICULT = 'd';
+/*popchain ghost*/
 
 CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
 {
@@ -347,3 +350,18 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
 
     return true;
 }
+
+
+bool CBlockTreeDB::WriteTd(const uint256 &hash, uint256 td)
+{
+	return Write(std::make_pair(DB_TOTALDIFFICULT, hash), td);
+
+}
+bool CBlockTreeDB::ReadTd(const uint256 &hash, uint256 &td)
+{
+    if (!Read(std::make_pair(DB_TOTALDIFFICULT, hash), td))
+        return false;
+    return true;
+}
+
+
