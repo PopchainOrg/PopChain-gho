@@ -4061,6 +4061,49 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 
     return true;
 }
+/*popchain ghost*/
+static bool AcceptBlockHeader(const CBlock & block, CValidationState& state, const CChainParams& chainparams)
+{
+
+	std::vector<CBlockHeader> blockHeaders = block.vuh;
+	if (blockHeaders.size() > 2 || blockHeaders.size() < 0)
+		{
+			return false;
+		}
+	
+
+	uint256 hashHeaders;
+	hashHeaders.SetNull();
+
+	
+	if(blockHeaders.size() > 0)
+		{
+			vector<CBlockHeader>::iterator it = blockHeaders.begin();			
+			while( it != blockHeaders.end()) {
+				CBlockHeader tmpBH = *it;
+				uint256 tmpHash;
+				tmpHash.SetNull();
+				if(!CheckBlockHeader(tmpBH, state, true))
+					{
+						return false;
+					}
+				tmpHash = tmpBH.GetHash();
+				CHash256().Write(tmpHash.begin(), 32).Write(hashHeaders.begin(), 32).Finalize(hashHeaders.begin());
+				it++;
+			}
+		}
+	else
+		{
+			return true;
+		}
+
+	if(block.hashUncles != hashHeaders)
+		{
+			return false;
+		}
+}
+
+/*popchain ghost*/
 
 static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex=NULL)
 {
