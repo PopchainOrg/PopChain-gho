@@ -4101,6 +4101,7 @@ static bool AcceptBlockHeader(const CBlock & block, CValidationState& state, con
 		{
 			return false;
 		}
+	return true;
 }
 
 /*popchain ghost*/
