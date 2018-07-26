@@ -4062,7 +4062,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
     return true;
 }
 /*popchain ghost*/
-static bool AcceptBlockHeader(const CBlock & block, CValidationState& state, const CChainParams& chainparams)
+static bool AcceptUnclesHeader(const CBlock & block, CValidationState& state, const CChainParams& chainparams)
 {
 
 	std::vector<CBlockHeader> blockHeaders = block.vuh;
