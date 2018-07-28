@@ -23,7 +23,16 @@ struct CTimestampIndexKey;
 struct CTimestampIndexIteratorKey;
 struct CSpentIndexKey;
 struct CSpentIndexValue;
+
+/*popchain ghost*/
+struct CBlockTdKey;
+/*popchain ghost*/
+
+
 class uint256;
+
+
+
 
 //! -dbcache default (MiB)
 static const int64_t nDefaultDbCache = 100;
@@ -79,8 +88,8 @@ public:
     bool ReadFlag(const std::string &name, bool &fValue);
     bool LoadBlockIndexGuts();
 	/*popchain ghost*/
-	bool WriteTd(const uint256 &hash, uint256 td);
-	bool ReadTd(const uint256 &hash, uint256 &td) ;
+	bool WriteTd(CBlockTdKey &key, uint256 td);
+	bool ReadTd(CBlockTdKey &key, uint256 &td);
 	/*popchain ghost*/
 };
 

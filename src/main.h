@@ -583,6 +583,39 @@ struct CAddressIndexIteratorHeightKey {
         blockHeight = 0;
     }
 };
+/*popchain ghost*/
+struct CBlockTdKey {
+
+	uint256 blockHash;
+	uint32_t blockNumber;
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(blockHash);
+        READWRITE(blockNumber);
+    }
+
+    CBlockTdKey(uint256 bH, uint32_t bN) {
+		blockHash = bH;
+		blockNumber = bN;
+    }
+
+    CBlockTdKey() {
+        SetNull();
+    }
+
+    void SetNull() {
+        blockHash.SetNull();
+        blockNumber = 0;
+    }
+
+};
+
+
+
+/*popchain ghost*/
 
 struct CDiskTxPos : public CDiskBlockPos
 {
