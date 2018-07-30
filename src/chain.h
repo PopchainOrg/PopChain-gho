@@ -138,6 +138,7 @@ public:
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 coinbaseAddress;//the autor address of this block header
+	uint256 difficulty;//the difficulty of this block header
 	unsigned int number;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
@@ -168,6 +169,7 @@ public:
 		/*popchain ghost*/
 		hashUncles = uint256();
 		coinbaseAddress = uint160();
+		difficulty = uint256();
 		number = 0;
 		/*popchain ghost*/
         hashMerkleRoot = uint256();
@@ -190,6 +192,7 @@ public:
 		/*popchain ghost*/
 		hashUncles = block.hashUncles;
 		coinbaseAddress = block.coinbaseAddress;
+		difficulty = block.difficulty;
 		number = block.number;
 		/*popchain ghost*/
         hashMerkleRoot = block.hashMerkleRoot;
@@ -226,6 +229,7 @@ public:
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
 		block.coinbaseAddress = coinbaseAddress;
+		block.difficulty = difficulty;
 		block.number = number;
 		/*popchain ghost*/
 		block.hashMerkleRoot = hashMerkleRoot;
@@ -265,10 +269,11 @@ public:
     std::string ToString() const
     {
     /*popchain ghost*/
-        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, coinbaseAddress=%s, number=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, coinbaseAddress=%s, difficulty=%s, number=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
             pprev, nHeight,
             hashUncles.ToString(),
             coinbaseAddress.ToString(),
+            difficulty.ToString(),
             number,
             hashMerkleRoot.ToString(),
             hashClaimTrie.ToString(),
@@ -349,6 +354,7 @@ public:
 		/*popchain ghost*/
 		READWRITE(hashUncles);
 		READWRITE(coinbaseAddress);
+		READWRITE(difficulty);
 		READWRITE(number);
 		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
@@ -368,6 +374,7 @@ public:
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
 		block.coinbaseAddress = coinbaseAddress;
+		block.difficulty = difficulty;
 		block.number = number;
 		/*popchain ghost*/
         block.hashMerkleRoot  = hashMerkleRoot;

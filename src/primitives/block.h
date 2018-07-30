@@ -24,6 +24,7 @@ public:
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 coinbaseAddress;//the autor address of this block header
+	uint256 difficulty;//the difficulty of this block
 	uint32_t number;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
@@ -47,6 +48,7 @@ public:
 		/*popchain ghost*/
 		READWRITE(hashUncles);
 		READWRITE(coinbaseAddress);
+		READWRITE(difficulty);
 		READWRITE(number);
 		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
@@ -63,6 +65,7 @@ public:
 		/*popchain ghost*/
 		hashUncles.SetNull();
 		coinbaseAddress.SetNull();
+		difficulty.SetNull();
 		number=0;
 		/*popchain ghost*/
         hashMerkleRoot.SetNull();
@@ -142,6 +145,7 @@ public:
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
 		block.coinbaseAddress = coinbaseAddress;
+		block.difficulty = difficulty;
 		block.number = number;
 		/*popchian ghost*/
         block.hashMerkleRoot = hashMerkleRoot;

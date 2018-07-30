@@ -87,7 +87,9 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
+	/*popchain ghost*/
     arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
+	/*popchain ghost*/
     std::cout << " finding genesis using target " << hashTarget.ToString()
         << ", " << net << std::endl;
 

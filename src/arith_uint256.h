@@ -284,4 +284,9 @@ public:
 uint256 ArithToUint256(const arith_uint256 &);
 arith_uint256 UintToArith256(const uint256 &);
 
+/*popchain ghost*/
+// This calculater the number divide by max uint256
+arith_uint256 maxUint256Div(const uint256 &a);
+/*popchain ghost*/
+
 #endif // BITCOIN_ARITH_UINT256_H

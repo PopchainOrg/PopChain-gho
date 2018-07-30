@@ -11,8 +11,10 @@ uint256 CBlockHeader::GetHash() const
 {
 //	return SerializeHash(*this);
 	uint256 hash;
-
+/*popchain ghost*/
 	CryptoPop(this, (unsigned char *)&hash);
+/*popchain ghost*/
+
 //	view_data_u8("PoW 3", (unsigned char *)&hash, OUTPUT_LEN); 
 //	std::cout<<"gethex() ="<<hash.GetHex()<<std::endl;
 //	std::cout<<"tostring ="<<hash.ToString()<<std::endl; 
@@ -23,12 +25,13 @@ std::string CBlockHeader::ToString() const
 {
 /*popchain ghost*/
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashUncles=%s, coinbaseAddress=%s, number=%u, hashPrevBlock=%s, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s)\n",
+    s << strprintf("CBlock(hash=%s, ver=%d, hashUncles=%s, coinbaseAddress=%s, difficulty=%s, number=%u, hashPrevBlock=%s, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s)\n",
 		GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
         hashUncles.ToString(),
         coinbaseAddress.ToString(),/*change by base58 ?*/
+        difficulty.ToString(),
         number,
         hashMerkleRoot.ToString(),
         hashClaimTrie.ToString(),
@@ -40,12 +43,13 @@ std::string CBlockHeader::ToString() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashUncles=%s, coinbaseAddress=%s, number=%u, hashPrevBlock=%s, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, ver=%d, hashUncles=%s, coinbaseAddress=%s, difficulty=%s, number=%u, hashPrevBlock=%s, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s, vtx=%u)\n",
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
         hashUncles.ToString(),/*popchain ghost*/
         coinbaseAddress.ToString(),/*popchain ghost*/
+        difficulty.ToString(),/*popchain ghost*/
         number,/*popchain ghost*/
         hashMerkleRoot.ToString(),
         hashClaimTrie.ToString(),
