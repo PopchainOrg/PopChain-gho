@@ -137,9 +137,9 @@ public:
     int nVersion;
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
-	uint160 coinbaseAddress;//the autor address of this block header
-	uint256 difficulty;//the difficulty of this block header
-	unsigned int number;//the height of this block header
+	uint160 nCoinbase;//the autor address of this block header
+	uint256 nDifficulty;//the difficulty of this block header
+	unsigned int nNumber;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
 	uint256 hashClaimTrie;
@@ -168,9 +168,9 @@ public:
         nVersion       = 0;
 		/*popchain ghost*/
 		hashUncles = uint256();
-		coinbaseAddress = uint160();
-		difficulty = uint256();
-		number = 0;
+		nCoinbase = uint160();
+		nDifficulty = uint256();
+		nNumber = 0;
 		/*popchain ghost*/
         hashMerkleRoot = uint256();
 		hashClaimTrie   = uint256();
@@ -191,9 +191,9 @@ public:
         nVersion       = block.nVersion;
 		/*popchain ghost*/
 		hashUncles = block.hashUncles;
-		coinbaseAddress = block.coinbaseAddress;
-		difficulty = block.difficulty;
-		number = block.number;
+		nCoinbase = block.nCoinbase;
+		nDifficulty = block.nDifficulty;
+		nNumber = block.nNumber;
 		/*popchain ghost*/
         hashMerkleRoot = block.hashMerkleRoot;
 		hashClaimTrie  = block.hashClaimTrie;
@@ -228,9 +228,9 @@ public:
             block.hashPrevBlock = pprev->GetBlockHash();
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
-		block.coinbaseAddress = coinbaseAddress;
-		block.difficulty = difficulty;
-		block.number = number;
+		block.nCoinbase = nCoinbase;
+		block.nDifficulty = nDifficulty;
+		block.nNumber = nNumber;
 		/*popchain ghost*/
 		block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
@@ -269,12 +269,12 @@ public:
     std::string ToString() const
     {
     /*popchain ghost*/
-        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, coinbaseAddress=%s, difficulty=%s, number=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, nCoinbase=%s, nDifficulty=%s, nNumber=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
             pprev, nHeight,
             hashUncles.ToString(),
-            coinbaseAddress.ToString(),
-            difficulty.ToString(),
-            number,
+            nCoinbase.ToString(),
+            nDifficulty.ToString(),
+            nNumber,
             hashMerkleRoot.ToString(),
             hashClaimTrie.ToString(),
             GetBlockHash().ToString());
@@ -353,9 +353,9 @@ public:
         READWRITE(hashPrev);
 		/*popchain ghost*/
 		READWRITE(hashUncles);
-		READWRITE(coinbaseAddress);
-		READWRITE(difficulty);
-		READWRITE(number);
+		READWRITE(nCoinbase);
+		READWRITE(nDifficulty);
+		READWRITE(nNumber);
 		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
 		READWRITE(hashClaimTrie);
@@ -373,9 +373,9 @@ public:
         block.hashPrevBlock   = hashPrev;
 		/*popchain ghost*/
 		block.hashUncles = hashUncles;
-		block.coinbaseAddress = coinbaseAddress;
-		block.difficulty = difficulty;
-		block.number = number;
+		block.nCoinbase = nCoinbase;
+		block.nDifficulty = nDifficulty;
+		block.nNumber = nNumber;
 		/*popchain ghost*/
         block.hashMerkleRoot  = hashMerkleRoot;
 		block.hashClaimTrie    = hashClaimTrie;

@@ -88,7 +88,8 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
 	/*popchain ghost*/
-    arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
+    //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
+    arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
 	/*popchain ghost*/
     std::cout << " finding genesis using target " << hashTarget.ToString()
         << ", " << net << std::endl;
@@ -117,8 +118,9 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
     }
 }
 #endif
-
-static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
+/*popchain ghost*/
+//static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
+static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const CAmount &genesisReward)
 {
     CMutableTransaction txNew;
     txNew.nVersion = 1;
@@ -130,7 +132,11 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 
     CBlock genesis;
     genesis.nTime    = nTime;
-    genesis.nBits    = nBits;
+	/*popchain ghost*/
+	genesis.nDifficulty = nDifficulty;
+	genesis.nBits = maxUint256Div(nDifficulty).GetCompact();
+    //genesis.nBits    = nBits;
+    /*popchain ghost*/
     genesis.nNonce   = nNonce;
     genesis.nVersion = nVersion;
     genesis.vtx.push_back(txNew);
@@ -139,7 +145,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     genesis.hashClaimTrie = uint256S("0x1");
     return genesis;
 }
-
+/*popchain ghost*/
 /**
  * Build the genesis block. Note that the output of its generation
  * transaction cannot be spent since it did not originally exist in the
@@ -151,21 +157,27 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  *     CTxOut(nValue=50.00000000, scriptPubKey=0xA9037BAC7050C479B121CF)
  *   vMerkleTree: e0028e
  */
-static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
+ /*popchain ghost*/
+//static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
+static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "pop hold value testnet.";
     const CScript genesisOutputScript = CScript() << ParseHex("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8") << OP_CHECKSIG;
     //std::vector<unsigned char > printscript(genesisOutputScript.begin(),genesisOutputScript.end);
     //std::cout<< StrHex(printscript)<<endl ;
-    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
 }
+/*popchain ghost*/
 
-static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)                                                                                                                
+/*popchain ghost*/
+//static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
+static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const int64_t& genesisReward)                                                                                                                
 {
     const char* pszTimestamp = "Change the World with Us. 22/May/2018, 00:00:00, GMT";
     const CScript genesisOutputScript = CScript() << ParseHex("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0") << OP_CHECKSIG;
-    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
 }
+/*popchain ghost*/
 
 /**
  * Main network
@@ -228,11 +240,17 @@ public:
         nDefaultPort = 9888;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nPruneAfterHeight = 100000;
-        arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
+		/*popchain ghost*/
+        //arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
+        //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
+        genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), consensus.powLimit, 1, consensus.genesisReward);
+		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
-        std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
+		/*popchain ghost*/
+        //std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
+		std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
+		/*popchain ghost*/
         //findGenesis(&genesis, "main");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -341,12 +359,17 @@ public:
         nDefaultPort = 19888;
         nMaxTipAge = 0x7fffffff; 		// allow mining on top of old blocks for testnet
         nPruneAfterHeight = 1000;
-	    
-   		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
-        genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
+	    /*popchain ghost*/
+   		//arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
+        //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
+		genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), consensus.powLimit, 1,  1 * COIN);
+		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         arith_uint256 a("0x000fffffff000000000000000000000000000000000000000000000000000000");
-        std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
+		/*popchain ghost*/
+        //std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
+		std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
+		/*popchain ghost*/
         //findGenesis(&genesis, "testnet");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -450,8 +473,10 @@ public:
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nDefaultPort = 29888;
         nPruneAfterHeight = 1000;
-
-        genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), 0x200f0f0f, 1, 1 * COIN);
+		/*popchain ghost*/
+        //genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), 0x200f0f0f, 1, 1 * COIN);
+		genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), consensus.powLimit, 1, 1 * COIN);
+		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //findGenesis(&genesis, "regtest");
 #endif

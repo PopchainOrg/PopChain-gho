@@ -111,10 +111,13 @@ bool CreateBlock(CBlockTemplate* pblocktemplate)
     for (arith_uint256 i = 0; ; ++i)
     {
 		pblock->nNonce = ArithToUint256(i);
-        if (CheckProofOfWork(pblock->GetHash(), pblock->nBits, chainparams.GetConsensus()))
+		/*popchain ghost*/
+        //if (CheckProofOfWork(pblock->GetHash(), pblock->nBits, chainparams.GetConsensus()))
+		if (CheckProofOfWork(pblock->GetHash(), pblock->nDifficulty, chainparams.GetConsensus()))
         {
             break;
         }
+		/*popchain ghost*/
     }
     CValidationState state;
     bool success = (ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL) && state.IsValid() && pblock->GetHash() == chainActive.Tip()->GetBlockHash());

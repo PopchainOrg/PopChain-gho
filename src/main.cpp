@@ -1704,9 +1704,11 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
 
 //arith_uint256 k = UintToArith256(block.GetHash());
 //LogPrintf("\t\t\tblock = %s\n\t\t\thash = %s\n\t\t\tarith hash = %s\n", block.ToString().c_str(), block.GetHash().ToString().c_str(), k.ToString().c_str());	
-    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+	/*popchain ghost*/
+	//if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+	if (!CheckProofOfWork(block.GetHash(), block.nDifficulty, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
-
+	/*popchain ghost*/
     return true;
 }
 
@@ -3861,7 +3863,9 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
+    /*popchain ghost*/
+	//if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
+    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nDifficulty, Params().GetConsensus()))
 	{
 		LogPrintf("CheckBlockHeader(): \n--b-l-o-c-k---%s\n\n", block.ToString().c_str());
         return state.DoS(50, error("CheckBlockHeader(): proof of work failed"),

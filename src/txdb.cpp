@@ -328,6 +328,12 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                 pindexNew->nDataPos       = diskindex.nDataPos;
                 pindexNew->nUndoPos       = diskindex.nUndoPos;
                 pindexNew->nVersion       = diskindex.nVersion;
+				/*popchain ghost*/
+				pindexNew->hashUncles     = diskindex.hashUncles;
+				pindexNew->nCoinbase      = diskindex.nCoinbase;
+				pindexNew->nDifficulty    = diskindex.nDifficulty;
+				pindexNew->nNumber        = diskindex.nNumber;
+				/*popchain ghost*/
                 pindexNew->hashMerkleRoot = diskindex.hashMerkleRoot;
                 pindexNew->hashClaimTrie  = diskindex.hashClaimTrie;
                 pindexNew->nTime          = diskindex.nTime;
@@ -335,8 +341,9 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                 pindexNew->nNonce         = diskindex.nNonce;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
-
-                if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, Params().GetConsensus()))
+				/*popchain ghost*/
+				//if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, Params().GetConsensus()))
+                if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nDifficulty, Params().GetConsensus()))
                     return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
 
                 pcursor->Next();
