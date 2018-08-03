@@ -14,12 +14,13 @@
 #include <iostream>
 #include <algorithm>
 
-// daa from zcash
+// popchain ghost
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
+    // get genesis nBits
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
 
-    // Genesis block
+    // Genesis block get minimum difficulty
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
 
@@ -38,7 +39,6 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         return nProofOfWorkLimit;
 
     arith_uint256 bnAvg {bnTot / params.nPowAveragingWindow};
-
     return CalculateNextWorkRequired(bnAvg, pindexLast->GetMedianTimePast(), pindexFirst->GetMedianTimePast(), params);
 }
 
