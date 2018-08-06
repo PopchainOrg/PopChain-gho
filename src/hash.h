@@ -73,9 +73,11 @@ public:
 	{
 		CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
 		ss << *pblock;
-		assert(ss.size() == 140);
-		write((uchar *)&ss[0], 140).finalize(hash);
-		
+		/*popchain ghost*/
+		//140 to 228
+		assert(ss.size() == 228);
+		write((uchar *)&ss[0], 228).finalize(hash);
+		/*popchain ghost*/
 		//view_data_u8("PoW 2", hash, OUTPUT_LEN);
 	}
 

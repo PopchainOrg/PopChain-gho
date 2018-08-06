@@ -133,8 +133,8 @@ TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>&
 	{
 		block.nNonce = ArithToUint256(i);
 		/*popchain ghost*/
-		//if (CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus()))
-		if (CheckProofOfWork(block.GetHash(), block.nDifficulty, chainparams.GetConsensus()))
+		//if (CheckProofOfWork(block.GetHash(), block.nDifficulty, chainparams.GetConsensus()))
+		if (CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus()))
 		{
 			break;
 		}	

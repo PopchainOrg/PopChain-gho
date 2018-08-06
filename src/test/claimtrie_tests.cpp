@@ -112,8 +112,8 @@ bool CreateBlock(CBlockTemplate* pblocktemplate)
     {
 		pblock->nNonce = ArithToUint256(i);
 		/*popchain ghost*/
-        //if (CheckProofOfWork(pblock->GetHash(), pblock->nBits, chainparams.GetConsensus()))
-		if (CheckProofOfWork(pblock->GetHash(), pblock->nDifficulty, chainparams.GetConsensus()))
+		//if (CheckProofOfWork(pblock->GetHash(), pblock->nDifficulty, chainparams.GetConsensus()))
+		if (CheckProofOfWork(pblock->GetHash(), pblock->nBits, chainparams.GetConsensus()))
         {
             break;
         }

@@ -76,15 +76,15 @@ unsigned int CalculateNextWorkRequired(arith_uint256 bnAvg,
     return bnNew.GetCompact();
 }
 /*popchain ghost*/
-//bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
 bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params& params)
+bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
 {
     bool fNegative = false;
     bool fOverflow = false;
     arith_uint256 bnTarget;
 
-    //bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
-    bnTarget = maxUint256Div(nDifficulty);
+    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+    //bnTarget = maxUint256Div(nDifficulty);
 
     // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
@@ -106,7 +106,7 @@ arith_uint256 GetBlockProof(const CBlockIndex& block)
     arith_uint256 bnTarget;
     bool fNegative;
     bool fOverflow;
-	/*
+	
     bnTarget.SetCompact(block.nBits, &fNegative, &fOverflow);
     if (fNegative || fOverflow || bnTarget == 0)
         return 0;
@@ -115,9 +115,10 @@ arith_uint256 GetBlockProof(const CBlockIndex& block)
     // as bnTarget+1, it is equal to ((2**256 - bnTarget - 1) / (bnTarget+1)) + 1,
     // or ~bnTarget / (nTarget+1) + 1.
     return (~bnTarget / (bnTarget + 1)) + 1;
-    */
-    bnTarget = maxUint256Div(block.nDifficulty);
-	return bnTarget;
+    /*popchain ghost*/
+    //bnTarget = maxUint256Div(block.nDifficulty);
+	//return bnTarget;
+	/*popchain ghost*/
 }
 
 /*popchain ghost*/

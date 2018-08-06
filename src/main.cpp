@@ -1705,8 +1705,8 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
 //arith_uint256 k = UintToArith256(block.GetHash());
 //LogPrintf("\t\t\tblock = %s\n\t\t\thash = %s\n\t\t\tarith hash = %s\n", block.ToString().c_str(), block.GetHash().ToString().c_str(), k.ToString().c_str());	
 	/*popchain ghost*/
-	//if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
-	if (!CheckProofOfWork(block.GetHash(), block.nDifficulty, consensusParams))
+	//if (!CheckProofOfWork(block.GetHash(), block.nDifficulty, consensusParams))
+	if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 	/*popchain ghost*/
     return true;
@@ -3864,13 +3864,14 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
 {
     // Check proof of work matches claimed amount
     /*popchain ghost*/
-	//if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nDifficulty, Params().GetConsensus()))
+	//if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nDifficulty, Params().GetConsensus()))
+	if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
 	{
 		LogPrintf("CheckBlockHeader(): \n--b-l-o-c-k---%s\n\n", block.ToString().c_str());
         return state.DoS(50, error("CheckBlockHeader(): proof of work failed"),
                          REJECT_INVALID, "high-hash");
 	}
+	/*popchain ghost*/
     // Check timestamp
     if (block.GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
         return state.Invalid(error("CheckBlockHeader(): block timestamp too far in the future"),
@@ -3906,6 +3907,16 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             return state.DoS(100, error("CheckBlock(): duplicate transaction"),
                              REJECT_INVALID, "bad-txns-duplicate", true);
     }
+
+	/*popchain ghost*/
+	if(true){
+		uint256 hashUncleRoot = BlockUncleRoot(block);
+		if(block.hashUncles != hashUncleRoot){
+			return state.DoS(100, error("CheckBlock(): hashUncles mismatch"),
+                             REJECT_INVALID, "bad-uncleshash", true);
+		}
+	}
+	/*popchain ghost*/
 
     // All potential-corruption validation must be done before we do any
     // transaction validation, as otherwise we may mark the header as invalid
@@ -4002,6 +4013,14 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 
     int nHeight = pindexPrev->nHeight + 1;
     LogPrintf("check block header height  %d  \n", nHeight);	
+
+	/*popchain ghost*/
+	// check nNumber against prev
+	if (block.nNumber != (pindexPrev->nNumber+ 1))
+	    return state.DoS(100, error("%s : incorrect nNumber at %d", __func__, nHeight),
+               REJECT_INVALID, "bad-nNumber");
+	/*popchain ghost*/
+			   
     // Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
@@ -6155,6 +6174,9 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         for (unsigned int n = 0; n < nCount; n++) {
             vRecv >> headers[n];
             ReadCompactSize(vRecv); // ignore tx count; assume it is 0.
+            /*popchain ghost*/
+			ReadCompactSize(vRecv); // ignore uncles count; assume it is 0.
+			/*popchain ghost*/
         }
 
         LOCK(cs_main);
@@ -6189,6 +6211,13 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 Misbehaving(pfrom->GetId(), 20);
                 return error("non-continuous headers sequence");
             }
+
+			/*popchain ghost*/
+			if (pindexLast != NULL && header.nNumber != (pindexLast->nNumber + 1)) {
+                Misbehaving(pfrom->GetId(), 20);
+                return error("non-continuous headers number");
+            }
+			
             if (!AcceptBlockHeader(header, state, chainparams, &pindexLast)) {
                 int nDoS;
                 if (state.IsInvalid(nDoS)) {

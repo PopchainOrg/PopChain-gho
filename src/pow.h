@@ -20,8 +20,8 @@ unsigned int CalculateNextWorkRequired(arith_uint256 bnAvg,
 
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 /*popchain ghost*/
-//bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);
-bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params&);
+bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);
+//bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params&);
 /*popchain ghost*/
 arith_uint256 GetBlockProof(const CBlockIndex& block);
 

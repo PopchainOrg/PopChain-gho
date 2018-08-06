@@ -278,7 +278,10 @@ void testPowFunction(uint8_t *mess, uint32_t messLen, const int64_t iterNum) {
 
 
 #define OUTPUT_BUFFER_SIZE	(32 * 1024UL * 1024UL)
-#define MAX_TEST_INPUT_LEN		140
+/*popchain ghost*/
+//140 to 228
+#define MAX_TEST_INPUT_LEN		228
+/*popchain ghost*/
 #define MAX_OUT_FILE_NAME_LEN	25
 
 const char testInputCase[][MAX_TEST_INPUT_LEN] = {

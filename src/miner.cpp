@@ -446,6 +446,9 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
         // Fill in header
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
+		/*popchain ghost*/
+		pblock->nNumber = pindexPrev->nNumber + 1;
+		/*popchain ghost*/
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
         pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
 
@@ -485,12 +488,18 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
     }
     ++nExtraNonce;
     unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
+    /*popchain ghost*/
+	//pblock->nNumber = pindexPrev->nNumber + 1;
+	/*popchain ghost*/
     CMutableTransaction txCoinbase(pblock->vtx[0]);
     txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
     assert(txCoinbase.vin[0].scriptSig.size() <= 100);
 
     pblock->vtx[0] = txCoinbase;
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+	/*popchain ghost*/
+	pblock->hashUncles = BlockUncleRoot(*pblock);
+	/*popchain ghost*/
 }
 
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
@@ -606,7 +615,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     pblock->nNonce = ArithToUint256(UintToArith256(pblock->nNonce) + 1);
 					/*popchain ghost*/
 					//change parameter 0xFF to 0xffff to support the ghost protol
-                    if ((UintToArith256(pblock->nNonce) & 0xffff) == 0)
+                    if ((UintToArith256(pblock->nNonce) & 0xff) == 0)
 		            {
 			            //LogPrintf("PopMiner: %d   nExtraNonce: %d\n", pblock->nNonce, nExtraNonce);    
 		                break;

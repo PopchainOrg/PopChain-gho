@@ -126,7 +126,7 @@ public:
         READWRITE(vtx);
 		/*popchain ghost*/
 		READWRITE(vuh);
-		READWRITE(td);
+		//READWRITE(td);
 		/*popchain ghost*/
     }
 
@@ -134,6 +134,9 @@ public:
     {
         CBlockHeader::SetNull();
         vtx.clear();
+		/*popchain ghost*/
+		vuh.clear();
+		/*popchain ghost*/
         fChecked = false;
     }
 
@@ -193,5 +196,11 @@ struct CBlockLocator
         return vHave.empty();
     }
 };
+
+/*popchain ghost*/
+uint256 BlockUncleRoot(const CBlock& block);
+
+/*popchain ghost*/
+
 
 #endif // BITCOIN_PRIMITIVES_BLOCK_H
