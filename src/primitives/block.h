@@ -25,6 +25,8 @@ public:
     uint256 hashClaimTrie; 							   // for claim operation
     uint32_t nTime;
     uint32_t nBits;
+    // ghost
+    uint32_t nDifficulty;
 	uint256 nNonce;
 
     CBlockHeader()
@@ -42,6 +44,8 @@ public:
         READWRITE(hashMerkleRoot);
         READWRITE(hashClaimTrie);
         READWRITE(nTime);
+        // ghost
+        READWRITE(nDifficulty);
         READWRITE(nBits);
         READWRITE(nNonce);
     }
@@ -53,6 +57,8 @@ public:
         hashMerkleRoot.SetNull();
         hashClaimTrie.SetNull();
         nTime = 0;
+        //ghost
+        nDifficulty = 0;
         nBits = 0;
         nNonce.SetNull();
     }
@@ -118,6 +124,8 @@ public:
         block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
         block.nTime          = nTime;
+        // ghost
+        block.nDifficulty    = nDifficulty;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
         return block;

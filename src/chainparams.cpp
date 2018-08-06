@@ -116,7 +116,7 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
 }
 #endif
 
-static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
+static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nDifficulty, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
 {
     CMutableTransaction txNew;
     txNew.nVersion = 1;
@@ -128,6 +128,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 
     CBlock genesis;
     genesis.nTime    = nTime;
+    // ghost
+    genesis.nDifficulty = nDifficulty;
     genesis.nBits    = nBits;
     genesis.nNonce   = nNonce;
     genesis.nVersion = nVersion;

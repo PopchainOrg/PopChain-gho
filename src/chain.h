@@ -138,6 +138,8 @@ public:
     uint256 hashMerkleRoot;
 	uint256 hashClaimTrie;
     unsigned int nTime;
+    // ghost
+    uint32_t nDifficulty;
     unsigned int nBits;
 	uint256  nNonce;
 
@@ -163,6 +165,8 @@ public:
         hashMerkleRoot = uint256();
 		hashClaimTrie   = uint256();
         nTime          = 0;
+        // ghost
+        nDifficulty    = 0;
         nBits          = 0;
         nNonce         = uint256();
     }
@@ -180,6 +184,8 @@ public:
         hashMerkleRoot = block.hashMerkleRoot;
 		hashClaimTrie  = block.hashClaimTrie;
         nTime          = block.nTime;
+        // ghost
+        nDifficulty    = block.nDifficulty;
         nBits          = block.nBits;
         nNonce         = block.nNonce;
     }
@@ -211,6 +217,8 @@ public:
         block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
         block.nTime          = nTime;
+        // ghost
+        block.nDifficulty    = nDifficulty;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
         return block;
@@ -324,6 +332,8 @@ public:
         READWRITE(hashMerkleRoot);
 		READWRITE(hashClaimTrie);
         READWRITE(nTime);
+        // ghost
+        READWRITE(nDifficulty);
         READWRITE(nBits);
         READWRITE(nNonce);
     }
@@ -338,6 +348,8 @@ public:
         block.hashMerkleRoot  = hashMerkleRoot;
 		block.hashClaimTrie    = hashClaimTrie;
         block.nTime           = nTime;
+        // ghost
+        block.nDifficulty     = nDifficulty;
         block.nBits           = nBits;
         block.nNonce          = nNonce;
         return block.GetHash();
