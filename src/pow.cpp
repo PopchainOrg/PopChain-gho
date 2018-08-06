@@ -76,7 +76,7 @@ unsigned int CalculateNextWorkRequired(arith_uint256 bnAvg,
     return bnNew.GetCompact();
 }
 /*popchain ghost*/
-bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params& params)
+//bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params& params)
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
 {
     bool fNegative = false;
