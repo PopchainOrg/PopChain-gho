@@ -43,7 +43,7 @@ std::string CBlockHeader::ToString() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashUncles=%s, nCoinbase=%s, nDifficulty=%s, nNumber=%u, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashUncles=%s, nCoinbase=%s, nDifficulty=%s, nNumber=%u, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nBits=%08x, nNonce=%s, vtx=%u, vuh=%u)\n",
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),

@@ -615,7 +615,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                     pblock->nNonce = ArithToUint256(UintToArith256(pblock->nNonce) + 1);
 					/*popchain ghost*/
 					//change parameter 0xFF to 0xffff to support the ghost protol
-                    if ((UintToArith256(pblock->nNonce) & 0xff) == 0)
+                    if ((UintToArith256(pblock->nNonce) & 0xFF) == 0)
 		            {
 			            //LogPrintf("PopMiner: %d   nExtraNonce: %d\n", pblock->nNonce, nExtraNonce);    
 		                break;
