@@ -268,4 +268,16 @@ arith_uint256 maxUint256Div(const uint256 &a)
 	return t;
 }
 
+
+bool hasUncles(uint256& hash)
+{
+	arith_uint256 d = UintToArith256(hash);
+	if(d == 0){
+		return false;
+	}
+
+	return true;
+}
+
+
 /*popchain ghost*/
