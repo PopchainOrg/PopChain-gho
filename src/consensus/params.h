@@ -77,6 +77,10 @@ struct Params {
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
     /** Proof of work parameters */
     uint256 powLimit;
+    // ghost
+    uint32_t difficultyBoundDivisor;
+    //uint32_t durationLimit;
+    uint256 minimumDifficulty;
     bool fPowAllowMinDifficultyBlocks;
     int64_t nPowAveragingWindow;
     bool fPowNoRetargeting;

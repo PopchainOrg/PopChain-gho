@@ -74,7 +74,7 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("nonce", blockindex->nNonce.GetHex()));
     // ghost
-    result.push_back(Pair("difficulty", blockindex->nDifficulty);
+    result.push_back(Pair("difficulty", vblockindex->nDifficulty);
     result.push_back(Pair("bits", strprintf("%08x", blockindex->nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));

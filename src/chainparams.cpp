@@ -196,7 +196,8 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 0; 
         consensus.BIP34Hash = uint256S("0x0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c");
-        consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
+        //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
@@ -204,6 +205,10 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
+        // ghost
+        consensus.difficultyBoundDivisor = 2048;
+        //consensus.durationLimit = 13;
+        consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
         consensus.nRuleChangeActivationThreshold = 1916;                // 95% of 2016
         consensus.nMinerConfirmationWindow = 2016;                      // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -313,7 +318,9 @@ public:
         consensus.nMajorityWindow = 100;
         consensus.BIP34Height = 0;
         consensus.BIP34Hash = uint256S("00065185c3ffa77ff797ea3141fba9b1ab76a0f336863dec1199042ca5560fc4");
-        consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
+        //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0x0010000000000001000000000000000000000000000000000000000000000000");
+
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         //consensus.nPowMaxAdjustUp = 16;                                 // 16% adjustment up
@@ -322,6 +329,10 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
+        // ghost
+        consensus.difficultyBoundDivisor = 2048;
+        //consensus.durationLimit = 13;
+        consensus.minimumDifficulty = 4096;                             // minidifficulty for target
         consensus.nRuleChangeActivationThreshold = 1512;                // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; 			// nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -426,7 +437,8 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = -1;                                     // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
-        consensus.powLimit = uint256S("0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
+        //consensus.powLimit = uint256S("0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
+        consensus.powLimit = uint256S("0f0f0f0f0f0f0f80000000000000000000000000000000000000000000000000");
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
         consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
@@ -434,6 +446,10 @@ public:
         consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
+        // ghost
+        consensus.difficultyBoundDivisor = 2048;
+        //consensus.durationLimit = 13;
+        consensus.minimumDifficulty = 17;
         consensus.nRuleChangeActivationThreshold = 108;                 // 75% for testchains
         consensus.nMinerConfirmationWindow = 144;                       // Faster than normal for regtest (144 instead of 2016)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
