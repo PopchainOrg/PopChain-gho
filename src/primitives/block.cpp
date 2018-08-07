@@ -95,6 +95,5 @@ uint256 BlockUncleRoot(const CBlock& block)
 }
 
 
-
 /*popchain ghost*/
 

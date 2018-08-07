@@ -200,7 +200,6 @@ struct CBlockLocator
 /*popchain ghost*/
 uint256 BlockUncleRoot(const CBlock& block);
 
-
 /*popchain ghost*/
 
 
