@@ -310,6 +310,16 @@ public:
     //! Efficiently find an ancestor of this block.
     CBlockIndex* GetAncestor(int height);
     const CBlockIndex* GetAncestor(int height) const;
+	/*popchain ghost*/
+	bool hasUncles(uint256& hash)
+	{
+		arith_uint256 d = UintToArith256(hash);
+		if(d == 0){
+			return false;
+		}
+		return true;
+	}
+	/*popchain ghost*/
 };
 
 /** Used to marshal pointers into hashes for db storage. */
