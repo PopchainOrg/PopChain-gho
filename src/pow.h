@@ -24,6 +24,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 //                                       int64_t nLastBlockTime, int64_t nFirstBlockTime,
 //                                       const Consensus::Params&);
 
+
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 /*popchain ghost*/
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);

@@ -76,7 +76,12 @@ struct Params {
     uint32_t nMinerConfirmationWindow;
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
     /** Proof of work parameters */
+    /* popchain ghost */
     uint256 powLimit;
+    uint32_t difficultyBoundDivisor;
+    //uint32_t durationLimit;
+    uint256 minimumDifficulty;
+    /* popchain ghost */
     bool fPowAllowMinDifficultyBlocks;
     int64_t nPowAveragingWindow;
     bool fPowNoRetargeting;

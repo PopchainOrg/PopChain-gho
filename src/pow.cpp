@@ -14,13 +14,50 @@
 #include <iostream>
 #include <algorithm>
 
-// popchain ghost
+// ghost new difficulty algorithm
+uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
+    // Genesis block get minimum difficulty
+    if (pindexLast == NULL)
+        return params.minimumDifficulty;
+
+    uint256 difficulty;
+
+    // timestampDiff = _bi.timestamp() - _parent.timestamp()
+    const CBlockIndex* pindexParent = pindexLast->pprev;
+    if (pindexParent == NULL)
+        return params.minimumDifficulty;
+
+    int64_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
+    int64_t const adjFactor = max<int64_t>((hasUncles(pindexParent.hashUncles) ? 2 : 1) - timestampDiff / 10, -99);
+
+    difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
+    difficulty = max<uint256>(params.minimumDifficulty,difficulty);
+    return min<uint256>(difficulty, std::numeric_limits<uint256>::max());
+}
+
+arith_uint256 getHashTraget (uint256 difficulty)
+{
+   arith_uint256 hashTarget = std::numeric_limits<uint256>::max()/UintToArith256(difficulty);
+   return hashTarget;
+}
+
+uint32_t getNBits(arith_uint256 hashTarget)
+{
+    return hashTarget.GetCompact();
+}
+
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    // get genesis nBits
+    return getNBits(getHashTraget(calculateDifficulty(pindexLast, *pblock, params)));
+}
+
+/*
+unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
 
-    // Genesis block get minimum difficulty
+    // Genesis block
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
 
@@ -76,6 +113,9 @@ unsigned int CalculateNextWorkRequired(arith_uint256 bnAvg,
 
     return bnNew.GetCompact();
 }
+*/
+
+
 /*popchain ghost*/
 //bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params& params)
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
