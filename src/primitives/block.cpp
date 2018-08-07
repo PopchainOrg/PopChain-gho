@@ -94,5 +94,15 @@ uint256 BlockUncleRoot(const CBlock& block)
     return hashUncles;
 }
 
+bool hasUncles(uint256& hash)
+{
+	arith_uint256 d = UintToArith256(hash);
+	if(d == 0){
+		return false;
+	}
+
+	return true;
+}
+
 /*popchain ghost*/
 
