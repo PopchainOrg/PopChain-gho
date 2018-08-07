@@ -595,6 +595,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
                 uint256 hash;
                 while (true) 
 		        { 
+                    // popchain ghost find a suitable hash
 		            hash = pblock->GetHash();
                     if (UintToArith256(hash) <= hashTarget)
                     {

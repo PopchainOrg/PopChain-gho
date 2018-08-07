@@ -14,7 +14,7 @@
 #include "arith_uint256.h"
 #include "chainparamsseeds.h"
 
-//#define GENESIS_GENERATION
+#define GENESIS_GENERATION
 
 #ifdef GENESIS_GENERATION
 #include <cstdlib>
@@ -90,6 +90,7 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
 	/*popchain ghost*/
     arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
     //arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
+
 	/*popchain ghost*/
     std::cout << " finding genesis using target " << hashTarget.ToString()
         << ", " << net << std::endl;
@@ -119,8 +120,8 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
 }
 #endif
 /*popchain ghost*/
-//static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const CAmount &genesisReward)
-static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
+static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint256 nDifficulty, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
+//static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
 {
     CMutableTransaction txNew;
     txNew.nVersion = 1;
@@ -133,8 +134,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     CBlock genesis;
     genesis.nTime    = nTime;
 	/*popchain ghost*/
-	//genesis.nDifficulty = nDifficulty;
-	//genesis.nBits = maxUint256Div(nDifficulty).GetCompact();
+    genesis.nDifficulty = nDifficulty;
     genesis.nBits    = nBits;
     /*popchain ghost*/
     genesis.nNonce   = nNonce;
@@ -144,7 +144,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 	/*popchain ghost*/
 	genesis.hashUncles.SetNull();
 	genesis.nCoinbase.SetNull();
-	genesis.nDifficulty.SetNull();
+    //genesis.nDifficulty.SetNull();
 	genesis.nNumber = 0;	
 	genesis.vuh.clear();
 	genesis.hashUncles = BlockUncleRoot(genesis);
@@ -168,25 +168,25 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  /*popchain ghost*/
 
 //static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const int64_t& genesisReward)
-static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
+static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "pop hold value testnet.";
     const CScript genesisOutputScript = CScript() << ParseHex("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8") << OP_CHECKSIG;
     //std::vector<unsigned char > printscript(genesisOutputScript.begin(),genesisOutputScript.end);
     //std::cout<< StrHex(printscript)<<endl ;
     //return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
-	return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nBits, nVersion, genesisReward);
 }
 /*popchain ghost*/
 
 /*popchain ghost*/
 //static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const int64_t& genesisReward)                                                                                                                
-static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
+static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "Change the World with Us. 22/May/2018, 00:00:00, GMT";
     const CScript genesisOutputScript = CScript() << ParseHex("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0") << OP_CHECKSIG;
     //return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
-	return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nBits, nVersion, genesisReward);
 }
 /*popchain ghost*/
 
@@ -438,7 +438,7 @@ public:
         // Founders reward script expects a vector of 2-of-3 multisig addresses
         vFoundersRewardAddress = {
             "pbFyUjHfZB8BBivQS1LXh8EaJNH5jjGbzk",
-	    "pbvTm479A2XTp2nCa8Z9qwAhindNbKarrX"
+            "pbvTm479A2XTp2nCa8Z9qwAhindNbKarrX"
         };
     }
 };

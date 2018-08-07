@@ -25,10 +25,12 @@ using namespace std;
 extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry);
 void ScriptPubKeyToJSON(const CScript& scriptPubKey, UniValue& out, bool fIncludeHex);
 
+//popchain ghost
 double GetDifficulty(const CBlockIndex* blockindex)
 {
     // Floating point number that is a multiple of the minimum difficulty,
     // minimum difficulty = 1.0.
+    /*
     if (blockindex == NULL)
     {
         if (chainActive.Tip() == NULL)
@@ -54,6 +56,8 @@ double GetDifficulty(const CBlockIndex* blockindex)
     }
 
     return dDiff;
+    */
+    return double(blockindex->nDifficulty);
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
@@ -72,8 +76,9 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("time", (int64_t)blockindex->nTime));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("nonce", blockindex->nNonce.GetHex()));
+    result.push_back(Pair("difficulty", blockindex->nDifficulty);
     result.push_back(Pair("bits", strprintf("%08x", blockindex->nBits)));
-    result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
+    //result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
 
     if (blockindex->pprev)
