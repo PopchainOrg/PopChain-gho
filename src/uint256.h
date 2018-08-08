@@ -11,6 +11,7 @@
 #include <vector>
 #include "crypto/common.h"
 
+#define MAXUINT256 0xffffffffffffffffffffffffffffffff
 /** Template base class for fixed-sized opaque blobs. */
 template<unsigned int BITS>
 class base_blob
