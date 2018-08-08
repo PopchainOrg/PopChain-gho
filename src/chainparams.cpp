@@ -89,7 +89,7 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
     arith_uint256 tt = maxUint256Div(uint256S("1"));
-    std::cout<<"test :"<<tt<<std::endl;
+    std::cout<<"test :"<<tt.ToString()<<std::endl;
 
 
 
