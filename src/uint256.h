@@ -11,7 +11,6 @@
 #include <vector>
 #include "crypto/common.h"
 
-static const uint256 maxUint256 = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 /** Template base class for fixed-sized opaque blobs. */
 template<unsigned int BITS>
 class base_blob
@@ -129,6 +128,8 @@ public:
      */
     uint64_t GetHash(const uint256& salt) const;
 };
+
+static const uint256 maxUint256 = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
 /* uint256 from const char *.
  * This is a separate function because the constructor uint256(const char*) can result
