@@ -27,7 +27,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
     if (pindexParent == NULL)
         return params.minimumDifficulty;
 
-    int64_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
+    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
     int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
 
     difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);

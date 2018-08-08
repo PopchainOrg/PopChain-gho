@@ -224,7 +224,7 @@ public:
         consensus.powLimit = uint256S("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
+        consensus.minimumDifficulty = uint256S("1730830");                          // minidifficulty for target
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -260,8 +260,7 @@ public:
 		/*popchain ghost*/
         arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
         //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
-        //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), consensus.powLimit, 1, consensus.genesisReward);
-        genesis = CreateGenesisBlock1(1529900309, uint256S("00002ff377441449fc998797055b4a553d9f855c587431e3aa2bd5892ea400ea"), 0x1f0fffff, 1, consensus.genesisReward);
+        genesis = CreateGenesisBlock1(1529900309, uint256S("00002ff377441449fc998797055b4a553d9f855c587431e3aa2bd5892ea400ea"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
@@ -355,7 +354,7 @@ public:
         /* popchain ghost */
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x0010000000000001000000000000000000000000000000000000000000000000");
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyBoundDivisor = uint256S("2048");
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
         /* popchain ghost */
@@ -390,7 +389,7 @@ public:
    		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
         //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
 		//genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), consensus.powLimit, 1,  1 * COIN);
-		genesis = CreateGenesisBlock(1529894661, uint256S("0000577da6294991bd9e1891b7f1e5fbc7e23943341e56e8e005db4358a6001e"), 0x1f0fffff, 1,  1 * COIN);
+        genesis = CreateGenesisBlock(1529894661, uint256S("0000577da6294991bd9e1891b7f1e5fbc7e23943341e56e8e005db4358a6001e"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         arith_uint256 a("0x0010000000000001000000000000000000000000000000000000000000000000");
@@ -492,7 +491,7 @@ public:
         /*popchain ghost*/
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = 17;
+        consensus.minimumDifficulty = uint256S("17");
         /*popchain ghost*/
         consensus.nRuleChangeActivationThreshold = 108;                 // 75% for testchains
         consensus.nMinerConfirmationWindow = 144;                       // Faster than normal for regtest (144 instead of 2016)
@@ -514,7 +513,7 @@ public:
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
         //genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), 0x200f0f0f, 1, 1 * COIN);
 		//genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), consensus.powLimit, 1, 1 * COIN);
-		genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000e1f169e639906e0e50622879c4fcf429d559b154002d32d3c250d2500001"), 0x200f0f0f, 1, 1 * COIN);
+        genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000e1f169e639906e0e50622879c4fcf429d559b154002d32d3c250d2500001"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //findGenesis(&genesis, "regtest");
