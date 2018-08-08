@@ -88,11 +88,6 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
-    arith_uint256 tt = maxUint256Div(uint256S("1"));
-    std::cout<<"test :"<<tt.ToString()<<std::endl;
-
-
-
 	/*popchain ghost*/
     //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
     arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
@@ -361,7 +356,7 @@ public:
         consensus.powLimit = uint256S("0x0010000000000001000000000000000000000000000000000000000000000000");
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = uint256S("4096");
+        consensus.minimumDifficulty = uint256S("0x1000");
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -495,7 +490,7 @@ public:
         /*popchain ghost*/
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = uint256S("17");
+        consensus.minimumDifficulty = uint256S("0x11");
         /*popchain ghost*/
         consensus.nRuleChangeActivationThreshold = 108;                 // 75% for testchains
         consensus.nMinerConfirmationWindow = 144;                       // Faster than normal for regtest (144 instead of 2016)
