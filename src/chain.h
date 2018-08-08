@@ -310,10 +310,11 @@ public:
     //! Efficiently find an ancestor of this block.
     CBlockIndex* GetAncestor(int height);
     const CBlockIndex* GetAncestor(int height) const;
+
 	/*popchain ghost*/
-	bool hasUncles(uint256& hash)
+    bool hasUncles() const
 	{
-		arith_uint256 d = UintToArith256(hash);
+        arith_uint256 d = UintToArith256(hashUncles);
 		if(d == 0){
 			return false;
 		}
@@ -363,7 +364,7 @@ public:
         READWRITE(hashPrev);
 		/*popchain ghost*/
 		READWRITE(hashUncles);
-		READWRITE(nCoinbase);
+		READWRITE(nCoinbase);
 		READWRITE(nDifficulty);
 		READWRITE(nNumber);
 		/*popchain ghost*/
