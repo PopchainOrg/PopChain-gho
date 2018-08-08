@@ -269,7 +269,7 @@ public:
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
-        //findGenesis(&genesis, "main");
+        findGenesis(&genesis, "main");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
@@ -354,9 +354,9 @@ public:
         /* popchain ghost */
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x0010000000000001000000000000000000000000000000000000000000000000");
-        consensus.difficultyBoundDivisor = uint256S("2048");
+        consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = 4096;
+        consensus.minimumDifficulty = uint256S("4096");
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -397,7 +397,7 @@ public:
         std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
-        //findGenesis(&genesis, "testnet");
+        findGenesis(&genesis, "testnet");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a"));
@@ -516,7 +516,7 @@ public:
         genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000e1f169e639906e0e50622879c4fcf429d559b154002d32d3c250d2500001"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        //findGenesis(&genesis, "regtest");
+        findGenesis(&genesis, "regtest");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d"));
