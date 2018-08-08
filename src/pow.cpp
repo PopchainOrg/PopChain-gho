@@ -32,7 +32,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
 
     difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);
     difficulty = std::max(params.minimumDifficulty,difficulty);
-    return std::min(difficulty, );
+    return std::min(difficulty, maxUint256);
 }
 
 arith_uint256 getHashTraget (uint256 difficulty)
