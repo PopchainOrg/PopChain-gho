@@ -15,7 +15,7 @@
 #include "arith_uint256.h"
 #include "chainparamsseeds.h"
 
-#define GENESIS_GENERATION
+//#define GENESIS_GENERATION
 
 #ifdef GENESIS_GENERATION
 #include <cstdlib>
@@ -508,15 +508,15 @@ public:
         nPruneAfterHeight = 1000;
 		/*popchain ghost*/
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        genesis = CreateGenesisBlock1(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
+        genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000d655023ab53aa769b911f448c7d3cff831e25c83d5918b78d8f0a40c0000"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        findGenesis(&genesis, "regtest");
+        //findGenesis(&genesis, "regtest");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d"));
-        assert(consensus.hashGenesisBlock == uint256S("0x01"));
-        assert(genesis.hashMerkleRoot == uint256S("0x01"));
+        assert(consensus.hashGenesisBlock == uint256S("0x08ae39c71de8f9ea8ed0dff77572b37bc7b03f4d39a2332388bc5117f0e5d2c9"));
+        assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
 
         vFixedSeeds.clear();                                             //! Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();                                                  //! Regtest mode doesn't have any DNS seeds.
@@ -531,11 +531,10 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            (0, uint256S("0x01")),
-            //(0, uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d")),
-            0,
-            0,
-            0
+            (0, uint256S("0x08ae39c71de8f9ea8ed0dff77572b37bc7b03f4d39a2332388bc5117f0e5d2c9")),
+             0,
+             0,
+             0
         };
         // Regtest Pop addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
