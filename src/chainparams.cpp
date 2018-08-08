@@ -266,7 +266,7 @@ public:
 		/*popchain ghost*/
         arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
         //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
-        genesis = CreateGenesisBlock1(1529900309, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
+        genesis = CreateGenesisBlock1(1533741060, uint256S("0x000060125fa20d8bde277afa2e6b1f2d0e2bae1fb0fbfdc0a7e6e4df2cfd7e93"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
@@ -279,8 +279,8 @@ public:
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
-        assert(consensus.hashGenesisBlock == uint256S("0x01"));
-        assert(genesis.hashMerkleRoot == uint256S("0x01"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000002c0aedad63473cac50ccb89bab94e325b11cc996947f7879cecb2676982"));
+        assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
 
         // Pop addresses start with 'P'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,56);
@@ -312,12 +312,11 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (   0, uint256S("0x01")),
-            //(   0, uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f")),
-            0,                       // * UNIX timestamp of last checkpoint block
-            0,                                // * total number of transactions between genesis and last checkpoint
-                                              //   (the tx=... number in the SetBestChain debug.log lines)
-            0                                 // * estimated number of transactions per day after checkpoint
+            (0, uint256S("0x000002c0aedad63473cac50ccb89bab94e325b11cc996947f7879cecb2676982")),
+             0,                       // * UNIX timestamp of last checkpoint block
+             0,                                // * total number of transactions between genesis and last checkpoint
+                                               //   (the tx=... number in the SetBestChain debug.log lines)
+             0                                 // * estimated number of transactions per day after checkpoint
         };
 
         // Founders reward script expects a vector of 2-of-3 multisig addresses
