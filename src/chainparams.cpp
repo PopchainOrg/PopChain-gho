@@ -270,7 +270,7 @@ public:
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
-        findGenesis(&genesis, "main");
+        //findGenesis(&genesis, "main");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
