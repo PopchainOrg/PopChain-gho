@@ -265,8 +265,8 @@ arith_uint256 maxUint256Div(const uint256 &a)
     arith_uint256 d = UintToArith256(a);
     std::cout<<"difficulty: "<<d.ToString()<<std::endl;
     assert(d != 0);
-    arith_uint256 t= UintToArith256(maxUint256) / d;
-    return t;
+    arith_uint256 target= UintToArith256(maxUint256) / d;
+    return target;
 }
 
 

@@ -88,6 +88,11 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
+    arith_uint256 tt = maxUint256Div(uint256S("1"));
+    std::cout<<"test :"<<tt<<std::endl;
+
+
+
 	/*popchain ghost*/
     //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
     arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
