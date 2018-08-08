@@ -29,7 +29,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
         return params.minimumDifficulty;
 
     int64_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
-    int64_t const adjFactor = max((hasUncles(pindexParent.hashUncles) ? 2 : 1) - timestampDiff / 10, -99);
+    int64_t const adjFactor = max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
 
     difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
     difficulty = max(params.minimumDifficulty,difficulty);
