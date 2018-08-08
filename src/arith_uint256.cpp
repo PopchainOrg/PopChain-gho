@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 
 template <unsigned int BITS>
 base_uint<BITS>::base_uint(const std::string& str)
