@@ -90,8 +90,7 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
 	/*popchain ghost*/
     //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
-    //arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
-    arith_uint256 hashTarget = MAXUINT256/UintToArith256(pb->nDifficulty);
+    arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
 
 	/*popchain ghost*/
     std::cout << " finding genesis using target " << hashTarget.ToString()
