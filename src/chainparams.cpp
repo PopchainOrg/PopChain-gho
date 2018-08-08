@@ -222,7 +222,7 @@ public:
         consensus.BIP34Hash = uint256S("0x0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c");
 		/*popchain ghost*/
         //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
-        consensus.powLimit = uint256S("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938a");
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = uint256S("0x1a690e");                          // minidifficulty for target
@@ -265,7 +265,7 @@ public:
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
-        arith_uint256 a("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
+        arith_uint256 a("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938aL");
 		/*popchain ghost*/
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
@@ -353,7 +353,7 @@ public:
         consensus.BIP34Hash = uint256S("00065185c3ffa77ff797ea3141fba9b1ab76a0f336863dec1199042ca5560fc4");
         /* popchain ghost */
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
-        consensus.powLimit = uint256S("0x0010000000000001000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = uint256S("0x1000");
@@ -391,7 +391,7 @@ public:
         genesis = CreateGenesisBlock(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        arith_uint256 a("0x0010000000000001000000000000000000000000000000000000000000000000");
+        arith_uint256 a("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 		/*popchain ghost*/
         std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
@@ -478,8 +478,7 @@ public:
         consensus.BIP34Height = -1;                                     // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
         // ghost
-        //consensus.powLimit = uint256S("0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
-        consensus.powLimit = uint256S("0f0f0f0f0f0f0f80000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
         consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
@@ -517,8 +516,8 @@ public:
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d"));
-        assert(consensus.hashGenesisBlock == uint256S("017b05f2adc6491e3fa200b72069b44daa6e83af1b5824a921427dcae8c08050"));
-        assert(genesis.hashMerkleRoot == uint256S("69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
+        assert(consensus.hashGenesisBlock == uint256S("0x01"));
+        assert(genesis.hashMerkleRoot == uint256S("0x01"));
 
         vFixedSeeds.clear();                                             //! Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();                                                  //! Regtest mode doesn't have any DNS seeds.
