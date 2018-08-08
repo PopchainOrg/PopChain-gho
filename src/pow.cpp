@@ -10,7 +10,6 @@
 #include "util.h"
 
 #include <math.h>
-
 #include <iostream>
 #include <algorithm>
 
@@ -29,16 +28,16 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
         return params.minimumDifficulty;
 
     int64_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
-    int64_t const adjFactor = max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+    int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
 
-    difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
-    difficulty = max(params.minimumDifficulty,difficulty);
-    return min(difficulty, std::numeric_limits<uint256>::max());
+    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);
+    difficulty = std::max(params.minimumDifficulty,difficulty);
+    return std::min(difficulty, std::numeric_limits<uint256>::max());
 }
 
 arith_uint256 getHashTraget (uint256 difficulty)
 {
-   arith_uint256 hashTarget = std::numeric_limits<uint256>::max()/UintToArith256(difficulty);
+   arith_uint256 hashTarget = UintToArith256(std::numeric_limits<uint256>::max())/UintToArith256(difficulty);
    return hashTarget;
 }
 
@@ -49,7 +48,7 @@ uint32_t getNBits(arith_uint256 hashTarget)
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    return getNBits(getHashTraget(calculateDifficulty(pindexLast, *pblock, params)));
+    return getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
 }
 
 /*
