@@ -129,8 +129,6 @@ public:
     uint64_t GetHash(const uint256& salt) const;
 };
 
-static const uint256 maxUint256 = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-
 /* uint256 from const char *.
  * This is a separate function because the constructor uint256(const char*) can result
  * in dangerously catching uint256(0).
@@ -151,6 +149,8 @@ inline uint256 uint256S(const std::string& str)
     rv.SetHex(str);
     return rv;
 }
+
+static const uint256 maxUint256 = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
 /** 512-bit unsigned big integer. */
 class uint512 : public base_blob<512> {
