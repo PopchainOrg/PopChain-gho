@@ -312,7 +312,7 @@ public:
     const CBlockIndex* GetAncestor(int height) const;
 
 	/*popchain ghost*/
-    bool hasUncles()
+    bool hasUncles() const
 	{
         arith_uint256 d = UintToArith256(hashUncles);
 		if(d == 0){
