@@ -230,7 +230,7 @@ public:
         consensus.powLimit = uint256S("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
         consensus.difficultyBoundDivisor = 2048;
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = uint256S("1730830");                          // minidifficulty for target
+        consensus.minimumDifficulty = uint256S("0x1a690e");                          // minidifficulty for target
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
         consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
