@@ -3,6 +3,7 @@
 #include "base58.h"
 #include "chainparams.h"
 #include "consensus/merkle.h"
+#include "pow.h"
 
 #include "tinyformat.h"
 #include "util.h"
@@ -88,8 +89,9 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
 	/*popchain ghost*/
-    arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
+    //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
     //arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
+    arith_uint256 hashTarget = getHashTraget(pb->nDifficulty);
 
 	/*popchain ghost*/
     std::cout << " finding genesis using target " << hashTarget.ToString()
@@ -260,7 +262,7 @@ public:
 		/*popchain ghost*/
         arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
         //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
-        genesis = CreateGenesisBlock1(1529900309, uint256S("00002ff377441449fc998797055b4a553d9f855c587431e3aa2bd5892ea400ea"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
+        genesis = CreateGenesisBlock1(1529900309, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
@@ -273,8 +275,8 @@ public:
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
-        assert(consensus.hashGenesisBlock == uint256S("0x0008c4249ce438419b225a0a0332f107ada1fa9eb18b4572fde08de4ecc3fcbf"));
-        assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
+        assert(consensus.hashGenesisBlock == uint256S("0x01"));
+        assert(genesis.hashMerkleRoot == uint256S("0x01"));
 
         // Pop addresses start with 'P'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,56);
@@ -306,9 +308,9 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-			(   0, uint256S("0x0008c4249ce438419b225a0a0332f107ada1fa9eb18b4572fde08de4ecc3fcbf")),
+            (   0, uint256S("0x01")),
             //(   0, uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f")),
-            1529900309,                       // * UNIX timestamp of last checkpoint block
+            0,                       // * UNIX timestamp of last checkpoint block
             0,                                // * total number of transactions between genesis and last checkpoint
                                               //   (the tx=... number in the SetBestChain debug.log lines)
             0                                 // * estimated number of transactions per day after checkpoint
@@ -388,8 +390,7 @@ public:
 	    /*popchain ghost*/
    		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
         //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
-		//genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), consensus.powLimit, 1,  1 * COIN);
-        genesis = CreateGenesisBlock(1529894661, uint256S("0000577da6294991bd9e1891b7f1e5fbc7e23943341e56e8e005db4358a6001e"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
+        genesis = CreateGenesisBlock(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         arith_uint256 a("0x0010000000000001000000000000000000000000000000000000000000000000");
@@ -401,8 +402,8 @@ public:
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a"));
-        assert(consensus.hashGenesisBlock == uint256S("000b826ae49848958a81d388d4007a59d7836697a8d2c52a21244245b23ca9c3"));
-        assert(genesis.hashMerkleRoot == uint256S("6f73646aa71aeec2163e047e0028e2c4313f3e88d4fb3e1ade176c56e1a148c4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x01"));
+        assert(genesis.hashMerkleRoot == uint256S("0x01"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -435,9 +436,9 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-			(0, uint256S("000b826ae49848958a81d388d4007a59d7836697a8d2c52a21244245b23ca9c3")),
+            (0, uint256S("0x01")),
             //(0, uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a")),
-            1529894661,     // * UNIX timestamp of last checkpoint block
+            0,     // * UNIX timestamp of last checkpoint block
             0,              // * total number of transactions between genesis and last checkpoint
                             //   (the tx=... number in the SetBestChain debug.log lines)
             0               // * estimated number of transactions per day after checkpoint
@@ -511,9 +512,7 @@ public:
         nPruneAfterHeight = 1000;
 		/*popchain ghost*/
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        //genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), 0x200f0f0f, 1, 1 * COIN);
-		//genesis = CreateGenesisBlock1(1529894661, uint256S("0x000088c293aca9524f1c4e4de0dfcc3bf4aa6d9ec2e4338d59368242d8950000"), consensus.powLimit, 1, 1 * COIN);
-        genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000e1f169e639906e0e50622879c4fcf429d559b154002d32d3c250d2500001"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
+        genesis = CreateGenesisBlock1(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         findGenesis(&genesis, "regtest");
@@ -536,7 +535,7 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-			(0, uint256S("017b05f2adc6491e3fa200b72069b44daa6e83af1b5824a921427dcae8c08050")),
+            (0, uint256S("0x01")),
             //(0, uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d")),
             0,
             0,
