@@ -12,7 +12,7 @@
 #include <math.h>
 #include <iostream>
 #include <algorithm>
-
+/*
 // ghost new difficulty algorithm
 uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
@@ -51,8 +51,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 {
     return getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
 }
+*/
 
-/*
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
@@ -113,7 +113,7 @@ unsigned int CalculateNextWorkRequired(arith_uint256 bnAvg,
 
     return bnNew.GetCompact();
 }
-*/
+
 
 
 /*popchain ghost*/
