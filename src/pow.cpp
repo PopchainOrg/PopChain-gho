@@ -24,7 +24,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
 
     // timestampDiff = _bi.timestamp() - _parent.timestamp()
     const CBlockIndex* pindexParent = pindexLast->pprev;
-    if (pindexParent == NULL)
+    //if (pindexParent == NULL)
         return params.minimumDifficulty;
 //    std::cout<<"popchain test2"<<std::endl;
 //    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
