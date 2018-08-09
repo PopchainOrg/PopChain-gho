@@ -57,7 +57,8 @@ double GetDifficulty(const CBlockIndex* blockindex)
 
     return dDiff;
     */
-    return stod(blockindex->nDifficulty.ToString());
+    //return stod(blockindex->nDifficulty.ToString());
+    return 10.0;
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
