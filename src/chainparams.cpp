@@ -228,10 +228,10 @@ public:
         consensus.minimumDifficulty = uint256S("0x1a690e");                          // minidifficulty for target
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
-        consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
-        consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
-        consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
-        consensus.nPowTargetSpacing = 1;                         // Pop: 2.5 minutes
+        //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
+        //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
+        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916;                // 95% of 2016
@@ -359,14 +359,14 @@ public:
         consensus.minimumDifficulty = uint256S("0x1000");
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
-        consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
+        //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         //consensus.nPowMaxAdjustUp = 16;                                 // 16% adjustment up
-	    consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
-        consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+        //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
+        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
         //consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.nPowTargetSpacing = 15;
         consensus.fPowAllowMinDifficultyBlocks = true;
-        consensus.fPowNoRetargeting = false;
+        //consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512;                // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; 			// nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -480,10 +480,10 @@ public:
         // ghost
         consensus.powLimit = uint256S("0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
         consensus.nPowAveragingWindow = 17;
-        consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
-        consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
-        consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
-        consensus.nPowTargetSpacing = 10;                         // Pop: 2.5 minutes
+        //consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
+        //consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
+        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         /*popchain ghost*/

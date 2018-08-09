@@ -23,16 +23,17 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
 
     // timestampDiff = _bi.timestamp() - _parent.timestamp()
     const CBlockIndex* pindexParent = pindexLast->pprev;
-    //if (pindexParent == NULL)
+    if (pindexParent == NULL)
         return params.minimumDifficulty;
-//    std::cout<<"popchain test2"<<std::endl;
-//    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
-//    int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
-//    std::cout<<"popchain test3"<<std::endl;
-//    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);
-//    difficulty = std::max(params.minimumDifficulty,difficulty);
-//    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
-//    return std::min(difficulty, maxUint256);
+    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
+    int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);
+    if (UintToArith256(params.minimumDifficulty) > UintToArith256(difficulty))
+        difficulty = params.minimumDifficulty;
+    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
+    if (UintToArith256(difficulty) > UintToArith256(maxUint256))
+        return maxUint256;
+    return difficulty;
 }
 
 arith_uint256 getHashTraget (uint256 difficulty)
@@ -66,7 +67,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     // Find the first block in the averaging interval
     const CBlockIndex* pindexFirst = pindexLast;
     arith_uint256 bnTot {0};
-    for (int i = 0; pindexFirst && i < params.nPowAveragingWindow; i++) {
+    for (int i = 0; pindexFirst && i < params.nPowAveragingWindow; i++) {   // 17
         arith_uint256 bnTmp;
         bnTmp.SetCompact(pindexFirst->nBits);
         bnTot += bnTmp;
