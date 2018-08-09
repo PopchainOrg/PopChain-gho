@@ -453,7 +453,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		pblock->nNumber = pindexPrev->nNumber + 1;
 		/*popchain ghost*/
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-        std::cout<<"create new block : nBits "<<nBits<<std::endl;
+        std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
         pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
 
         // Randomise nonce
