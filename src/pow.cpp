@@ -19,12 +19,11 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
     // Genesis block get minimum difficulty
     if (pindexLast == NULL)
         return params.minimumDifficulty;
-    std::cout<<"popchain test1"<<std::endl;
     uint256 difficulty;
 
     // timestampDiff = _bi.timestamp() - _parent.timestamp()
     const CBlockIndex* pindexParent = pindexLast->pprev;
-    //if (pindexParent == NULL)
+    if (pindexParent == NULL)
         return params.minimumDifficulty;
 //    std::cout<<"popchain test2"<<std::endl;
 //    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;

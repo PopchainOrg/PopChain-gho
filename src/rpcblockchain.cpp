@@ -57,9 +57,8 @@ std::string GetDifficulty(const CBlockIndex* blockindex)
 
     return dDiff;
     */
-    //std::cout <<"test: "<< blockindex->nDifficulty.ToString()<<std::endl;
-    string a = "1234567";
-    return a;
+    std::cout<<"test"<<UintToArith256(blockindex->nDifficulty).ToString()<<std::endl;
+    return UintToArith256(blockindex->nDifficulty).ToString();
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
