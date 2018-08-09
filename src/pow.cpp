@@ -23,7 +23,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
 
     // timestampDiff = _bi.timestamp() - _parent.timestamp()
     const CBlockIndex* pindexParent = pindexLast->pprev;
-    if (pindexParent == NULL)
+    //if (pindexParent == NULL)
         return params.minimumDifficulty;
 //    std::cout<<"popchain test2"<<std::endl;
 //    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
@@ -48,7 +48,9 @@ uint32_t getNBits(arith_uint256 hashTarget)
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    return getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
+    uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
+    std::cout<<"GetNextWorkRequired nBits: "<<nBits<<std::endl;
+    return nBits;
 }
 
 
