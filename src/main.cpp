@@ -4023,8 +4023,11 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 			   
     // Check proof of work
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    {
+        std::cout<<"just for test"<<std::endl;
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
                REJECT_INVALID, "bad-diffbits");
+    }
 
     // Check timestamp against prev
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())

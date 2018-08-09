@@ -70,7 +70,10 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
     // Updating time can change work required on testnet:
     if (consensusParams.fPowAllowMinDifficultyBlocks)
+    {
+        std::cout<<"update time: nOldTime"<<nOldTime<< " newtime: "<<nNewTime<<std::endl;
         pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
+    }
 
     return nNewTime - nOldTime;
 }
@@ -450,6 +453,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		pblock->nNumber = pindexPrev->nNumber + 1;
 		/*popchain ghost*/
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
+        std::cout<<"create new block : nBits "<<nBits<<std::endl;
         pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
 
         // Randomise nonce
