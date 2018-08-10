@@ -19,12 +19,16 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
     // Genesis block get minimum difficulty
     if (pindexLast == NULL)
         return params.minimumDifficulty;
-    uint256 difficulty;
 
     // timestampDiff = _bi.timestamp() - _parent.timestamp()
     const CBlockIndex* pindexParent = pindexLast->pprev;
     if (pindexParent == NULL)
         return params.minimumDifficulty;
+
+    if (UintToArith256(pindexParent->phashBlock) == UintToArith256(params.hashGenesisBlock))
+        return params.minimumDifficulty;
+
+    uint256 difficulty;
     std::cout<<"pindexLast->nTime - pindexParent->nTime: "<<pindexLast->nTime<<"  "<<pindexParent->nTime<<std::endl;
 
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
