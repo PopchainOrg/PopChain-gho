@@ -57,7 +57,16 @@ std::string GetDifficulty(const CBlockIndex* blockindex)
 
     return dDiff;
     */
-    return UintToArith256(blockindex->nDifficulty).ToString();
+
+    if (blockindex == NULL)
+    {
+        if (chainActive.Tip() == NULL)
+            return Params().consensus.minimumDifficulty.ToString();
+        else
+            blockindex = chainActive.Tip();
+    }
+
+    return blockindex->nDifficulty.ToString();
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
