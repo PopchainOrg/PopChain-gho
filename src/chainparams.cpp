@@ -388,7 +388,7 @@ public:
 	    /*popchain ghost*/
    		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
         //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
-        genesis = CreateGenesisBlock(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
+        genesis = CreateGenesisBlock(1529894661, uint256S("0x00006410bb8e706a7f96be15cb4217e7f9b1a4fe1000b0f2bab3f03cdbc60047"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
 
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
@@ -397,12 +397,12 @@ public:
         std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
-        findGenesis(&genesis, "testnet");
+        //findGenesis(&genesis, "testnet");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a"));
-        assert(consensus.hashGenesisBlock == uint256S("0x01"));
-        assert(genesis.hashMerkleRoot == uint256S("0x01"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0008247432537c397b0144615ee72ea2aca440079b749d288f1c47c387b71511"));
+        assert(genesis.hashMerkleRoot == uint256S("0x6f73646aa71aeec2163e047e0028e2c4313f3e88d4fb3e1ade176c56e1a148c4"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -435,7 +435,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x01")),
+            (0, uint256S("0x0008247432537c397b0144615ee72ea2aca440079b749d288f1c47c387b71511")),
              0,     // * UNIX timestamp of last checkpoint block
              0,              // * total number of transactions between genesis and last checkpoint
                              //   (the tx=... number in the SetBestChain debug.log lines)
