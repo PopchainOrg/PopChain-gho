@@ -61,11 +61,10 @@ std::string GetDifficulty(const CBlockIndex* blockindex)
     if (blockindex == NULL)
     {
         if (chainActive.Tip() == NULL)
-            return Params().consensus.minimumDifficulty.ToString();
+            return std::string("unknown difficulty.");
         else
             blockindex = chainActive.Tip();
     }
-
     return blockindex->nDifficulty.ToString();
 }
 
