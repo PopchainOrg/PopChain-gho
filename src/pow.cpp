@@ -57,7 +57,7 @@ uint32_t getNBits(arith_uint256 hashTarget)
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
-    std::cout<<"GetNextWorkRequired nBits: "<<nBits<<std::endl;
+    //std::cout<<"GetNextWorkRequired nBits: "<<nBits<<std::endl;
     return nBits;
 }
 
