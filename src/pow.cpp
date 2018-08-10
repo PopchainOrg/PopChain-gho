@@ -33,7 +33,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
 
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
     int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
-    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / UintToArith256(params.difficultyBoundDivisor) * adjFactor);
+    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / UintToArith256(params.difficultyBoundDivisor) * arith_uint256(adjFactor));
     std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
     if (UintToArith256(params.minimumDifficulty) > UintToArith256(difficulty))
         difficulty = params.minimumDifficulty;
@@ -57,7 +57,6 @@ uint32_t getNBits(arith_uint256 hashTarget)
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
-    //std::cout<<"GetNextWorkRequired nBits: "<<nBits<<std::endl;
     return nBits;
 }
 
