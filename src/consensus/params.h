@@ -78,7 +78,7 @@ struct Params {
     /** Proof of work parameters */
     /* popchain ghost */
     uint256 powLimit;
-    uint32_t difficultyBoundDivisor;
+    uint256 difficultyBoundDivisor;
     //uint32_t durationLimit;
     uint256 minimumDifficulty;
     /* popchain ghost */

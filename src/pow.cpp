@@ -33,10 +33,11 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
 
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
     int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
-    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);
+    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / UintToArith256(params.difficultyBoundDivisor) * adjFactor);
+    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
     if (UintToArith256(params.minimumDifficulty) > UintToArith256(difficulty))
         difficulty = params.minimumDifficulty;
-    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
+
     if (UintToArith256(difficulty) > UintToArith256(maxUint256))
         return maxUint256;
     return difficulty;

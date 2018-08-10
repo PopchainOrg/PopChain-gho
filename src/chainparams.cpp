@@ -223,7 +223,7 @@ public:
 		/*popchain ghost*/
         //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938a");
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = uint256S("0x1a690e");                          // minidifficulty for target
 		/*popchain ghost*/
@@ -354,7 +354,7 @@ public:
         /* popchain ghost */
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = uint256S("0x1000");
         /* popchain ghost */
@@ -487,7 +487,7 @@ public:
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         /*popchain ghost*/
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = uint256S("0x11");
         /*popchain ghost*/
