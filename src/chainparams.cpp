@@ -259,7 +259,7 @@ public:
         nPruneAfterHeight = 100000;
 		/*popchain ghost*/
         arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        genesis = CreateGenesisBlock1(1533741060, uint256S("0x0000bdefbb1cb97e50d2ac4c9cda0e61195d01d3441180448453fc484ce51ed5"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
+        genesis = CreateGenesisBlock1(1533916035, uint256S("0x0000bdefbb1cb97e50d2ac4c9cda0e61195d01d3441180448453fc484ce51ed5"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
