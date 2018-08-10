@@ -45,7 +45,7 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
 
 arith_uint256 getHashTraget (uint64_t difficulty)
 {
-   arith_uint256 hashTarget = UintToArith256(maxUint256)/UintToArith256(difficulty);
+   arith_uint256 hashTarget = UintToArith256(maxUint256)/arith_uint256(difficulty);
    return hashTarget;
 }
 

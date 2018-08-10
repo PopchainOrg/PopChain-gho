@@ -26,7 +26,7 @@ extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& 
 void ScriptPubKeyToJSON(const CScript& scriptPubKey, UniValue& out, bool fIncludeHex);
 
 //popchain ghost
-int64_t GetDifficulty(const CBlockIndex* blockindex)
+uint64_t GetDifficulty(const CBlockIndex* blockindex)
 {
     // Floating point number that is a multiple of the minimum difficulty,
     // minimum difficulty = 1.0.
@@ -61,7 +61,7 @@ int64_t GetDifficulty(const CBlockIndex* blockindex)
     if (blockindex == NULL)
     {
         if (chainActive.Tip() == NULL)
-            return std::string("unknown difficulty.");
+            return 19910728;
         else
             blockindex = chainActive.Tip();
     }
