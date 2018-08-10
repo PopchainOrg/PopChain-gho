@@ -12,7 +12,7 @@
 
 /*popchain ghost*/
 //114 to 228
-#define INPUT_LEN	228
+#define INPUT_LEN	204
 /*popchain ghsot*/
 #define OUTPUT_LEN	32
 

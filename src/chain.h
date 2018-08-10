@@ -138,7 +138,7 @@ public:
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 nCoinbase;//the autor address of this block header
-	uint256 nDifficulty;//the difficulty of this block header
+    uint64_t nDifficulty;//the difficulty of this block header
 	unsigned int nNumber;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
@@ -169,7 +169,7 @@ public:
 		/*popchain ghost*/
 		hashUncles = uint256();
 		nCoinbase = uint160();
-		nDifficulty = uint256();
+        nDifficulty = 0;
 		nNumber = 0;
 		/*popchain ghost*/
         hashMerkleRoot = uint256();
@@ -269,11 +269,11 @@ public:
     std::string ToString() const
     {
     /*popchain ghost*/
-        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, nCoinbase=%s, nDifficulty=%s, nNumber=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, hashUncles=%s, nCoinbase=%s, nDifficulty=%u, nNumber=%u, merkle=%s, claimtrie=%s, hashBlock=%s)",
             pprev, nHeight,
             hashUncles.ToString(),
             nCoinbase.ToString(),
-            nDifficulty.ToString(),
+            nDifficulty,
             nNumber,
             hashMerkleRoot.ToString(),
             hashClaimTrie.ToString(),

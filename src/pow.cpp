@@ -14,7 +14,7 @@
 #include <algorithm>
 
 // ghost new difficulty algorithm
-uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // Genesis block get minimum difficulty
     if (pindexLast == NULL)
@@ -28,22 +28,22 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
     if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
         return params.minimumDifficulty;
 
-    uint256 difficulty;
-    std::cout<<"pindexLast ndifficulty: "<<pindexLast->nDifficulty.ToString()<<std::endl;
+    uint64_t difficulty;
+    std::cout<<"pindexLast ndifficulty: "<<pindexLast->nDifficulty<<std::endl;
 
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
     int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
-    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / UintToArith256(params.difficultyBoundDivisor) * arith_uint256(adjFactor));
-    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
-    if (UintToArith256(params.minimumDifficulty) > UintToArith256(difficulty))
-        difficulty = params.minimumDifficulty;
 
-    if (UintToArith256(difficulty) > UintToArith256(maxUint256))
-        return maxUint256;
+    difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
+    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
+    assert(difficulty > 0);
+    if (params.minimumDifficulty > difficulty)
+        difficulty = params.minimumDifficulty;
+    assert (difficulty < std::numeric_limits<uint64_t>::max());
     return difficulty;
 }
 
-arith_uint256 getHashTraget (uint256 difficulty)
+arith_uint256 getHashTraget (uint64_t difficulty)
 {
    arith_uint256 hashTarget = UintToArith256(maxUint256)/UintToArith256(difficulty);
    return hashTarget;
