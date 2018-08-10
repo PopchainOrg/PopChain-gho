@@ -260,7 +260,6 @@ public:
         nPruneAfterHeight = 100000;
 		/*popchain ghost*/
         arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
         genesis = CreateGenesisBlock1(1533741060, uint256S("0x000060125fa20d8bde277afa2e6b1f2d0e2bae1fb0fbfdc0a7e6e4df2cfd7e93"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
@@ -270,7 +269,7 @@ public:
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
-        //findGenesis(&genesis, "main");
+        findGenesis(&genesis, "main");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
@@ -357,6 +356,7 @@ public:
         consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = uint256S("0x1000");
+
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -390,6 +390,7 @@ public:
    		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
         //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
         genesis = CreateGenesisBlock(1529894661, uint256S("0x00003dc6b0dfef31bdaff67e5cb66b60ea6b8b4e8e9dd2dd30dca8d2fb890081"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
+
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         arith_uint256 a("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -397,7 +398,7 @@ public:
         std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
-        //findGenesis(&genesis, "testnet");
+        findGenesis(&genesis, "testnet");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a"));
@@ -512,7 +513,7 @@ public:
         genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000d655023ab53aa769b911f448c7d3cff831e25c83d5918b78d8f0a40c0000"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        //findGenesis(&genesis, "regtest");
+        findGenesis(&genesis, "regtest");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d"));
