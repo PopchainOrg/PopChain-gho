@@ -15,7 +15,7 @@
 #include "arith_uint256.h"
 #include "chainparamsseeds.h"
 
-#define GENESIS_GENERATION
+//#define GENESIS_GENERATION
 
 #ifdef GENESIS_GENERATION
 #include <cstdlib>
