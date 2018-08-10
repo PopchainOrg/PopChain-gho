@@ -25,7 +25,7 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
     if (pindexParent == NULL)
         return params.minimumDifficulty;
 
-    if (UintToArith256(pindexParent->phashBlock) == UintToArith256(params.hashGenesisBlock))
+    if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
         return params.minimumDifficulty;
 
     uint256 difficulty;
