@@ -70,7 +70,11 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
     // Updating time can change work required on testnet:
     if (consensusParams.fPowAllowMinDifficultyBlocks)
-        pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
+    {
+        std::cout<<"update time: nOldTime"<<nOldTime<< " newtime: "<<nNewTime<<std::endl;
+        pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, consensusParams);
+        pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
+    }
 
     return nNewTime - nOldTime;
 }
@@ -450,7 +454,10 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		pblock->nNumber = pindexPrev->nNumber + 1;
 		/*popchain ghost*/
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
+        //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
+        pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
 
         // Randomise nonce
         arith_uint256 nonce = UintToArith256(GetRandHash());

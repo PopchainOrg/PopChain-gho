@@ -15,7 +15,7 @@
 #include "arith_uint256.h"
 #include "chainparamsseeds.h"
 
-#define GENESIS_GENERATION
+//#define GENESIS_GENERATION
 
 #ifdef GENESIS_GENERATION
 #include <cstdlib>
@@ -90,8 +90,7 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
 	/*popchain ghost*/
     //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
-    //arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
-    arith_uint256 hashTarget = getHashTraget(pb->nDifficulty);
+    arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
 
 	/*popchain ghost*/
     std::cout << " finding genesis using target " << hashTarget.ToString()
@@ -223,15 +222,15 @@ public:
         consensus.BIP34Hash = uint256S("0x0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c");
 		/*popchain ghost*/
         //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
-        consensus.powLimit = uint256S("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.powLimit = uint256S("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938a");
+        consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = uint256S("1730830");                          // minidifficulty for target
+        consensus.minimumDifficulty = uint256S("0x1a690e");                          // minidifficulty for target
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
-        consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
-        consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
-        consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+        //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
+        //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
+        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
@@ -261,12 +260,11 @@ public:
         nPruneAfterHeight = 100000;
 		/*popchain ghost*/
         arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        //genesis = CreateGenesisBlock1(1529900309, uint256S("00000e2ab47d1cbc2447109cf47e5a20153f9e6038f375cc956a1574c245d5df"), nTempBit.GetCompact(), 1, consensus.genesisReward);
-        genesis = CreateGenesisBlock1(1529900309, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
+        genesis = CreateGenesisBlock1(1533741060, uint256S("0x000060125fa20d8bde277afa2e6b1f2d0e2bae1fb0fbfdc0a7e6e4df2cfd7e93"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
-        arith_uint256 a("0x000009b173149ff8b40000000000000000000000000000000000000000000000");
+        arith_uint256 a("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938aL");
 		/*popchain ghost*/
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
@@ -275,8 +273,8 @@ public:
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
-        assert(consensus.hashGenesisBlock == uint256S("0x01"));
-        assert(genesis.hashMerkleRoot == uint256S("0x01"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000002c0aedad63473cac50ccb89bab94e325b11cc996947f7879cecb2676982"));
+        assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
 
         // Pop addresses start with 'P'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,56);
@@ -308,12 +306,11 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (   0, uint256S("0x01")),
-            //(   0, uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f")),
-            0,                       // * UNIX timestamp of last checkpoint block
-            0,                                // * total number of transactions between genesis and last checkpoint
-                                              //   (the tx=... number in the SetBestChain debug.log lines)
-            0                                 // * estimated number of transactions per day after checkpoint
+            (0, uint256S("0x000002c0aedad63473cac50ccb89bab94e325b11cc996947f7879cecb2676982")),
+             0,                       // * UNIX timestamp of last checkpoint block
+             0,                                // * total number of transactions between genesis and last checkpoint
+                                               //   (the tx=... number in the SetBestChain debug.log lines)
+             0                                 // * estimated number of transactions per day after checkpoint
         };
 
         // Founders reward script expects a vector of 2-of-3 multisig addresses
@@ -355,19 +352,21 @@ public:
         consensus.BIP34Hash = uint256S("00065185c3ffa77ff797ea3141fba9b1ab76a0f336863dec1199042ca5560fc4");
         /* popchain ghost */
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
-        consensus.powLimit = uint256S("0x0010000000000001000000000000000000000000000000000000000000000000");
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = uint256S("4096");
+        consensus.minimumDifficulty = uint256S("0x1000");
+
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
-        consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
+        //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         //consensus.nPowMaxAdjustUp = 16;                                 // 16% adjustment up
-	    consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
-        consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
+        //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
+        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+        //consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
+        consensus.nPowTargetSpacing = 15;
         consensus.fPowAllowMinDifficultyBlocks = true;
-        consensus.fPowNoRetargeting = false;
+        //consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512;                // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; 			// nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -390,10 +389,11 @@ public:
 	    /*popchain ghost*/
    		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
         //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
-        genesis = CreateGenesisBlock(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
+        genesis = CreateGenesisBlock(1529894661, uint256S("0x00003dc6b0dfef31bdaff67e5cb66b60ea6b8b4e8e9dd2dd30dca8d2fb890081"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
+
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        arith_uint256 a("0x0010000000000001000000000000000000000000000000000000000000000000");
+        arith_uint256 a("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 		/*popchain ghost*/
         std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
 		//std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
@@ -402,8 +402,8 @@ public:
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a"));
-        assert(consensus.hashGenesisBlock == uint256S("0x01"));
-        assert(genesis.hashMerkleRoot == uint256S("0x01"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000304cef61d8345673c4455da35bcd46cdc0742ddad2f916bbc739ec7d53a3c"));
+        assert(genesis.hashMerkleRoot == uint256S("0x6f73646aa71aeec2163e047e0028e2c4313f3e88d4fb3e1ade176c56e1a148c4"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -436,12 +436,11 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x01")),
-            //(0, uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a")),
-            0,     // * UNIX timestamp of last checkpoint block
-            0,              // * total number of transactions between genesis and last checkpoint
-                            //   (the tx=... number in the SetBestChain debug.log lines)
-            0               // * estimated number of transactions per day after checkpoint
+            (0, uint256S("0x000304cef61d8345673c4455da35bcd46cdc0742ddad2f916bbc739ec7d53a3c")),
+             0,     // * UNIX timestamp of last checkpoint block
+             0,              // * total number of transactions between genesis and last checkpoint
+                             //   (the tx=... number in the SetBestChain debug.log lines)
+             0               // * estimated number of transactions per day after checkpoint
         };
 
         // Founders reward script expects a vector of 2-of-3 multisig addresses
@@ -480,19 +479,18 @@ public:
         consensus.BIP34Height = -1;                                     // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
         // ghost
-        //consensus.powLimit = uint256S("0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
-        consensus.powLimit = uint256S("0f0f0f0f0f0f0f80000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
         consensus.nPowAveragingWindow = 17;
-        consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
-        consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
-        consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+        //consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
+        //consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
+        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         /*popchain ghost*/
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyBoundDivisor = uint256S("0x800");
         //consensus.durationLimit = 13;
-        consensus.minimumDifficulty = uint256S("17");
+        consensus.minimumDifficulty = uint256S("0x11");
         /*popchain ghost*/
         consensus.nRuleChangeActivationThreshold = 108;                 // 75% for testchains
         consensus.nMinerConfirmationWindow = 144;                       // Faster than normal for regtest (144 instead of 2016)
@@ -512,15 +510,15 @@ public:
         nPruneAfterHeight = 1000;
 		/*popchain ghost*/
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
-        genesis = CreateGenesisBlock1(1529894661, uint256S("0x01"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
+        genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000d655023ab53aa769b911f448c7d3cff831e25c83d5918b78d8f0a40c0000"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
         findGenesis(&genesis, "regtest");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d"));
-        assert(consensus.hashGenesisBlock == uint256S("017b05f2adc6491e3fa200b72069b44daa6e83af1b5824a921427dcae8c08050"));
-        assert(genesis.hashMerkleRoot == uint256S("69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
+        assert(consensus.hashGenesisBlock == uint256S("0x08ae39c71de8f9ea8ed0dff77572b37bc7b03f4d39a2332388bc5117f0e5d2c9"));
+        assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
 
         vFixedSeeds.clear();                                             //! Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();                                                  //! Regtest mode doesn't have any DNS seeds.
@@ -535,11 +533,10 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            (0, uint256S("0x01")),
-            //(0, uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d")),
-            0,
-            0,
-            0
+            (0, uint256S("0x08ae39c71de8f9ea8ed0dff77572b37bc7b03f4d39a2332388bc5117f0e5d2c9")),
+             0,
+             0,
+             0
         };
         // Regtest Pop addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);

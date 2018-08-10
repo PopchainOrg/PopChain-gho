@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 
 template <unsigned int BITS>
 base_uint<BITS>::base_uint(const std::string& str)
@@ -259,14 +260,14 @@ arith_uint256 UintToArith256(const uint256 &a)
 /*popchain ghost*/
 
 // This calculater the number divide by max uint256
-//arith_uint256 maxUint256Div(const uint256 &a)
-//{
-//	arith_uint256 maxUint256("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-//	arith_uint256 d = UintToArith256(a);
-//	assert(d == 0);
-//	arith_uint256 t= maxUint256 / d;
-//	return t;
-//}
+arith_uint256 maxUint256Div(const uint256 &a)
+{
+    arith_uint256 d = UintToArith256(a);
+    std::cout<<"difficulty: "<<d.ToString()<<std::endl;
+    assert(d != 0);
+    arith_uint256 target= UintToArith256(maxUint256) / d;
+    return target;
+}
 
 
 

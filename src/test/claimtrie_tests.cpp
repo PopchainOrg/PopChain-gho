@@ -107,7 +107,9 @@ bool CreateBlock(CBlockTemplate* pblocktemplate)
     txCoinbase.vout[0].nValue = GetBlockSubsidy(chainActive.Height() + 1, chainparams.GetConsensus());
     pblock->vtx[0] = CTransaction(txCoinbase);
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
-    pblock->nBits=GetNextWorkRequired(chainActive.Tip(),pblock,chainparams.GetConsensus());
+    //pblock->nBits=GetNextWorkRequired(chainActive.Tip(),pblock,chainparams.GetConsensus());
+    pblock->nDifficulty = calculateDifficulty(chainActive.Tip(),pblock,chainparams.GetConsensus());
+    pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
     for (arith_uint256 i = 0; ; ++i)
     {
 		pblock->nNonce = ArithToUint256(i);

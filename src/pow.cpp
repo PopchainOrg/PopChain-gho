@@ -20,24 +20,32 @@ uint256 calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *p
     if (pindexLast == NULL)
         return params.minimumDifficulty;
 
-    uint256 difficulty;
-
     // timestampDiff = _bi.timestamp() - _parent.timestamp()
     const CBlockIndex* pindexParent = pindexLast->pprev;
     if (pindexParent == NULL)
         return params.minimumDifficulty;
+  
+    if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
+        return params.minimumDifficulty;
+
+    uint256 difficulty;
+    std::cout<<"pindexLast ndifficulty: "<<pindexLast->nDifficulty.ToString()<<std::endl;
 
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
     int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / UintToArith256(params.difficultyBoundDivisor) * arith_uint256(adjFactor));
+    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<UintToArith256(difficulty).ToString()<<std::endl;
+    if (UintToArith256(params.minimumDifficulty) > UintToArith256(difficulty))
+        difficulty = params.minimumDifficulty;
 
-    difficulty = ArithToUint256(UintToArith256(pindexParent->nDifficulty) + UintToArith256(pindexParent->nDifficulty) / params.difficultyBoundDivisor * adjFactor);
-    difficulty = std::max(params.minimumDifficulty,difficulty);
-    return std::min(difficulty, std::numeric_limits<uint256>::max());
+    if (UintToArith256(difficulty) > UintToArith256(maxUint256))
+        return maxUint256;
+    return difficulty;
 }
 
 arith_uint256 getHashTraget (uint256 difficulty)
 {
-   arith_uint256 hashTarget = UintToArith256(std::numeric_limits<uint256>::max())/UintToArith256(difficulty);
+   arith_uint256 hashTarget = UintToArith256(maxUint256)/UintToArith256(difficulty);
    return hashTarget;
 }
 
@@ -48,8 +56,10 @@ uint32_t getNBits(arith_uint256 hashTarget)
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    return getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
+    uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
+    return nBits;
 }
+
 
 /*
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
@@ -63,7 +73,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     // Find the first block in the averaging interval
     const CBlockIndex* pindexFirst = pindexLast;
     arith_uint256 bnTot {0};
-    for (int i = 0; pindexFirst && i < params.nPowAveragingWindow; i++) {
+    for (int i = 0; pindexFirst && i < params.nPowAveragingWindow; i++) {   // 17
         arith_uint256 bnTmp;
         bnTmp.SetCompact(pindexFirst->nBits);
         bnTot += bnTmp;

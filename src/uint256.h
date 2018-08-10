@@ -150,6 +150,8 @@ inline uint256 uint256S(const std::string& str)
     return rv;
 }
 
+static const uint256 maxUint256 = uint256S("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+
 /** 512-bit unsigned big integer. */
 class uint512 : public base_blob<512> {
 public:
