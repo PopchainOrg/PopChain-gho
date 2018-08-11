@@ -139,6 +139,49 @@ typedef boost::unordered_map<uint256, CBlockIndex*, BlockHasher> BlockMap;
 // lru cache define
 template<typename Key, typename Value>
 class LRUCache {
+private:
+	struct Cache {
+		Cache() = default;
+		Cache(Key key, Value value) : key(key), value(value) {}
+		Key key;
+		Value value;
+		Cache *prev;
+		Cache *next;
+	};
+
+	void cache_push(Cache *c) {
+		c->next = head_.next;
+		head_.next = c;
+		c->next->prev = c;
+		c->prev = &head_;
+	}
+
+	void cache_push(Key key, Value value) {
+		Cache *c = new Cache(key, value);
+		cache_push(c);
+	}
+
+	void move_cache_to_head(Cache *c) {
+		c->prev->next = c->next;
+		c->next->prev = c->prev;
+		cache_push(c);
+	}
+
+	Cache *remove_last_cache() {
+		Cache *c = tail_.prev;
+		tail_.prev = c->prev;
+		c->prev->next = &tail_;
+		return c;
+	}
+
+private:
+	Cache head_;
+	Cache tail_;
+	Value err_;
+	int capacity_;
+	typedef boost::unordered_map<Key, Cache *> vmap_;
+
+
 public:
     // err is return value when find fail
     LRUCache(int capacity, Value err) {
@@ -201,47 +244,9 @@ public:
         }
     }
 
-private:
-    struct Cache {
-        Cache() = default;
-        Cache(Key key, Value value) : key(key), value(value) {}
-        Key key;
-        Value value;
-        Cache *prev;
-        Cache *next;
-    };
 
-    void cache_push(Cache *c) {
-        c->next = head_.next;
-        head_.next = c;
-        c->next->prev = c;
-        c->prev = &head_;
-    }
 
-    void cache_push(Key key, Value value) {
-        Cache *c = new Cache(key, value);
-        cache_push(c);
-    }
 
-    void move_cache_to_head(Cache *c) {
-        c->prev->next = c->next;
-        c->next->prev = c->prev;
-        cache_push(c);
-    }
-
-    Cache *remove_last_cache() {
-        Cache *c = tail_.prev;
-        tail_.prev = c->prev;
-        c->prev->next = &tail_;
-        return c;
-    }
-
-private:
-    Cache head_;
-    Cache tail_;
-    Value err_;
-    int capacity_;
-    std::unordered_map<Key, Cache *> vmap_;
 };
 
 
