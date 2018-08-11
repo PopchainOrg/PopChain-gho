@@ -63,6 +63,11 @@ using namespace std;
 CCriticalSection cs_main;
 
 BlockMap mapBlockIndex;
+
+/*popchain ghost*/
+FutureBlockMap mapFutureBlock;
+/*popchain ghost*/
+
 CChain chainActive;
 CBlockIndex *pindexBestHeader = NULL;
 int64_t nTimeBestReceived = 0;
@@ -3725,6 +3730,24 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
 
     return pindexNew;
 }
+
+/*popchain ghost*/
+CBlock* AddToFutureBlock(const CBlock& block)
+{
+    uint256 hash = block.GetHash();
+    BlockMap::iterator it = mapFutureBlock.find(hash);
+    if (it != mapFutureBlock.end())
+        return it->second;
+    // Construct new block index object
+    CBlock* pBlockNew = new CBlock();
+	*pBlockNew = block;
+    assert(pBlockNew);
+    mapFutureBlock.insert(make_pair(hash, pBlockNew));
+    return pBlockNew;
+}
+
+/*popchain ghost*/
+
 
 /** Mark a block as having its data received and checked (up to BLOCK_VALID_TRANSACTIONS). */
 bool ReceivedBlockTransactions(const CBlock &block, CValidationState& state, CBlockIndex *pindexNew, const CDiskBlockPos& pos)

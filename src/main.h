@@ -135,6 +135,17 @@ extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
 extern CTxMemPool mempool;
 typedef boost::unordered_map<uint256, CBlockIndex*, BlockHasher> BlockMap;
+/*popchain ghost*/
+//5min
+static const unsigned int DEFAULT_MAXTIMEFUTUREBLOCKS = 3000;
+//2.5min
+static const unsigned int DEFAULT_ALLOWEDFUTUREBLOCKTIME = 1500;
+//max futureblocks size limit
+static const unsigned int DEFAULT_MAXFUTUREBLOCKS =256;
+typedef std::map<uint256, CBlock*> FutureBlockMap;
+extern FutureBlockMap mapFutureBlock;
+/*popchain ghost*/
+
 extern BlockMap mapBlockIndex;
 extern uint64_t nLastBlockTx;
 extern uint64_t nLastBlockSize;
