@@ -3735,7 +3735,7 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
 CBlock* AddToFutureBlock(const CBlock& block)
 {
     uint256 hash = block.GetHash();
-    BlockMap::iterator it = mapFutureBlock.find(hash);
+    FutureBlockMap::iterator it = mapFutureBlock.find(hash);
     if (it != mapFutureBlock.end())
         return it->second;
     // Construct new block index object
