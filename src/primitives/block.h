@@ -24,7 +24,7 @@ public:
 	/*popchain ghost*/
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 nCoinbase;//the autor address of this block header
-	uint256 nDifficulty;//the difficulty of this block
+    uint64_t nDifficulty;//the difficulty of this block
 	uint32_t nNumber;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
@@ -65,7 +65,7 @@ public:
 		/*popchain ghost*/
 		hashUncles.SetNull();
 		nCoinbase.SetNull();
-		nDifficulty.SetNull();
+        nDifficulty = 0;
 		nNumber=0;
 		/*popchain ghost*/
         hashMerkleRoot.SetNull();

@@ -260,12 +260,11 @@ arith_uint256 UintToArith256(const uint256 &a)
 /*popchain ghost*/
 
 // This calculater the number divide by max uint256
-arith_uint256 maxUint256Div(const uint256 &a)
+arith_uint256 maxUint256Div(uint64_t &a)
 {
-    arith_uint256 d = UintToArith256(a);
-    std::cout<<"difficulty: "<<d.ToString()<<std::endl;
-    assert(d != 0);
-    arith_uint256 target= UintToArith256(maxUint256) / d;
+    std::cout<<"difficulty: "<<a<<std::endl;
+    assert(a != 0);
+    arith_uint256 target= UintToArith256(maxUint256) / arith_uint256(a);
     return target;
 }
 

@@ -26,7 +26,7 @@ std::string CBlockHeader::ToString() const
 {
 /*popchain ghost*/
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashUncles=%s, nCoinbase=%s, nNumber=%u, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nDifficulty=%s, nBits=%08x, nNonce=%s)\n",
+    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashUncles=%s, nCoinbase=%s, nNumber=%u, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nDifficulty=%u, nBits=%08x, nNonce=%s)\n",
 		GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
@@ -36,7 +36,7 @@ std::string CBlockHeader::ToString() const
         hashMerkleRoot.ToString(),
         hashClaimTrie.ToString(),
         nTime,
-        nDifficulty.ToString(),
+        nDifficulty,
         nBits, nNonce.ToString());
 /*popchain ghost*/
     return s.str();
@@ -45,7 +45,7 @@ std::string CBlockHeader::ToString() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashUncles=%s, nCoinbase=%s, nNumber=%u, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nDifficulty=%s, nBits=%08x, nNonce=%s, vtx=%u, vuh=%u)\n",
+    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashUncles=%s, nCoinbase=%s, nNumber=%u, hashMerkleRoot=%s, hashClaimTrie=%s, nTime=%u, nDifficulty=%u, nBits=%08x, nNonce=%s, vtx=%u, vuh=%u)\n",
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
@@ -55,7 +55,7 @@ std::string CBlock::ToString() const
         hashMerkleRoot.ToString(),
         hashClaimTrie.ToString(),
         nTime,
-        nDifficulty.ToString(),/*popchain ghost*/
+        nDifficulty,/*popchain ghost*/
         nBits, nNonce.ToString(),
         vtx.size(),
         vuh.size()/*popchain ghost*/);
