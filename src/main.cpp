@@ -65,6 +65,7 @@ CCriticalSection cs_main;
 BlockMap mapBlockIndex;
 
 /*popchain ghost*/
+LRUCache<uint256,CBlock> lruFutureBlock(DEFAULT_MAXFUTUREBLOCKS, CBlock());
 FutureBlockMap mapFutureBlock;
 /*popchain ghost*/
 
