@@ -29,13 +29,13 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
         return params.minimumDifficulty;
 
     uint64_t difficulty;
-    std::cout<<"pindexLast ndifficulty: "<<pindexLast->nDifficulty<<std::endl;
+    //std::cout<<"pindexLast ndifficulty: "<<pindexLast->nDifficulty<<std::endl;
 
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
-    int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+    int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 9, -99);
 
     difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
-    std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
+    std::cout<<"nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
     assert(difficulty > 0);
     if (params.minimumDifficulty > difficulty)
         difficulty = params.minimumDifficulty;
