@@ -112,7 +112,7 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 CScript COINBASE_FLAGS;
 
 const string strMessageMagic = "Pop Signed Message:\n";
-#define P 100
+//#define P 100
 
 // Internal stuff
 namespace {
@@ -150,12 +150,11 @@ namespace {
             // First sort by most total work, ...
             bool reorg;
             reorg = pa->nChainWork < pb->nChainWork;
-            //std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
+            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
             if (!reorg && pa->nChainWork == pb->nChainWork){
-                //std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                //reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.50);
-                //std::cout<<"reorg : "<<reorg<<std::endl;
-                reorg = pa->nSequenceId > pb->nSequenceId || (pa->nSequenceId == pb->nSequenceId && pa > pb);
+                std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && pa > pb);
+                std::cout<<"reorg : "<<reorg<<std::endl;
             }
             return reorg;
         }

@@ -35,7 +35,7 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
     int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
 
     difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
-    std::cout<<"height "<<pindexLast->nHeight<<"nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
+    std::cout<<"height "<<pindexLast->nHeight<<" nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
     assert(difficulty > 0);
     if (params.minimumDifficulty > difficulty)
         difficulty = params.minimumDifficulty;
