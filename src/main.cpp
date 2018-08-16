@@ -3537,6 +3537,7 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
                 }
             } else {
                 PruneBlockIndexCandidates();
+                std::cout<<"good ssss"<<std::endl;
                 if (!pindexOldTip || chainActive.Tip()->nChainWork > pindexOldTip->nChainWork) {
                     // We're in a better position than we were. Return temporarily to release the lock.
                     fContinue = false;
@@ -4643,6 +4644,7 @@ bool static LoadBlockIndexDB()
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
+    std::cout<<"good bbbb"<<std::endl;
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
