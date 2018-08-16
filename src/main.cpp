@@ -146,18 +146,19 @@ namespace {
             return false;
         }
 
-//        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
-//            // First sort by most total work, ...
-//            bool reorg;
-//            reorg = pa->nChainWork < pb->nChainWork;
-//            //std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
-//            if (!reorg && pa->nChainWork == pb->nChainWork){
-//                //std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-//                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.50);
-//                //std::cout<<"reorg : "<<reorg<<std::endl;
-//            }
-//            return reorg;
-//        }
+        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
+            // First sort by most total work, ...
+            bool reorg;
+            reorg = pa->nChainWork < pb->nChainWork;
+            //std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
+            if (!reorg && pa->nChainWork == pb->nChainWork){
+                //std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
+                //reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.50);
+                //std::cout<<"reorg : "<<reorg<<std::endl;
+                reorg = pa->nSequenceId > pb->nSequenceId || (pa->nSequenceId == pb->nSequenceId && pa > pb);
+            }
+            return reorg;
+        }
     };
 
     CBlockIndex *pindexBestInvalid;

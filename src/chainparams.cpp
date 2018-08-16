@@ -363,7 +363,7 @@ public:
         //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
         //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
         //consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
-        consensus.nPowTargetSpacing = 24 * 60 * 60;
+        consensus.nPowTargetSpacing = 15;
         consensus.fPowAllowMinDifficultyBlocks = true;
         //consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512;                // 75% for testchains
