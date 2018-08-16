@@ -120,6 +120,8 @@ namespace {
     {
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
+            std::cout<<"pa->nChainWork "<<pa->nChainWork<<" pb->nChainWork "<<pb->nChainWork<<std::endl;
+            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
             if (pa->nChainWork > pb->nChainWork) return false;
             if (pa->nChainWork < pb->nChainWork) return true;
 
@@ -3556,7 +3558,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         {
             LOCK(cs_main);
             CBlockIndex *pindexOldTip = chainActive.Tip();
-            pindexMostWork = FindMostWorkChain();
+            pindexMostWork = FindMostWorkChain();   //popchain ghost
 
             // Whether we have anything to do at all.
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip())
