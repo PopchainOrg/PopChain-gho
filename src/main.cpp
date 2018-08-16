@@ -120,7 +120,7 @@ namespace {
     {
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
-            std::cout<<"pa->nChainWork "<<pa->nChainWork<<" pb->nChainWork "<<pb->nChainWork<<std::endl;
+            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
             std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
             if (pa->nChainWork > pb->nChainWork) return false;
             if (pa->nChainWork < pb->nChainWork) return true;
