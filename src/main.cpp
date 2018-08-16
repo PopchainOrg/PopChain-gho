@@ -96,8 +96,8 @@ struct COrphanTx {
     CTransaction tx;
     NodeId fromPeer;
 };
-map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);;
-map<uint256, set<uint256> > mapOrphanTransactionsByPrev GUARDED_BY(cs_main);;
+map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);
+map<uint256, set<uint256> > mapOrphanTransactionsByPrev GUARDED_BY(cs_main);
 map<uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 void EraseOrphansFor(NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
@@ -116,48 +116,48 @@ const string strMessageMagic = "Pop Signed Message:\n";
 
 // Internal stuff
 namespace {
-    float_t getRandomNumber()
-    {
-        srand(time(NULL));
-        float num = rand() % P / (float_t)P;
-        std::cout<<"num:="<<num<<std::endl;
-        return num;
-    }
+//    float_t getRandomNumber()
+//    {
+//        srand(time(NULL));
+//        float num = rand() % P / (float_t)P;
+//        std::cout<<"num:="<<num<<std::endl;
+//        return num;
+//    }
 
     struct CBlockIndexWorkComparator
     {
-//        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
-//            // First sort by most total work, ...
-//            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
-//            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
-//            if (pa->nChainWork > pb->nChainWork) return false;
-//            if (pa->nChainWork < pb->nChainWork) return true;
-
-//            // ... then by earliest time received, ...
-//            if (pa->nSequenceId < pb->nSequenceId) return false;
-//            if (pa->nSequenceId > pb->nSequenceId) return true;
-
-//            // Use pointer address as tie breaker (should only happen with blocks
-//            // loaded from disk, as those all have id 0).
-//            if (pa < pb) return false;
-//            if (pa > pb) return true;
-
-//            // Identical blocks.
-//            return false;
-//        }
-
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
-            bool reorg;
-            reorg = pa->nChainWork < pb->nChainWork;
             std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
-            if (!reorg && pa->nChainWork == pb->nChainWork){
-                std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.50);
-                std::cout<<"reorg : "<<reorg<<std::endl;
-            }
-            return reorg;
+            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
+            if (pa->nChainWork > pb->nChainWork) return false;
+            if (pa->nChainWork < pb->nChainWork) return true;
+
+            // ... then by earliest time received, ...
+            if (pa->nSequenceId < pb->nSequenceId) return false;
+            if (pa->nSequenceId > pb->nSequenceId) return true;
+
+            // Use pointer address as tie breaker (should only happen with blocks
+            // loaded from disk, as those all have id 0).
+            if (pa < pb) return false;
+            if (pa > pb) return true;
+
+            // Identical blocks.
+            return false;
         }
+
+//        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
+//            // First sort by most total work, ...
+//            bool reorg;
+//            reorg = pa->nChainWork < pb->nChainWork;
+//            //std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
+//            if (!reorg && pa->nChainWork == pb->nChainWork){
+//                //std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
+//                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.50);
+//                //std::cout<<"reorg : "<<reorg<<std::endl;
+//            }
+//            return reorg;
+//        }
     };
 
     CBlockIndex *pindexBestInvalid;
@@ -3537,7 +3537,6 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
                 }
             } else {
                 PruneBlockIndexCandidates();
-                std::cout<<"good ssss"<<std::endl;
                 if (!pindexOldTip || chainActive.Tip()->nChainWork > pindexOldTip->nChainWork) {
                     // We're in a better position than we were. Return temporarily to release the lock.
                     fContinue = false;
@@ -4644,7 +4643,6 @@ bool static LoadBlockIndexDB()
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
-    std::cout<<"good bbbb"<<std::endl;
 
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
