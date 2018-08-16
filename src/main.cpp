@@ -119,8 +119,9 @@ namespace {
     float_t getRandomNumber()
     {
         srand(time(NULL));
-        std::cout<<"rand :"<<rand() % P / (float_t)P<<std::endl;
-        return rand() % P / (float_t)P;
+        float num = rand() % P / (float_t)P;
+        std::cout<<"num:="<<num<<std::endl;
+        return num;
     }
 
     struct CBlockIndexWorkComparator
@@ -152,7 +153,7 @@ namespace {
             std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
             if (!reorg && pa->nChainWork == pb->nChainWork){
                 std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.5);
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.50);
                 std::cout<<"reorg : "<<reorg<<std::endl;
             }
             return reorg;
@@ -3480,7 +3481,7 @@ static void PruneBlockIndexCandidates() {
         setBlockIndexCandidates.erase(it++);
     }
     // Either the current tip or a successor of it we're working towards is left in setBlockIndexCandidates.
-    assert(!setBlockIndexCandidates.empty());
+    assert(!setBlockIndexCandidates.empty());       //empty return failure
 }
 
 /**
