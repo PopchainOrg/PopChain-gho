@@ -112,17 +112,18 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 CScript COINBASE_FLAGS;
 
 const string strMessageMagic = "Pop Signed Message:\n";
-//#define P 100
+#define P 100
 
 // Internal stuff
 namespace {
-//    float_t getRandomNumber()
-//    {
-//        srand(time(NULL));
-//        float num = rand() % P / (float_t)P;
-//        std::cout<<"num:="<<num<<std::endl;
-//        return num;
-//    }
+    float_t getRandomNumber(CBlockIndex *ptr)
+    {
+        uint32_t randNum = ptr % std::numeric_limits<uint32_t>::max();
+        srand(randNum);
+        float num = rand() % P / (float_t)P;
+        std::cout<<"num:="<<num<<std::endl;
+        return num;
+    }
 
     struct CBlockIndexWorkComparator
     {
@@ -153,7 +154,8 @@ namespace {
             std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
             if (!reorg && pa->nChainWork == pb->nChainWork){
                 std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && pa > pb);
+                //reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && pa > pb);
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber(pa) > getRandomNumber(pb));
                 std::cout<<"reorg : "<<reorg<<std::endl;
             }
             return reorg;
