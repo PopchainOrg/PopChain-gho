@@ -112,30 +112,51 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 CScript COINBASE_FLAGS;
 
 const string strMessageMagic = "Pop Signed Message:\n";
+#define P 100
 
 // Internal stuff
 namespace {
 
     struct CBlockIndexWorkComparator
     {
+//        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
+//            // First sort by most total work, ...
+//            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
+//            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
+//            if (pa->nChainWork > pb->nChainWork) return false;
+//            if (pa->nChainWork < pb->nChainWork) return true;
+
+//            // ... then by earliest time received, ...
+//            if (pa->nSequenceId < pb->nSequenceId) return false;
+//            if (pa->nSequenceId > pb->nSequenceId) return true;
+
+//            // Use pointer address as tie breaker (should only happen with blocks
+//            // loaded from disk, as those all have id 0).
+//            if (pa < pb) return false;
+//            if (pa > pb) return true;
+
+//            // Identical blocks.
+//            return false;
+//        }
+
+        float_t getRandomNumber()
+        {
+            float_t num;
+            srand(time(NULL));
+            return rand() % P / (float_t)P;
+        }
+
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
+            bool reorg;
+            reorg = pa->nChainWork < pb->nChainWork;
             std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
-            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
-            if (pa->nChainWork > pb->nChainWork) return false;
-            if (pa->nChainWork < pb->nChainWork) return true;
-
-            // ... then by earliest time received, ...
-            if (pa->nSequenceId < pb->nSequenceId) return false;
-            if (pa->nSequenceId > pb->nSequenceId) return true;
-
-            // Use pointer address as tie breaker (should only happen with blocks
-            // loaded from disk, as those all have id 0).
-            if (pa < pb) return false;
-            if (pa > pb) return true;
-
-            // Identical blocks.
-            return false;
+            if (!reorg && pa->nChainWork == pb->nChainWork){
+                std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber() < 0.5);
+                std::cout<<"reorg : "<<reorg<<std::endl;
+            }
+            return reorg;
         }
     };
 
