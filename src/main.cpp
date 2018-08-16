@@ -116,13 +116,12 @@ const string strMessageMagic = "Pop Signed Message:\n";
 
 // Internal stuff
 namespace {
-    float_t getRandomNumber(CBlockIndex *ptr)
+    int getRandomNumber()
     {
-        uint32_t randNum = ptr % std::numeric_limits<uint32_t>::max();
-        srand(randNum);
+        srand(time(NULL));
         float num = rand() % P / (float_t)P;
         std::cout<<"num:="<<num<<std::endl;
-        return num;
+        return num<0.5;
     }
 
     struct CBlockIndexWorkComparator
@@ -155,7 +154,7 @@ namespace {
             if (!reorg && pa->nChainWork == pb->nChainWork){
                 std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
                 //reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && pa > pb);
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber(pa) > getRandomNumber(pb));
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber()*pa > getRandomNumber()*pb);
                 std::cout<<"reorg : "<<reorg<<std::endl;
             }
             return reorg;
