@@ -116,6 +116,12 @@ const string strMessageMagic = "Pop Signed Message:\n";
 
 // Internal stuff
 namespace {
+    float_t getRandomNumber()
+    {
+        srand(time(NULL));
+        std::cout<<"rand :"<<rand() % P / (float_t)P<<std::endl;
+        return rand() % P / (float_t)P;
+    }
 
     struct CBlockIndexWorkComparator
     {
@@ -138,13 +144,6 @@ namespace {
 //            // Identical blocks.
 //            return false;
 //        }
-
-        float_t getRandomNumber()
-        {
-            float_t num;
-            srand(time(NULL));
-            return rand() % P / (float_t)P;
-        }
 
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
