@@ -27,7 +27,6 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
     if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
         return params.minimumDifficulty;
 
-
     uint64_t difficulty;
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
 
