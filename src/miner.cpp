@@ -455,7 +455,8 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
         //std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
         //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
-        pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus())));
+        pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
+        pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
 
         // Randomise nonce
         arith_uint256 nonce = UintToArith256(GetRandHash());
