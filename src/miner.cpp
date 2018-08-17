@@ -72,7 +72,9 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     if (consensusParams.fPowAllowMinDifficultyBlocks)
     {
         //std::cout<<"update time: nOldTime"<<nOldTime<< " newtime: "<<nNewTime<<std::endl;
-        pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, consensusParams)));
+        //pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, consensusParams)));
+        //pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
+
     }
 
     return nNewTime - nOldTime;
@@ -454,8 +456,9 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		/*popchain ghost*/
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
         //std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
-        //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
-        pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus())));
+        pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, consensusParams);
+        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        //pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus())));
 
         // Randomise nonce
         arith_uint256 nonce = UintToArith256(GetRandHash());
@@ -594,6 +597,7 @@ void static BitcoinMiner(const CChainParams& chainparams)
             // Search
             //
             int64_t nStart = GetTime();
+            //pblock->nDifficulty = calculateDifficulty()
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             while (true)
             {
