@@ -79,6 +79,7 @@ struct Params {
     /* popchain ghost */
     uint256 powLimit;
     uint32_t difficultyBoundDivisor;
+    uint32_t difficultyRapidFitDivisor;
     //uint32_t durationLimit;
     uint64_t minimumDifficulty;
     /* popchain ghost */
@@ -86,6 +87,7 @@ struct Params {
     int64_t nPowAveragingWindow;
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
+    uint32_t nYolandaTime;
     //int64_t nPowTargetTimespan;
     //int64_t nPowMaxAdjustDown;
     //int64_t nPowMaxAdjustUp;

@@ -116,11 +116,11 @@ const string strMessageMagic = "Pop Signed Message:\n";
 
 // Internal stuff
 namespace {
-    float_t getRandomNumber(uint32_t n)
+    float_t getRandomNumber()
     {
-        srand(n);
+        srand(time(NULL));
         float_t num = rand() % P / (float_t)P;
-        std::cout<<"num:="<<num<<std::endl;
+        //std::cout<<"num:="<<num<<std::endl;
         return num;
     }
 
@@ -151,9 +151,7 @@ namespace {
             bool reorg;
             reorg = pa->nChainWork < pb->nChainWork;
             if (!reorg && pa->nChainWork == pb->nChainWork){
-                std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber(pa->nHeight)<0.5?(pa>pb):(pa<pb));
-                std::cout<<"reorg : "<<reorg<<std::endl;
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber()<0.5?(pa>pb):(pa<pb));
             }
             return reorg;
         }

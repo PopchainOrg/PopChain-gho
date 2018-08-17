@@ -171,6 +171,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint64_t nDifficulty, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "pop hold value testnet.";
+    //const char* pszTimestamp = "hope u happiness in canada gg by armin.";
     const CScript genesisOutputScript = CScript() << ParseHex("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8") << OP_CHECKSIG;
     //std::vector<unsigned char > printscript(genesisOutputScript.begin(),genesisOutputScript.end);
     //std::cout<< StrHex(printscript)<<endl ;
@@ -184,6 +185,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint64_t nDiffi
 static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint64_t nDifficulty, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "Change the World with Us. 22/May/2018, 00:00:00, GMT";
+    //const char* pszTimestamp = "Shall I compare thee to a summer's day? 23/Jan/2011, Sy Forever";
     const CScript genesisOutputScript = CScript() << ParseHex("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0") << OP_CHECKSIG;
     //return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nBits, nVersion, genesisReward);
@@ -223,8 +225,10 @@ public:
         //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938a");
         consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyRapidFitDivisor = 200;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
+        consensus.nYolandaTime = 172800;
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -353,9 +357,10 @@ public:
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyRapidFitDivisor = 20;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
-
+        consensus.nYolandaTime = 200;
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -488,8 +493,10 @@ public:
         consensus.fPowNoRetargeting = true;
         /*popchain ghost*/
         consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyRapidFitDivisor = 20;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 17;
+        consensus.nYolandaTime = 100;
         /*popchain ghost*/
         consensus.nRuleChangeActivationThreshold = 108;                 // 75% for testchains
         consensus.nMinerConfirmationWindow = 144;                       // Faster than normal for regtest (144 instead of 2016)
