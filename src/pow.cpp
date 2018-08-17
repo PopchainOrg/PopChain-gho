@@ -21,11 +21,15 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
         return params.minimumDifficulty;
 
     const CBlockIndex* pindexParent = pindexLast->pprev;
-    if (pindexParent == NULL)
+    if (pindexParent == NULL){
+        pindexLast->nDifficulty = params.minimumDifficulty;
         return params.minimumDifficulty;
+    }
   
-    if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
+    if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock)){
+        pindexLast->nDifficulty = params.minimumDifficulty;
         return params.minimumDifficulty;
+    }
 
     uint64_t difficulty;
     int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
@@ -33,7 +37,7 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
     if (pindexLast->nHeight < params.nYolandaTime+1){
         if (timestampDiff < 15) difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyRapidFitDivisor;
         else difficulty = pindexParent->nDifficulty - pindexParent->nDifficulty / params.difficultyRapidFitDivisor;
-        std::cout<<"BStep"<<" height "<<pindexLast->nHeight<<" nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
+        std::cout<<"AStep"<<" height "<<pindexLast->nHeight<<" nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
     } else {
         int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
         difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
@@ -44,6 +48,7 @@ uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *
     if (params.minimumDifficulty > difficulty)
         difficulty = params.minimumDifficulty;
     assert (difficulty < std::numeric_limits<uint64_t>::max());
+    pindexLast->nDifficulty = params.minimumDifficulty;
     return difficulty;
 }
 
