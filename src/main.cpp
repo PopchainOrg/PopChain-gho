@@ -116,12 +116,12 @@ const string strMessageMagic = "Pop Signed Message:\n";
 
 // Internal stuff
 namespace {
-    int getRandomNumber()
+    float_t getRandomNumber()
     {
         srand(time(NULL));
-        float num = rand() % P / (float_t)P;
+        float_t num = rand() % P / (float_t)P;
         std::cout<<"num:="<<num<<std::endl;
-        return num<0.5;
+        return num;
     }
 
     struct CBlockIndexWorkComparator
@@ -150,11 +150,9 @@ namespace {
             // First sort by most total work, ...
             bool reorg;
             reorg = pa->nChainWork < pb->nChainWork;
-            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
             if (!reorg && pa->nChainWork == pb->nChainWork){
                 std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                //reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && pa > pb);
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber()*pa > getRandomNumber()*pb);
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber<0.5?(pa>pb):(pa<pb));
                 std::cout<<"reorg : "<<reorg<<std::endl;
             }
             return reorg;
