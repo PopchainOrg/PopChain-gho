@@ -152,7 +152,7 @@ namespace {
             reorg = pa->nChainWork < pb->nChainWork;
             if (!reorg && pa->nChainWork == pb->nChainWork){
                 std::cout<<"pa->nHeight "<<pa->nHeight<<" pb->nHeight "<<pb->nHeight<<std::endl;
-                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber<0.5?(pa>pb):(pa<pb));
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber()<0.5?(pa>pb):(pa<pb));
                 std::cout<<"reorg : "<<reorg<<std::endl;
             }
             return reorg;
