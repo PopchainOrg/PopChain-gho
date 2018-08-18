@@ -71,7 +71,7 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     // Updating time can change work required on testnet:
     if (consensusParams.fPowAllowMinDifficultyBlocks)
     {
-        std::cout<<"update time: nOldTime"<<nOldTime<< " newtime: "<<nNewTime<<std::endl;
+        //std::cout<<"update time: nOldTime"<<nOldTime<< " newtime: "<<nNewTime<<std::endl;
         pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, consensusParams);
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
     }
@@ -453,8 +453,48 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		/*popchain ghost*/
 		pblock->nNumber = pindexPrev->nNumber + 1;
 		/*popchain ghost*/
+
+		/*popchain ghost*/
+		/*
+		uint256 ur1 = uint256S("0x0009ccbd718edfa200f86d4e54531b477175f022d3e621e27d3e213678f84d0b");
+		std::cout<<"uncle block ur1 : "<<ur1.ToString()<<endl;
+		uint256 ur2 = uint256S("0x0006f4dee5efc4d458e09f142f0dc32d65801876313cd0b5f5da1731d9511a44ss");
+		std::cout<<"uncle block ur2 : "<<ur2.ToString()<<endl;
+		uint256 res = uint256();
+		CHash256().Write(ur1.begin(), 32).Write(ur2.begin(), 32).Finalize(res.begin());
+		std::cout<<"uncle block res : "<<res.ToString()<<endl;
+
+		ur1 = uint256S("0x0000d24761665f069f52004635b0d90886477bbdbf925597463796126d2b0342");
+		res = uint256();
+		CHash256().Write(ur1.begin(), 32).Write(ur1.begin(), 32).Finalize(res.begin());
+		std::cout<<"uncle block res : "<<res.ToString()<<endl;
+		*/
+		
+		/*popchain ghost*/
+		
+		/*popchain ghost*/
+		std::cout<<"after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+		std::vector<CBlock> unclesBlock;
+		FindBlockUncles(pblock->hashPrevBlock,unclesBlock);
+		std::cout<<"createnewblock select uncle size "<<unclesBlock.size()<<endl;
+		CBlock uncleBlock;
+		int uncleCount = 0;
+		for(std::vector<CBlock>::iterator it = unclesBlock.begin();it != unclesBlock.end(); ++it){
+			uncleBlock = *it;
+			
+			std::cout<<uncleCount<<" uncleBlock: "<<uncleBlock.ToString()<<endl;
+			if(uncleCount < 2){
+				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
+			}
+			
+			uncleCount++;
+		}
+
+		pblock->hashUncles = BlockUncleRoot(*pblock);
+		/*popchain ghost*/
+		
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-        std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
+        //std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
         //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
         pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
@@ -519,6 +559,17 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
         LOCK(cs_main);
         if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
 		{
+			/*popchain ghost*/
+			/*
+			CBlock possibleBlock = *pblock;
+			uint256 possibleBlockHash = possibleBlock.GetHash();
+			mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
+			std::cout<<"add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+			std::cout<<"add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+			std::cout<<"add in processblockfound , generate state : "<<GetBoolArg("-gen", false)<<std::endl;
+			std::cout<<"after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+			*/
+			/*popchain ghost*/
 			//LogPrintf("hashPrevBlock = %s, Tip hash = %s\n", pblock->hashPrevBlock, chainActive.Tip()->GetBlockHash());
 			return error("ProcessBlockFound -- generated block is stale");
 		}

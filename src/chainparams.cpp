@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 The Popchain Core Developers
+\// Copyright (c) 2017-2018 The Popchain Core Developers
 
 #include "base58.h"
 #include "chainparams.h"
