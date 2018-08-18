@@ -136,6 +136,161 @@ extern CCriticalSection cs_main;
 extern CTxMemPool mempool;
 typedef boost::unordered_map<uint256, CBlockIndex*, BlockHasher> BlockMap;
 extern BlockMap mapBlockIndex;
+/*popchain ghost*/
+
+
+
+//5min
+static const unsigned int DEFAULT_MAXTIMEFUTUREBLOCKS = 3000;
+//2.5min
+static const unsigned int DEFAULT_ALLOWEDFUTUREBLOCKTIME = 1500;
+//max futureblocks size limit
+static const unsigned int DEFAULT_MAXFUTUREBLOCKS =256;
+typedef std::map<uint256, CBlock*> FutureBlockMap;
+extern FutureBlockMap mapFutureBlock;
+
+
+template<typename Key, typename Value>
+class LRUCache {
+public:
+    // err is return find fail
+    LRUCache(int capacity, Value err) {
+        err_ = err;
+        capacity_ = capacity;
+        head_.next = &tail_;
+        tail_.prev = &head_;
+    }
+
+    Value get(Key key) {
+        auto it = vmap_.find(key);
+        if(it == vmap_.end()) {
+            return err_;
+        } else {
+            Cache *c = it->second;
+            move_cache_to_head(c);
+            return c->value;
+        }
+    }
+
+    void add(Key key, Value value) {
+        auto it = vmap_.find(key);
+        if(it != vmap_.end()) {
+            Cache *c = it->second;
+            c->value = value;
+            move_cache_to_head(c);
+        } else {
+            if(capacity_ == vmap_.size()) {
+                Cache *c = remove_last_cache();
+                vmap_.erase(c->key);
+                c->key = key;
+                c->value = value;
+                cache_push(c);
+                vmap_[key] = c;
+            } else {
+                Cache *c = new Cache(key, value);
+                cache_push(c);
+                vmap_[key] = c;
+            }
+        }
+    }
+
+	void purge(){
+		head_.next = &tail_;
+        tail_.prev = &head_;
+		vmap_.clear();
+	}
+
+	Value peek(Key key){
+		auto it = vmap_.find(key);
+        if(it == vmap_.end()) {
+            return err_;
+        } else {
+            Cache *c = it->second;
+            return c->value;
+        }
+	}
+
+	bool remove(Key key){
+	    auto it = vmap_.find(key);
+        if(it == vmap_.end()) {
+            return false;
+        } else {
+            Cache *c = it->second;
+			cache_remove(c);
+            vmap_.erase(it);
+            return true;
+        }
+	}
+
+	bool contains(Key key){
+		auto it = vmap_.find(key);
+		if(it == vmap_.end()){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	void keys(std::vector<Key> &keys){
+		Cache *c = tail_.prev;
+		for(int i = vmap_.size(); i > 0; i--){
+			keys.push_back(c->key);
+			c = c->prev;
+		}	
+	}
+
+private:
+    struct Cache {
+        Cache() = default;
+        Cache(Key key, Value value) : key(key), value(value) {}
+        Key key;
+        Value value;
+        Cache *prev;
+        Cache *next;
+    };
+
+    void cache_push(Cache *c) {
+        c->next = head_.next;
+        head_.next = c;
+        c->next->prev = c;
+        c->prev = &head_;
+    }
+
+    void cache_push(Key key, Value value) {
+        Cache *c = new Cache(key, value);
+        cache_push(c);
+    }
+
+
+    void move_cache_to_head(Cache *c) {
+        c->prev->next = c->next;
+        c->next->prev = c->prev;
+        cache_push(c);
+    }
+
+    Cache *remove_last_cache() {
+        Cache *c = tail_.prev;
+        tail_.prev = c->prev;
+        c->prev->next = &tail_;
+        return c;
+    }
+
+	void cache_remove(Cache *c){
+		c->prev->next = c->next;
+		c->next->prev = c->prev;
+	}
+
+private:
+    Cache head_;
+    Cache tail_;
+    Value err_;
+    int capacity_;
+    std::map<Key, Cache *> vmap_;
+};
+
+/*popchain ghost*/
+
+
 extern uint64_t nLastBlockTx;
 extern uint64_t nLastBlockSize;
 extern const std::string strMessageMagic;
@@ -777,6 +932,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
 /** Context-independent validity checks */
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW = true);
+
 bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
 
 /** Context-dependent validity checks */

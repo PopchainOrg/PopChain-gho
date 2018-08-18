@@ -229,6 +229,7 @@ public:
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
         consensus.nYolandaTime = 172800;
+      
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -361,6 +362,7 @@ public:
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
         consensus.nYolandaTime = 200;
+
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
