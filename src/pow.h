@@ -13,7 +13,7 @@ class uint256;
 class arith_uint256;
 
 /*popchain ghost*/
-uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlock *pblock, const Consensus::Params& params);
+uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlockHeader *pblock, const Consensus::Params& params);
 arith_uint256 getHashTraget (uint64_t difficulty);
 uint32_t getNBits(arith_uint256 hashTarget);
 
