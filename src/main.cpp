@@ -4039,8 +4039,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 	if (block.nNumber != (pindexPrev->nNumber+ 1))
 	    return state.DoS(100, error("%s : incorrect nNumber at %d", __func__, nHeight),
                REJECT_INVALID, "bad-nNumber");
-	/*popchain ghost*/
-			   
+
     // Check proof of work
     //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
     if (block.nDifficulty != calculateDifficulty(pindexPrev, &block, consensusParams))
@@ -4049,6 +4048,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
                REJECT_INVALID, "bad-diffbits");
     }
+    /*popchain ghost*/
 
     // Check timestamp against prev
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())

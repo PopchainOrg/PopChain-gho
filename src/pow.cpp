@@ -14,30 +14,31 @@
 #include <algorithm>
 
 // ghost new difficulty algorithm
-uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+// pindex chainactivate tip, pblock ready to assembly
+uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // Genesis block get minimum difficulty
-    if (pindexLast == NULL)
+    if (pindex == NULL)
         return params.minimumDifficulty;
 
-    const CBlockIndex* pindexParent = pindexLast->pprev;
-    if (pindexParent == NULL)
-        return params.minimumDifficulty;
+//    const CBlockIndex* pindexParent = pindex->pprev;
+//    if (pindexParent == NULL)
+//        return params.minimumDifficulty;
   
-    if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
+    if (UintToArith256(pindex->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
         return params.minimumDifficulty;
 
     uint64_t difficulty;
-    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
+    int32_t const timestampDiff = pblock->nTime - pindex->nTime;
 
-    if (pindexLast->nHeight < params.nYolandaTime+1){
-        if (timestampDiff < 15) difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyRapidFitDivisor;
-        else difficulty = pindexParent->nDifficulty - pindexParent->nDifficulty / params.difficultyRapidFitDivisor;
-        std::cout<<"AStep"<<" height "<<pindexLast->nHeight<<" nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
+    if (pindex->nHeight < params.nYolandaTime){
+        if (timestampDiff < 15) difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyRapidFitDivisor;
+        else difficulty = pindex->nDifficulty - pindex->nDifficulty / params.difficultyRapidFitDivisor;
+        std::cout<<"AStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
     } else {
-        int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
-        difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
-        std::cout<<"BStep"<<" height "<<pindexLast->nHeight<<" nTime: "<<pindexLast->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
+        int64_t const adjFactor = std::max((pindex->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+        difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyBoundDivisor * adjFactor;
+        std::cout<<"BStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
     }
 
     assert(difficulty > 0);
@@ -58,9 +59,10 @@ uint32_t getNBits(arith_uint256 hashTarget)
     return hashTarget.GetCompact();
 }
 
-unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+// GetNextWorkRequired called getNBits
+unsigned int GetNextWorkRequired(const CBlockIndex* pindex, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
+    uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindex, pblock, params)));
     return nBits;
 }
 

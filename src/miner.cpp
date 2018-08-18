@@ -454,10 +454,9 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		/*popchain ghost*/
 		pblock->nNumber = pindexPrev->nNumber + 1;
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-        //std::cout<<"create new block : nBits "<<pblock->nBits<<std::endl;
         pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
-        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
-        //pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus())));
+        //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
         /*popchain ghost*/
 
         // Randomise nonce
