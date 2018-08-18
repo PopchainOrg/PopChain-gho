@@ -75,7 +75,7 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
         //pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, consensusParams)));
         //pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
 
-        pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
+        pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, consensusParams);
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
     }
 
