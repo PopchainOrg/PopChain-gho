@@ -368,7 +368,7 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
 
     CBlockIndex* pblockindex = chainActive[nHeight];
     //return pblockindex->GetBlockHash().GetHex();
-    return to_string(GetDifficulty(pblockindex));
+    return GetDifficulty(pblockindex);
 }
 
 UniValue getblockheader(const UniValue& params, bool fHelp)
