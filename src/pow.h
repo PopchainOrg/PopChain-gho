@@ -13,7 +13,7 @@ class uint256;
 class arith_uint256;
 
 /*popchain ghost*/
-uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params);
+uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlockHeader *pblock, const Consensus::Params& params);
 arith_uint256 getHashTraget (uint64_t difficulty);
 uint32_t getNBits(arith_uint256 hashTarget);
 
@@ -30,7 +30,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);
 //bool CheckProofOfWork(uint256 hash, uint256 nDifficulty, const Consensus::Params&);
 /*popchain ghost*/
-arith_uint256 GetBlockProof(const CBlockIndex& block);
+arith_uint256 GetBlockDifficulty(const CBlockIndex& block);
 
 /** Return the time it would take to redo the work difference between from and to, assuming the current hashrate corresponds to the difficulty at tip, in seconds. */
 int64_t GetBlockProofEquivalentTime(const CBlockIndex& to, const CBlockIndex& from, const CBlockIndex& tip, const Consensus::Params&);

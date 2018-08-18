@@ -102,8 +102,8 @@ struct COrphanTx {
     CTransaction tx;
     NodeId fromPeer;
 };
-map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);;
-map<uint256, set<uint256> > mapOrphanTransactionsByPrev GUARDED_BY(cs_main);;
+map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);
+map<uint256, set<uint256> > mapOrphanTransactionsByPrev GUARDED_BY(cs_main);
 map<uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 void EraseOrphansFor(NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
@@ -118,28 +118,48 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 CScript COINBASE_FLAGS;
 
 const string strMessageMagic = "Pop Signed Message:\n";
+#define P 100
 
 // Internal stuff
 namespace {
+    float_t getRandomNumber()
+    {
+        srand(time(NULL));
+        float_t num = rand() % P / (float_t)P;
+        //std::cout<<"num:="<<num<<std::endl;
+        return num;
+    }
 
     struct CBlockIndexWorkComparator
     {
+//        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
+//            // First sort by most total work, ...
+//            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
+//            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
+//            if (pa->nChainWork > pb->nChainWork) return false;
+//            if (pa->nChainWork < pb->nChainWork) return true;
+
+//            // ... then by earliest time received, ...
+//            if (pa->nSequenceId < pb->nSequenceId) return false;
+//            if (pa->nSequenceId > pb->nSequenceId) return true;
+
+//            // Use pointer address as tie breaker (should only happen with blocks
+//            // loaded from disk, as those all have id 0).
+//            if (pa < pb) return false;
+//            if (pa > pb) return true;
+
+//            // Identical blocks.
+//            return false;
+//        }
+
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
-            if (pa->nChainWork > pb->nChainWork) return false;
-            if (pa->nChainWork < pb->nChainWork) return true;
-
-            // ... then by earliest time received, ...
-            if (pa->nSequenceId < pb->nSequenceId) return false;
-            if (pa->nSequenceId > pb->nSequenceId) return true;
-
-            // Use pointer address as tie breaker (should only happen with blocks
-            // loaded from disk, as those all have id 0).
-            if (pa < pb) return false;
-            if (pa > pb) return true;
-
-            // Identical blocks.
-            return false;
+            bool reorg;
+            reorg = pa->nChainWork < pb->nChainWork;
+            if (!reorg && pa->nChainWork == pb->nChainWork){
+                reorg = pa->nHeight > pb->nHeight || (pa->nHeight == pb->nHeight && getRandomNumber()<0.5?(pa>pb):(pa<pb));
+            }
+            return reorg;
         }
     };
 
@@ -443,7 +463,7 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
 // Requires cs_main
 bool CanDirectFetch(const Consensus::Params &consensusParams)
 {
-    return chainActive.Tip()->GetBlockTime() > GetAdjustedTime() - consensusParams.nPowTargetSpacing * 20;
+    return chainActive.Tip()->GetBlockTime() > GetAdjustedTime() - consensusParams.nPowTargetSpacing * 20;  // tipTimeStamp > timenow-300 20个块内为true
 }
 
 // Requires cs_main
@@ -1820,7 +1840,7 @@ void CheckForkWarningConditions()
     if (pindexBestForkTip && chainActive.Height() - pindexBestForkTip->nHeight >= 72)
         pindexBestForkTip = NULL;
 
-    if (pindexBestForkTip || (pindexBestInvalid && pindexBestInvalid->nChainWork > chainActive.Tip()->nChainWork + (GetBlockProof(*chainActive.Tip()) * 6)))
+    if (pindexBestForkTip || (pindexBestInvalid && pindexBestInvalid->nChainWork > chainActive.Tip()->nChainWork + (GetBlockDifficulty(*chainActive.Tip()) * 6)))
     {
         if (!fLargeWorkForkFound && pindexBestForkBase)
         {
@@ -1878,7 +1898,7 @@ void CheckForkWarningConditionsOnNewFork(CBlockIndex* pindexNewForkTip)
     // We define it this way because it allows us to only store the highest fork tip (+ base) which meets
     // the 7-block condition and from this always have the most-likely-to-cause-warning fork
     if (pfork && (!pindexBestForkTip || (pindexBestForkTip && pindexNewForkTip->nHeight > pindexBestForkTip->nHeight)) &&
-            pindexNewForkTip->nChainWork - pfork->nChainWork > (GetBlockProof(*pfork) * 7) &&
+            pindexNewForkTip->nChainWork - pfork->nChainWork > (GetBlockDifficulty(*pfork) * 7) &&
             chainActive.Height() - pindexNewForkTip->nHeight < 72)
     {
         pindexBestForkTip = pindexNewForkTip;
@@ -3464,7 +3484,7 @@ static void PruneBlockIndexCandidates() {
         setBlockIndexCandidates.erase(it++);
     }
     // Either the current tip or a successor of it we're working towards is left in setBlockIndexCandidates.
-    assert(!setBlockIndexCandidates.empty());
+    assert(!setBlockIndexCandidates.empty());       //empty return failure
 }
 
 /**
@@ -3562,7 +3582,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         {
             LOCK(cs_main);
             CBlockIndex *pindexOldTip = chainActive.Tip();
-            pindexMostWork = FindMostWorkChain();
+            pindexMostWork = FindMostWorkChain();   //popchain ghost
 
             // Whether we have anything to do at all.
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip())
@@ -3722,7 +3742,7 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
         pindexNew->nHeight = pindexNew->pprev->nHeight + 1;
         pindexNew->BuildSkip();
     }
-    pindexNew->nChainWork = (pindexNew->pprev ? pindexNew->pprev->nChainWork : 0) + GetBlockProof(*pindexNew);
+    pindexNew->nChainWork = (pindexNew->pprev ? pindexNew->pprev->nChainWork : 0) + GetBlockDifficulty(*pindexNew);
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
     if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
         pindexBestHeader = pindexNew;
@@ -4043,15 +4063,16 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 	if (block.nNumber != (pindexPrev->nNumber+ 1))
 	    return state.DoS(100, error("%s : incorrect nNumber at %d", __func__, nHeight),
                REJECT_INVALID, "bad-nNumber");
-	/*popchain ghost*/
-			   
+
     // Check proof of work
-    if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    if (block.nDifficulty != calculateDifficulty(pindexPrev, &block, consensusParams))
     {
         std::cout<<"just for test"<<std::endl;
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
                REJECT_INVALID, "bad-diffbits");
     }
+    /*popchain ghost*/
 
     // Check timestamp against prev
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())
@@ -4551,7 +4572,7 @@ bool static LoadBlockIndexDB()
     BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
     {
         CBlockIndex* pindex = item.second;
-        pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockProof(*pindex);
+        pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockDifficulty(*pindex);
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
         if (pindex->nTx > 0) {

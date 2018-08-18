@@ -14,28 +14,33 @@
 #include <algorithm>
 
 // ghost new difficulty algorithm
-uint64_t calculateDifficulty(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+// pindex chainactivate tip, pblock ready to assembly
+uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // Genesis block get minimum difficulty
-    if (pindexLast == NULL)
+    if (pindex == NULL)
         return params.minimumDifficulty;
 
-    // timestampDiff = _bi.timestamp() - _parent.timestamp()
-    const CBlockIndex* pindexParent = pindexLast->pprev;
-    if (pindexParent == NULL)
-        return params.minimumDifficulty;
+//    const CBlockIndex* pindexParent = pindex->pprev;
+//    if (pindexParent == NULL)
+//        return params.minimumDifficulty;
   
-    if (UintToArith256(pindexParent->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
+    if (UintToArith256(pindex->GetBlockHash()) == UintToArith256(params.hashGenesisBlock))
         return params.minimumDifficulty;
 
     uint64_t difficulty;
-    //std::cout<<"pindexLast ndifficulty: "<<pindexLast->nDifficulty<<std::endl;
+    int32_t const timestampDiff = pblock->nTime - pindex->nTime;
 
-    int32_t const timestampDiff = pindexLast->nTime - pindexParent->nTime;
-    int64_t const adjFactor = std::max((pindexParent->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+    if (pindex->nHeight < params.nYolandaTime){
+        if (timestampDiff < 15) difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyRapidFitDivisor;
+        else difficulty = pindex->nDifficulty - pindex->nDifficulty / params.difficultyRapidFitDivisor;
+        std::cout<<"AStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
+    } else {
+        int64_t const adjFactor = std::max((pindex->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+        difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyBoundDivisor * adjFactor;
+        std::cout<<"BStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
+    }
 
-    difficulty = pindexParent->nDifficulty + pindexParent->nDifficulty / params.difficultyBoundDivisor * adjFactor;
-    //std::cout<<"test calculateDifficulty: timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
     assert(difficulty > 0);
     if (params.minimumDifficulty > difficulty)
         difficulty = params.minimumDifficulty;
@@ -54,9 +59,10 @@ uint32_t getNBits(arith_uint256 hashTarget)
     return hashTarget.GetCompact();
 }
 
-unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+// GetNextWorkRequired called getNBits
+unsigned int GetNextWorkRequired(const CBlockIndex* pindex, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindexLast, pblock, params)));
+    uint32_t nBits = getNBits(getHashTraget(calculateDifficulty(pindex, pblock, params)));
     return nBits;
 }
 
@@ -151,20 +157,25 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&
 /*popchain ghost*/
 
 /*popchain ghost*/
-arith_uint256 GetBlockProof(const CBlockIndex& block)
+arith_uint256 GetBlockDifficulty(const CBlockIndex& block)
 {
-    arith_uint256 bnTarget;
-    bool fNegative;
-    bool fOverflow;
+//    arith_uint256 bnTarget;
+//    bool fNegative;
+//    bool fOverflow;
 	
-    bnTarget.SetCompact(block.nBits, &fNegative, &fOverflow);
-    if (fNegative || fOverflow || bnTarget == 0)
-        return 0;
+//    bnTarget.SetCompact(block.nBits, &fNegative, &fOverflow);
+//    if (fNegative || fOverflow || bnTarget == 0)
+//        return 0;
     // We need to compute 2**256 / (bnTarget+1), but we can't represent 2**256
     // as it's too large for a arith_uint256. However, as 2**256 is at least as large
     // as bnTarget+1, it is equal to ((2**256 - bnTarget - 1) / (bnTarget+1)) + 1,
     // or ~bnTarget / (nTarget+1) + 1.
-    return (~bnTarget / (bnTarget + 1)) + 1;
+    //return (~bnTarget / (bnTarget + 1)) + 1;
+
+    if (block.nDifficulty > 0)
+        return block.nDifficulty;
+    return 0;
+
     /*popchain ghost*/
     //bnTarget = maxUint256Div(block.nDifficulty);
 	//return bnTarget;
@@ -183,7 +194,7 @@ int64_t GetBlockProofEquivalentTime(const CBlockIndex& to, const CBlockIndex& fr
         r = from.nChainWork - to.nChainWork;
         sign = -1;
     }
-    r = r * arith_uint256(params.nPowTargetSpacing) / GetBlockProof(tip);
+    r = r * arith_uint256(params.nPowTargetSpacing) / GetBlockDifficulty(tip);
     if (r.bits() > 63) {
         return sign * std::numeric_limits<int64_t>::max();
     }
