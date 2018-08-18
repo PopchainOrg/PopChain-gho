@@ -65,6 +65,11 @@ CCriticalSection cs_main;
 BlockMap mapBlockIndex;
 
 /*popchain ghost*/
+BlockMapGho mapPossibleUncles;
+BlockSetGho setCurrentAncestor;
+BlockSetGho setCurrentUncle;
+BlockSetGho setCurrentFamily;
+uint256 currentParenthash = uint256();
 LRUCache<uint256,CBlock> lruFutureBlock(DEFAULT_MAXFUTUREBLOCKS, CBlock());
 FutureBlockMap mapFutureBlock;
 /*popchain ghost*/
@@ -2582,6 +2587,158 @@ bool GetBlockHash(uint256& hashRet, int nBlockHeight)
     return true;
 }
 
+/*popchain ghost*/
+bool GetBlockNumber(uint256 hash, uint32_t* number)
+{
+	LOCK(cs_main);
+	if (hash != uint256()) {
+        BlockMap::iterator mi = mapBlockIndex.find(hash);
+        if (mi != mapBlockIndex.end() && (*mi).second) {
+            CBlockIndex* pindex = (*mi).second;
+			*number = pindex->nNumber;
+			return true;
+        }
+    }
+	return false;
+}
+bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vCbi)
+{
+	LOCK(cs_main);
+	LogPrintf("GetAncestorBlocksFromHash \n");
+	//uint32_t number=0;
+	if(hash == uint256())
+		return false;
+	BlockMap::iterator mi = mapBlockIndex.find(hash);
+	if(mi != mapBlockIndex.end() && (*mi).second){
+		CBlockIndex* pblockindex =(*mi).second;
+		for(int i = 0; i < n; i++){
+			if(pblockindex != NULL){
+				vCbi.push_back(pblockindex);
+				pblockindex = pblockindex->pprev;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool MakeCurrentCycle(uint256 hash)
+{
+	LOCK(cs_main);
+	LogPrintf("MakeCurrentCycle \n");
+	if(hash == uint256())
+		return false;
+	if(currentParenthash == hash)
+		return true;
+	const CChainParams& chainparams = Params();
+	std::vector<CBlockIndex*> ancestor;
+	if(!GetAncestorBlocksFromHash(hash,7,ancestor)){
+		return false;
+	}
+	CBlock block;
+	CBlockIndex* pBlockIndex;
+	CBlockHeader blockheader;
+	for(std::vector<CBlockIndex*>::iterator it = ancestor.begin(); it != ancestor.end(); ++it){
+		pBlockIndex = *it;
+		ReadBlockFromDisk(block, pBlockIndex, chainparams.GetConsensus());
+		for(std::vector<CBlockHeader>::iterator bi = block.vuh.begin(); bi != block.vuh.end(); ++bi){
+			blockheader = *bi;
+			setCurrentFamily.insert(blockheader.GetHash());
+		}
+		setCurrentFamily.insert(block.GetHash());
+		setCurrentAncestor.insert(block.GetHash());
+	}	
+	currentParenthash = hash;
+	return true;
+}
+
+bool CommitUncle(CBlockHeader uncle)
+{	
+	LOCK(cs_main);
+	LogPrintf("CommitUncle \n");
+	uint256 hash = uncle.GetHash();
+	if(setCurrentUncle.count(hash) != 0){
+		return false;
+	}
+	if(setCurrentAncestor.count(uncle.hashPrevBlock) ==0){
+		return false;
+	}
+	if(setCurrentFamily.count(hash) !=0){
+		return false;
+	}
+	setCurrentUncle.insert(hash);
+	return true;
+	
+}
+
+void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
+{	
+	LOCK(cs_main);
+	LogPrintf("FindBlockUncles in \n");
+	if(parenthash == uint256()){
+		LogPrintf("FindBlockUncles out 1 \n");
+		//std::cout<<"parenthash == uint256()"<<endl;
+		return;
+	}
+	
+	if(parenthash == currentParenthash){
+		LogPrintf("FindBlockUncles out 2 \n");
+		//std::cout<<"parenthash == currentParenthash"<<endl;
+		for(BlockSetGho::iterator it = setCurrentUncle.begin(); it != setCurrentUncle.end(); ++it){
+			BlockMapGho::iterator mi = mapPossibleUncles.find(*it);
+			vuncles.push_back((*mi).second);	
+		}
+		return;
+	} else{
+		setCurrentAncestor.clear();
+		setCurrentUncle.clear();
+		setCurrentFamily.clear();
+	}
+	
+
+	if(!MakeCurrentCycle(parenthash)){
+		LogPrintf("FindBlockUncles out 3 \n");
+		//std::cout<<"!MakeCurrentCycle(parenthash"<<endl;
+		return;
+	}	
+
+	CBlock block;
+	CBlockHeader blockheader;
+	std::vector<uint256> badUncles;
+	//std::vector<CBlockHeader> goodUncles;
+	for(BlockMapGho::iterator it= mapPossibleUncles.begin(); it != mapPossibleUncles.end(); ++it){
+		if(vuncles.size() == 2){
+			break;
+		}
+		block = (*it).second;
+		blockheader = block.GetBlockHeader();
+		if(CommitUncle(blockheader)){
+			vuncles.push_back(block);
+		} else{
+			badUncles.push_back(blockheader.GetHash());
+		}
+	}
+
+	//std::cout<<"findblockuncle vunces size"<<vuncles.size()<<endl;
+	//std::cout<<"findblockuncle baduncles size "<<badUncles.size()<<endl;
+	
+	for(std::vector<uint256>::iterator it = badUncles.begin(); it != badUncles.end(); ++it){
+		BlockMapGho::iterator mi = mapPossibleUncles.find(*it);
+		mapPossibleUncles.erase(mi);
+	}
+	LogPrintf("FindBlockUncles mapPossibleUncles size %d\n",mapPossibleUncles.size());
+	//std::cout<<"findblockuncle parenthash "<<parenthash.ToString()<<endl;
+	//std::cout<<"findblockuncle curentrparenthash "<<currentParenthash.ToString()<<endl;
+	LogPrintf("FindBlockUncles out 4 \n");
+	return;
+}
+
+
+
+
+/*popchain ghost*/
+
+
 /**
  * Threshold condition checker that triggers when unknown versionbits are seen on the network.
  */
@@ -3500,9 +3657,31 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
 
     // Disconnect active blocks which are no longer in the best chain.
     bool fBlocksDisconnected = false;
+	/*popchain ghost*/
+	uint256 possibleBlockHash;
+	CBlock possibleBlock;
+	CBlockIndex *pindexPossibleBlock;
+	/*popchain ghost*/
     while (chainActive.Tip() && chainActive.Tip() != pindexFork) {
+		/*popchain ghost*/
+		if(GetBoolArg("-gen", false)){
+			pindexPossibleBlock = chainActive.Tip();
+		}
+		/*popchain ghost*/
         if (!DisconnectTip(state, chainparams.GetConsensus()))
             return false;
+		/*popchain ghost*/
+		if(GetBoolArg("-gen", false)){
+			possibleBlockHash = pindexPossibleBlock->GetBlockHash();
+			ReadBlockFromDisk(possibleBlock, pindexPossibleBlock, chainparams.GetConsensus());
+			mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
+			std::cout<<"ActivateBestChainStep add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+			std::cout<<"ActivateBestChainStep add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+			std::cout<<"ActivateBestChainStep add in activatebestchainstep , generate state : "<<GetBoolArg("-gen", false)<<std::endl;
+			std::cout<<"ActivateBestChainStep after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+			LogPrintf("ActivateBestChainStep possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
+		}
+		/*popchain ghost*/
         fBlocksDisconnected = true;
     }
 
@@ -3585,8 +3764,22 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             pindexMostWork = FindMostWorkChain();   //popchain ghost
 
             // Whether we have anything to do at all.
-            if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip())
-                return true;
+            /*popchain ghost*/
+            if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip()){
+				if(GetBoolArg("-gen", false)){
+					CBlock possibleBlock = *pblock;
+					uint256 possibleBlockHash = possibleBlock.GetHash();
+					mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
+					std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+					std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+					std::cout<<"ActivateBestChain add in activatebestchain , generate state : "<<GetBoolArg("-gen", false)<<std::endl;
+					std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+					LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
+				}
+				return true;
+			}
+			/*popchain ghost*/
+                
 
             if (!ActivateBestChainStep(state, chainparams, pindexMostWork, pblock && pblock->GetHash() == pindexMostWork->GetBlockHash() ? pblock : NULL))
                 return false;
@@ -3956,6 +4149,17 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 	if(true){
 		uint256 hashUncleRoot = BlockUncleRoot(block);
 		if(block.hashUncles != hashUncleRoot){
+			/*popchain ghost*/
+			std::cout<<"bad-uncleshash block.hashUncles: "<<block.hashUncles.ToString()<<endl;
+			std::cout<<"bad-uncleshash hashUncleRoot: "<<hashUncleRoot.ToString()<<endl;
+			std::cout<<"bad-uncleshash block.vuh.size(): "<<block.vuh.size()<<endl;
+			CBlock dBlock = block;
+			for(std::vector<CBlockHeader>::iterator it = dBlock.vuh.begin(); it != dBlock.vuh.end(); ++it){
+				CBlockHeader blockheader = *it;
+				std::cout<<" bad-uncleshash block.vuh[]: "<<blockheader.ToString()<<endl;
+				
+			}
+			/*popchain ghost*/
 			return state.DoS(100, error("CheckBlock(): hashUncles mismatch"),
                              REJECT_INVALID, "bad-uncleshash", true);
 		}
@@ -4348,6 +4552,13 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, c
         return error("%s: ActivateBestChain failed", __func__);
 
     popnodeSync.IsBlockchainSynced(true);
+	/*popchain ghost*/
+	if(pblock->hashUncles != uint256()){
+		CBlock blockhasuncle = *pblock;
+		std::cout<<"ProcessNewBlock block have uncles: "<<blockhasuncle.ToString()<<endl;
+		LogPrintf("%s :block %s has uncle \n", __func__,blockhasuncle.ToString());
+	}
+	/*popchain ghost*/
 
     LogPrintf("%s : ACCEPTED\n", __func__);
     return true;

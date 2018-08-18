@@ -138,6 +138,13 @@ typedef boost::unordered_map<uint256, CBlockIndex*, BlockHasher> BlockMap;
 extern BlockMap mapBlockIndex;
 /*popchain ghost*/
 
+typedef std::map<uint256, CBlock> BlockMapGho;
+extern BlockMapGho mapPossibleUncles;
+extern uint256 currentParenthash;
+typedef std::set<uint256> BlockSetGho;
+extern BlockSetGho setCurrentAncestor;
+extern BlockSetGho setCurrentUncle;
+extern BlockSetGho setCurrentFamily;
 
 
 //5min
@@ -1043,6 +1050,21 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
  * Fills hashRet with found hash, if no nBlockHeight is specified - chainActive.Height() is used.
  */
 bool GetBlockHash(uint256& hashRet, int nBlockHeight = -1);
+
+/*popchain ghost*/
+bool GetBlockNumber(uint256 hash, uint32_t* number);
+bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vCbi);
+bool MakeCurrentCycle(uint256 hash);
+bool CommitUncle(CBlockHeader uncle);
+void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles);
+
+
+
+
+
+
+/*popchain ghost*/
+
 
 /** Reject codes greater or equal to this can be returned by AcceptToMemPool
  * for transactions, to signal internal conditions. They cannot and should not
