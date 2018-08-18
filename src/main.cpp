@@ -4042,7 +4042,8 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 	/*popchain ghost*/
 			   
     // Check proof of work
-    if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    if (block.nDifficulty != calculateDifficulty(pindexPrev, &block, consensusParams))
     {
         std::cout<<"just for test"<<std::endl;
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
