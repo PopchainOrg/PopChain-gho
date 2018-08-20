@@ -372,7 +372,7 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
 
 UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() != 0 || 1)
+    if (fHelp || (params.size() != 0 || 1))
         throw runtime_error(
             "gettotaldifficulty index\n"
             "\nReturns total difficulty of block in best-block-chain at index provided or tip.\n"
@@ -381,8 +381,8 @@ UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
             "\nResult:\n"
             "\"total difficulty\"         (string) The block total difficulty\n"
             "\nExamples:\n"
-            + HelpExampleCli("gettotaldifficulty", "")
-            + HelpExampleRpc("gettotaldifficulty", "")
+            + HelpExampleCli("gettotaldifficulty", "1000")
+            + HelpExampleRpc("gettotaldifficulty", "1000")
         );
 
     LOCK(cs_main);
