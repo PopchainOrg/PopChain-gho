@@ -618,6 +618,97 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 }
 
 
+UniValue getalluncleblockheader(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() < 1 || params.size() > 2)
+        throw runtime_error(
+            "getblock \"hash\" ( verbose )\n"
+            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
+            "If verbose is true, returns an Object with information about block <hash>.\n"
+            "\nArguments:\n"
+            "1. \"hash\"          (string, required) The block hash\n"
+            "2. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
+            "\nResult (for verbose = true):\n"
+            "{\n"
+            "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
+            "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
+            "  \"size\" : n,            (numeric) The block size\n"
+            "  \"height\" : n,          (numeric) The block height or index\n"
+            "  \"version\" : n,         (numeric) The block version\n"
+            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
+            "  \"nameclaimroot\" : \"xxxx\",  (string) The hash of the root of the name claim trie\n"
+            "  \"tx\" : [               (array of string) The transaction ids\n"
+            "     \"transactionid\"     (string) The transaction id\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"nonce\" : n,           (numeric) The nonce\n"
+            "  \"bits\" : \"1d00ffff\", (string) The bits\n"
+            "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
+            "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
+            "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
+            "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
+            "}\n"
+            "\nResult (for verbose=false):\n"
+            "\"data\"             (string) A string that is serialized, hex-encoded data for block 'hash'.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getblock", "\"00000000000fd08c2fb661d2fcb0d49abb3a91e5f27082ce64feed3b4dede2e2\"")
+            + HelpExampleRpc("getblock", "\"00000000000fd08c2fb661d2fcb0d49abb3a91e5f27082ce64feed3b4dede2e2\"")
+        );
+
+    LOCK(cs_main);
+
+    std::string strHash = params[0].get_str();
+    uint256 hash(uint256S(strHash));
+
+    bool fVerbose = true;
+    if (params.size() > 1)
+        fVerbose = params[1].get_bool();
+
+	UniValue result(UniValue::VOBJ);
+	
+	const CChainParams& chainparams = Params();
+	//std::vector<CBlockIndex*> containUncleBlockIndex;
+	bool bGetUncle = false;
+	UniValue ucb(UniValue::VARR);
+	int uncleCount =0;
+	for(BlockMap::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi){
+		CBlockIndex* blockindex = (*mi).second;	
+		if(blockindex->hashUncles == uint256()){
+			continue;
+		}
+		LogPrintf("block contain uncle: %s\n",blockindex->GetBlockHash().ToString());
+
+		CBlock block;
+		if(!ReadBlockFromDisk(block, blockindex, chainparams.GetConsensus())){
+			LogPrintf("uncleheader : OpenBlockFile failed  for %s \n",blockindex->GetBlockHash().ToString());
+			/*
+			LogPrintf("blockhash: %s,pprev: %s,nHeight: %d,nFile: %d,nDataPos: %d,nUndoPos: %d,nChainWork: %s,nTx: %d,nChainTx: %d,nStatus: %d \n",\
+				blockindex->GetBlockHash().ToString(),\
+				blockindex->pprev->GetBlockHash().ToString(),blockindex->nHeight,\
+				blockindex->nFile,blockindex->nDataPos,blockindex->nUndoPos,\
+				blockindex->nChainWork.ToString(),blockindex->nTx,blockindex->nChainTx,\
+				blockindex->nStatus);
+				*/
+		} else{
+			//LogPrintf("uncleheader : OpenBlockFile success for %s \n",blockindex->GetBlockHash().ToString());
+		}
+		std::vector<CBlockHeader> vuh = block.vuh;
+		for(std::vector<CBlockHeader>::iterator bi = vuh.begin(); bi != vuh.end(); ++bi){
+			LogPrintf("uncleheader : %s \n",(*bi).ToString());
+			//result.push_back(Pair("uncle", (*bi).ToString()));
+			uncleCount++;
+
+			
+		}
+	}
+	result.push_back(Pair("unclesize",uncleCount));
+
+    return result;
+}
+
+
 /*popchain ghost*/
 
 UniValue getblock(const UniValue& params, bool fHelp)

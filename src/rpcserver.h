@@ -287,6 +287,8 @@ extern UniValue getblockheader(const UniValue& params, bool fHelp);
 extern UniValue getblockheaders(const UniValue& params, bool fHelp);
 /*popchain ghost*/
 extern UniValue getuncleblockheader(const UniValue& params, bool fHelp);
+extern UniValue getalluncleblockheader(const UniValue& params, bool fHelp);
+
 
 /*popchain ghost*/
 extern UniValue getblock(const UniValue& params, bool fHelp);
