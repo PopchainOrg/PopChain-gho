@@ -123,6 +123,15 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
             txs.push_back(tx.GetHash().GetHex());
     }
     result.push_back(Pair("tx", txs));
+	/*popchain ghost*/
+	UniValue uhs(UniValue::VARR);
+	BOOST_FOREACH(const CBlockHeader&uh, block.vuh)
+	{
+		//UniValue objUh(UniValue::VOBJ);
+		uhs.push_back(uh.GetHash().GetHex());
+	}
+	result.push_back(Pair("uh",uhs));
+	/*popchain ghost*/
     result.push_back(Pair("time", block.GetBlockTime()));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("nonce", block.nNonce.GetHex()));
