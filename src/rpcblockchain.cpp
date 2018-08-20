@@ -372,7 +372,7 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
 
 UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() != 0 || params.size() != 1)
+    if (fHelp || (params.size() != 0 && params.size() != 1))
         throw runtime_error(
             "gettotaldifficulty index\n"
             "\nReturns total difficulty of block in best-block-chain at index provided or tip.\n"
@@ -385,7 +385,6 @@ UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
             + HelpExampleRpc("gettotaldifficulty", "1000")
         );
 
-    std::cout<<"2"<<std::endl;
     LOCK(cs_main);
 
     CBlockIndex* pblockindex;
@@ -398,7 +397,6 @@ UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
     else {
         pblockindex = chainActive.Tip();
     }
-    std::cout<<"3"<<std::endl;
     return pblockindex->nChainWork.ToString();
 }
 
