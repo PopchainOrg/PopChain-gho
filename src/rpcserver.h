@@ -285,6 +285,10 @@ extern UniValue getblockhashes(const UniValue& params, bool fHelp);
 extern UniValue getblockhash(const UniValue& params, bool fHelp);
 extern UniValue getblockheader(const UniValue& params, bool fHelp);
 extern UniValue getblockheaders(const UniValue& params, bool fHelp);
+/*popchain ghost*/
+extern UniValue getuncleblockheader(const UniValue& params, bool fHelp);
+
+/*popchain ghost*/
 extern UniValue getblock(const UniValue& params, bool fHelp);
 extern UniValue gettxoutsetinfo(const UniValue& params, bool fHelp);
 extern UniValue gettxout(const UniValue& params, bool fHelp);
