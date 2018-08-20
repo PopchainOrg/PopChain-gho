@@ -349,15 +349,15 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getblockhash index\n"
-            "\nReturns hash of block in best-block-chain at index provided.\n"
+            "getblockdifficulty index\n"
+            "\nReturns difficulty of block in best-block-chain at index provided.\n"
             "\nArguments:\n"
             "1. index         (numeric, required) The block index\n"
             "\nResult:\n"
-            "\"hash\"         (string) The block hash\n"
+            "\"difficulty\"         (string) The block difficulty\n"
             "\nExamples:\n"
-            + HelpExampleCli("getblockhash", "1000")
-            + HelpExampleRpc("getblockhash", "1000")
+            + HelpExampleCli("getblockdifficulty", "1000")
+            + HelpExampleRpc("getblockdifficulty", "1000")
         );
 
     LOCK(cs_main);
@@ -367,7 +367,7 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
 
     CBlockIndex* pblockindex = chainActive[nHeight];
-    return "123456";
+    return GetDifficulty(pblockindex);
 }
 
 UniValue getblockheader(const UniValue& params, bool fHelp)
