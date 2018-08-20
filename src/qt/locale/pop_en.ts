@@ -4780,8 +4780,8 @@ for example: alertnotify=echo %%s | mail -s &quot;Pop Alert&quot; admin@foo.com
     </message>
     <message>
         <location line="+6"/>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 could be used only on mainnet)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 could be used only on mainnet)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5292,8 +5292,8 @@ for example: alertnotify=echo %%s | mail -s &quot;Pop Alert&quot; admin@foo.com
     </message>
     <message>
         <location line="-88"/>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(must be 9888 for mainnet)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(must be 2888 for mainnet)</translation>
     </message>
     <message>
         <location line="+13"/>

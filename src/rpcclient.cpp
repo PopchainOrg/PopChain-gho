@@ -50,6 +50,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getchaintips", 0 },
     { "getchaintips", 1 },
     { "getblockhash", 0 },
+    { "getblockdifficulty", 0 },
+    { "gettotaldifficulty", 0 },
     { "move", 2 },
     { "move", 3 },
     { "sendfrom", 2 },

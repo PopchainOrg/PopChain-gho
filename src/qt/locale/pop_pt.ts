@@ -3654,8 +3654,8 @@ https://www.transifex.com/projects/p/pop/</translation>
         <translation>Aviso: Por favor verifique que a data e a hora do computador está correcta! Se o relógio estiver errado o Pop Core não vai funcionar correctamente.</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 apenas pode ser usado para mainnet)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 apenas pode ser usado para mainnet)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4056,8 +4056,8 @@ https://www.transifex.com/projects/p/pop/</translation>
         <translation>popnodeprivkey inválida. Por favor reveja a documentação.</translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(deve ser 9888 para mainnet)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(deve ser 2888 para mainnet)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>

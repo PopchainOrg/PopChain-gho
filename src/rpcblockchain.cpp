@@ -355,6 +355,61 @@ UniValue getblockhash(const UniValue& params, bool fHelp)
     return pblockindex->GetBlockHash().GetHex();
 }
 
+UniValue getblockdifficulty(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "getblockdifficulty index\n"
+            "\nReturns difficulty of block in best-block-chain at index provided.\n"
+            "\nArguments:\n"
+            "1. index         (numeric, required) The block index\n"
+            "\nResult:\n"
+            "\"difficulty\"         (string) The block difficulty\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getblockdifficulty", "1000")
+            + HelpExampleRpc("getblockdifficulty", "1000")
+        );
+
+    LOCK(cs_main);
+
+    int nHeight = params[0].get_int();
+    if (nHeight < 0 || nHeight > chainActive.Height())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
+
+    CBlockIndex* pblockindex = chainActive[nHeight];
+    return GetDifficulty(pblockindex);
+}
+
+UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
+{
+    if (fHelp || (params.size() != 0 && params.size() != 1))
+        throw runtime_error(
+            "gettotaldifficulty index\n"
+            "\nReturns total difficulty of block in best-block-chain at index provided or tip.\n"
+            "\nArguments:\n"
+            "1. index         (numeric, optional, default=chainactive tip) The block index\n"
+            "\nResult:\n"
+            "\"total difficulty\"         (string) The block total difficulty\n"
+            "\nExamples:\n"
+            + HelpExampleCli("gettotaldifficulty", "1000")
+            + HelpExampleRpc("gettotaldifficulty", "1000")
+        );
+
+    LOCK(cs_main);
+
+    CBlockIndex* pblockindex;
+    if (params.size() == 1){
+        int nHeight = params[0].get_int();
+        if (nHeight < 0 || nHeight > chainActive.Height())
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
+        pblockindex = chainActive[nHeight];
+    }
+    else {
+        pblockindex = chainActive.Tip();
+    }
+    return pblockindex->nChainWork.ToString();
+}
+
 UniValue getblockheader(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)

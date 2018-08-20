@@ -229,7 +229,6 @@ public:
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
         consensus.nYolandaTime = 172800;
-      
 		/*popchain ghost*/
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -259,7 +258,7 @@ public:
         pchMessageStart[2] = 0x6f;
         pchMessageStart[3] = 0xb1;
 		vAlertPubKey = ParseHex("028efd0f3c697689f8f1f6744edbbc1f85871b8c51218ddd89d90a3e435d1a8691");
-        nDefaultPort = 9888;
+        nDefaultPort = 2888;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nPruneAfterHeight = 100000;
 		/*popchain ghost*/
@@ -362,7 +361,7 @@ public:
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
         consensus.nYolandaTime = 200;
-
+      
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
@@ -389,7 +388,7 @@ public:
         pchMessageStart[2] = 0xce;
         pchMessageStart[3] = 0xf3;
         vAlertPubKey = ParseHex("0244a0bb22e931bf59cc8a434d9d22bd2fa493f579bd2659bc9188361d78bdc45f");
-        nDefaultPort = 19888;
+        nDefaultPort = 12888;
         nMaxTipAge = 0x7fffffff; 		// allow mining on top of old blocks for testnet
         nPruneAfterHeight = 1000;
 	    /*popchain ghost*/

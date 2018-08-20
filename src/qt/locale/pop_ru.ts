@@ -3754,8 +3754,8 @@ rpcpassword=%s
         <translation>Пиры, внесенные в белый список, не будут подвергаться DoS блокировкам и их транзакции будут ретранслироваться, даже если они уже есть в пуле памяти, что полезно, например, для работы в качестве шлюза</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 можно использовать только в главной сети)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 можно использовать только в главной сети)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4164,8 +4164,8 @@ rpcpassword=%s
         <translation>Неправильное значение popnodeprivkey. Пожалуйста, ознакомьтесь с документацией.</translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(должно быть 9888 в главной сети)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(должно быть 2888 в главной сети)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>

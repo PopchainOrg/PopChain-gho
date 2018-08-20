@@ -3753,8 +3753,8 @@ napríklad: alertnotify=echo %%s | mail -s "Pop Upozornenie" admin@foo.com
         <translation>Uzle na zoznam povolených nemôžu byť DoS zakázané a ich transakcie vždy postúpené ďalej, aj v prípade, ak sú už pamäťovej fronte. Užitočné napr. pre brány</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 nemôže byť použité pre hlavnú sieť)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 nemôže byť použité pre hlavnú sieť)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4163,8 +4163,8 @@ napríklad: alertnotify=echo %%s | mail -s "Pop Upozornenie" admin@foo.com
         <translation>Neplatný popnodeprivkey. Prosím pozrite do dokumentácie.</translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(pre hlavnú sieť musí byť 9888)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(pre hlavnú sieť musí byť 2888)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>
