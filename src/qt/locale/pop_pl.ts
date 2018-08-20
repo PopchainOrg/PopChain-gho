@@ -3753,8 +3753,8 @@ Zaleca się również aby ustawić alarm powiadomień tzw. alertnotify, aby dać
         <translation>Peery z białej listy nie mogą zostać zbanowane a ich transakcje są zawsze retransmitowane, nawet jeśli już są w pamięci zbiorowej (mempool). Jest to przydatne np. dla bramek wyjściowych</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 może być użyte tylko dla głównej sieci)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 może być użyte tylko dla głównej sieci)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4163,8 +4163,8 @@ Zaleca się również aby ustawić alarm powiadomień tzw. alertnotify, aby dać
         <translation>Nieprawidłowy klucz prywatny popnoda. Przeczytaj dokumentację.</translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(musi być 9888 dla głównej sieci)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(musi być 2888 dla głównej sieci)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>

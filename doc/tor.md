@@ -52,11 +52,11 @@ reachable from the Tor network. Add these lines to your /etc/tor/torrc (or equiv
 config file):
 
 	HiddenServiceDir /var/lib/tor/popcore-service/
-	HiddenServicePort 9888 127.0.0.1:9888
-	HiddenServicePort 19888 127.0.0.1:19888
+        HiddenServicePort 2888 127.0.0.1:2888
+        HiddenServicePort 12888 127.0.0.1:12888
 
 The directory can be different of course, but (both) port numbers should be equal to
-your popd's P2P listen port (9888 by default).
+your popd's P2P listen port (2888 by default).
 
 	-externalip=X   You can tell Pop Core about its publicly reachable address using
 	                this option, and this can be a .onion address. Given the above
@@ -91,7 +91,7 @@ as well, use `discover` instead:
 
 	./popd ... -discover
 
-and open port 9888 on your firewall (or use -upnp).
+and open port 2888 on your firewall (or use -upnp).
 
 If you only want to use Tor to reach onion addresses, but not use it as a proxy
 for normal IPv4/IPv6 communication, use:

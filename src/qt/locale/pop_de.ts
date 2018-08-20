@@ -3753,8 +3753,8 @@ zum Beispiel: alertnotify=echo %%s | mail -s \"Pop Alert\" admin@foo.com</transl
         <translation>Erlaubte Gegenstellen können nicht wegen DoS ausgeschlossen werden und ihre Transaktionen werden immer weitergeleitet, sogar wenn sie schon im Memory-Pool sind. Dies ist z.B. für Gateways nützlich.</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 kann nur im Standardnetz benutzt werden)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 kann nur im Standardnetz benutzt werden)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4160,8 +4160,8 @@ Pop Core wird heruntergefahren.</translation>
         <translation>Popnode-Geheimschlüssel (popnodeprivkey) ist ungültig. Siehe Dokumentation. </translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(muss für Standardnetz 9888 sein)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(muss für Standardnetz 2888 sein)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>

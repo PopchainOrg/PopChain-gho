@@ -3761,8 +3761,8 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Pop Hälytys" admin@foo.com
         <translation>Luotettaviksi merkittyjä peers:ejä ei voida DoS estää, ja niiden siirtotapahtumat välitetään aina, vaikka ne olisvatkin jo muistivarannossa, käyttökelpoinen esim. yhdyskäytävään</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 voidaan käyttää vain pääverkossa)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 voidaan käyttää vain pääverkossa)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4171,8 +4171,8 @@ esimerkiksi: alertnotify=echo %%s | mail -s "Pop Hälytys" admin@foo.com
         <translation>Virheellinen popnoden yksityisavain (popnodeprivkey). Katso lisätietoja dokumentaatiosta.</translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(oltava 9888 pääverkossa)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(oltava 2888 pääverkossa)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>

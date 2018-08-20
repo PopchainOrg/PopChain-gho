@@ -3754,8 +3754,8 @@ ví dụ: alertnotify=echo %%s | mail -s "Pop Alert" admin@foo.com
         <translation>Cái điểm ngang hàng trong danh sách trắng không thể bị cấm DoS và các giao dịch của nó luôn được chuyển tiếp, thậm chí cả khi nó đã có trong mempool, hữu ích ví dụ như cho một cửa ngõ</translation>
     </message>
     <message>
-        <source>(9888 could be used only on mainnet)</source>
-        <translation>(9888 chỉ được sử dụng trên mạng chính thức)</translation>
+        <source>(2888 could be used only on mainnet)</source>
+        <translation>(2888 chỉ được sử dụng trên mạng chính thức)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4163,8 +4163,8 @@ ví dụ: alertnotify=echo %%s | mail -s "Pop Alert" admin@foo.com
         <translation>Popnodeprivkey không hợp lệ. Hãy xem lại tài liệu.</translation>
     </message>
     <message>
-        <source>(must be 9888 for mainnet)</source>
-        <translation>(phải là 9888 cho mạng chính thức)</translation>
+        <source>(must be 2888 for mainnet)</source>
+        <translation>(phải là 2888 cho mạng chính thức)</translation>
     </message>
     <message>
         <source>Can't find random Popnode.</source>

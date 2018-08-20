@@ -202,10 +202,10 @@ QT_TRANSLATE_NOOP("pop-core", ""
 QT_TRANSLATE_NOOP("pop-core", ""
 "You must specify a popnodeprivkey in the configuration. Please see "
 "documentation for help."),
-QT_TRANSLATE_NOOP("pop-core", "(9888 could be used only on mainnet)"),
+QT_TRANSLATE_NOOP("pop-core", "(2888 could be used only on mainnet)"),
 QT_TRANSLATE_NOOP("pop-core", "(default: %s)"),
 QT_TRANSLATE_NOOP("pop-core", "(default: 1)"),
-QT_TRANSLATE_NOOP("pop-core", "(must be 9888 for mainnet)"),
+QT_TRANSLATE_NOOP("pop-core", "(must be 2888 for mainnet)"),
 QT_TRANSLATE_NOOP("pop-core", "<category> can be:\n"),
 QT_TRANSLATE_NOOP("pop-core", "Accept command line and JSON-RPC commands"),
 QT_TRANSLATE_NOOP("pop-core", "Accept connections from outside (default: 1 if no -proxy or -connect)"),
