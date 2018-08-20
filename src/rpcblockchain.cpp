@@ -367,7 +367,7 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
 
     CBlockIndex* pblockindex = chainActive[nHeight];
-    return pblockindex->GetBlockHash().GetHex();
+    return GetDifficulty(pblockindex);
 }
 
 UniValue getblockheader(const UniValue& params, bool fHelp)
