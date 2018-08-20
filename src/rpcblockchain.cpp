@@ -389,9 +389,9 @@ UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
 
     CBlockIndex* pblockindex;
     if (params.size() == 1){
-        int nHeight = params[0].get_int();
-        if (nHeight < 0 || nHeight > chainActive.Height())
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
+//        int nHeight = params[0].get_int();
+//        if (nHeight < 0 || nHeight > chainActive.Height())
+//            throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
         pblockindex = chainActive[nHeight];
     }
     else {
