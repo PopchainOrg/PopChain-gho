@@ -370,6 +370,35 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
     return GetDifficulty(pblockindex);
 }
 
+UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0 || 1)
+        throw runtime_error(
+            "gettotaldifficulty index\n"
+            "\nReturns total difficulty of block in best-block-chain at index provided or tip.\n"
+            "\nArguments:\n"
+            "1. index         (numeric, optional, default=chainactive tip) The block index\n"
+            "\nResult:\n"
+            "\"total difficulty\"         (string) The block total difficulty\n"
+            "\nExamples:\n"
+            + HelpExampleCli("gettotaldifficulty", "")
+            + HelpExampleRpc("gettotaldifficulty", "")
+        );
+
+    LOCK(cs_main);
+
+    if (params.size() = 1){
+        int nHeight = params[0].get_int();
+        if (nHeight < 0 || nHeight > chainActive.Height())
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
+        CBlockIndex* pblockindex = chainActive[nHeight];
+    }
+    else {
+        CBlockIndex* pblockindex = chainActive.Tip();
+    }
+    return pblockindex->nChainWork.ToString();
+}
+
 UniValue getblockheader(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
