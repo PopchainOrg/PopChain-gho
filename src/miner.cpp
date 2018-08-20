@@ -461,6 +461,22 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
         /*popchain ghost*/
 
+		/*popchain ghost*/
+		std::vector<CBlock> unclesBlock;
+		FindBlockUncles(pblock->hashPrevBlock,unclesBlock);
+		CBlock uncleBlock;
+		int uncleCount = 0;
+		for(std::vector<CBlock>::iterator it = unclesBlock.begin();it != unclesBlock.end(); ++it){
+			uncleBlock = *it;
+			if(uncleCount < 2){
+				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
+			}
+			uncleCount++;
+		}
+
+		pblock->hashUncles = BlockUncleRoot(*pblock);
+		/*popchain ghost*/
+
         // Randomise nonce
         arith_uint256 nonce = UintToArith256(GetRandHash());
         // Clear the top and bottom 16 bits (for local use as thread flags and counters)
@@ -507,7 +523,7 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
     pblock->vtx[0] = txCoinbase;
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
 	/*popchain ghost*/
-	pblock->hashUncles = BlockUncleRoot(*pblock);
+	//pblock->hashUncles = BlockUncleRoot(*pblock);
 	/*popchain ghost*/
 }
 
