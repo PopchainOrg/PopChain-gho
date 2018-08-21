@@ -380,19 +380,19 @@ UniValue getblockdifficulty(const UniValue& params, bool fHelp)
     return GetDifficulty(pblockindex);
 }
 
-UniValue gettotaldifficulty(const UniValue& params, bool fHelp)
+UniValue getchainwork(const UniValue& params, bool fHelp)
 {
     if (fHelp || (params.size() != 0 && params.size() != 1))
         throw runtime_error(
-            "gettotaldifficulty index\n"
-            "\nReturns total difficulty of block in best-block-chain at index provided or tip.\n"
+            "getchainwork index\n"
+            "\nReturns chain work of block in best-block-chain at index provided or tip.\n"
             "\nArguments:\n"
             "1. index         (numeric, optional, default=chainactive tip) The block index\n"
             "\nResult:\n"
-            "\"total difficulty\"         (string) The block total difficulty\n"
+            "\"chain work\"         (string) The block total difficulty\n"
             "\nExamples:\n"
-            + HelpExampleCli("gettotaldifficulty", "1000")
-            + HelpExampleRpc("gettotaldifficulty", "1000")
+            + HelpExampleCli("getchainwork", "1000")
+            + HelpExampleRpc("getchainwork", "1000")
         );
 
     LOCK(cs_main);
