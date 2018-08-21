@@ -513,7 +513,7 @@ public:
         pchMessageStart[2] = 0xbb;
         pchMessageStart[3] = 0xd0;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
-        nDefaultPort = 29888;
+        nDefaultPort = 12888;
         nPruneAfterHeight = 1000;
 		/*popchain ghost*/
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
