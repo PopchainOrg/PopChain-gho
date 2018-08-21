@@ -446,8 +446,12 @@ int64_t GetArg(const std::string& strArg, int64_t nDefault)
 
 bool GetBoolArg(const std::string& strArg, bool fDefault)
 {
-    if (mapArgs.count(strArg))
+    if (mapArgs.count(strArg)){
+        std::cout <<"GetBoolArg : " << strArg << std::endl;
+        std::cout <<"Arg : " << mapArgs[strArg] << std::endl;
         return InterpretBool(mapArgs[strArg]);
+    }
+
     return fDefault;
 }
 
