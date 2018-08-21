@@ -131,7 +131,6 @@ namespace {
     {
         srand(time(NULL));
         float_t num = rand() % P / (float_t)P;
-        //std::cout<<"num:="<<num<<std::endl;
         return num;
     }
 
