@@ -279,7 +279,7 @@ static const CRPCCommand vRPCCommands[] =
     { "blockchain",         "getblockcount",          &getblockcount,          true  },
     /*popchain ghost*/
     { "blockchain",         "getuncleblockheader",    &getuncleblockheader,    true  },
-    { "blockchain",         "getalluncleblockheader", &getalluncleblockheader, true  },
+    { "blockchain",         "getalluncleblock",       &getalluncleblock,       true  },
     /*popchain ghost*/
     { "blockchain",         "getblock",               &getblock,               true  },
     { "blockchain",         "getblockhashes",         &getblockhashes,         true  },

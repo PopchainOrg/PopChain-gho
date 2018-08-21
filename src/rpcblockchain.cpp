@@ -96,7 +96,27 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     return result;
 }
 
-UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDetails = false)
+/*popchain ghost*/
+void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry)
+{
+    entry.push_back(Pair("hash", blockheader.GetHash().GetHex()));
+    entry.push_back(Pair("CURRENT_VERSION", blockheader.CURRENT_VERSION));
+    entry.push_back(Pair("nVersion", blockheader.nVersion));
+	entry.push_back(Pair("hashPrevBlock", blockheader.hashPrevBlock.GetHex()));
+	entry.push_back(Pair("hashUncles", blockheader.hashUncles.GetHex()));
+	entry.push_back(Pair("nCoinbase", blockheader.nCoinbase.GetHex()));
+	entry.push_back(Pair("nDifficulty", strprintf("%d", blockheader.nDifficulty)));
+	entry.push_back(Pair("nNumber", strprintf("%d", blockheader.nNumber)));
+	entry.push_back(Pair("hashMerkleRoot", blockheader.hashMerkleRoot.GetHex()));
+	entry.push_back(Pair("hashClaimTrie", blockheader.hashClaimTrie.GetHex()));
+	entry.push_back(Pair("nTime", strprintf("%d", blockheader.nTime)));
+	entry.push_back(Pair("nBits", strprintf("%08x", blockheader.nBits)));
+	entry.push_back(Pair("nNonce", blockheader.nNonce.GetHex()));
+}
+
+/*popchain ghost*/
+
+UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDetails = false, bool uhDetails = false)
 {
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("hash", block.GetHash().GetHex()));
@@ -108,6 +128,11 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
     result.push_back(Pair("height", blockindex->nHeight));
     result.push_back(Pair("version", block.nVersion));
+	/*popchain ghost*/
+	result.push_back(Pair("hashUncles",block.hashUncles.GetHex()));
+	result.push_back(Pair("coinbase",block.nCoinbase.GetHex()));
+	result.push_back(Pair("number",strprintf("%d", block.nNumber)));
+	/*popchain ghost*/
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
     result.push_back(Pair("nameclaimroot", block.hashClaimTrie.GetHex()));
     UniValue txs(UniValue::VARR);
@@ -125,16 +150,25 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("tx", txs));
 	/*popchain ghost*/
 	UniValue uhs(UniValue::VARR);
+	//uhDetails  =true;
 	BOOST_FOREACH(const CBlockHeader&uh, block.vuh)
 	{
 		//UniValue objUh(UniValue::VOBJ);
-		uhs.push_back(uh.GetHash().GetHex());
+		//uhs.push_back(uh.GetHash().GetHex());
 		//uhs.push_back(uh.ToString());
+		if(uhDetails){
+			UniValue objUh(UniValue::VOBJ);
+            uncleblockheaderToJSON(uh,objUh);
+            uhs.push_back(objUh);
+		} else{
+			uhs.push_back(uh.GetHash().GetHex());
+		}
 	}
 	result.push_back(Pair("uh",uhs));
 	/*popchain ghost*/
     result.push_back(Pair("time", block.GetBlockTime()));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
+	result.push_back(Pair("unclesize",block.vuh.size()));
     result.push_back(Pair("nonce", block.nNonce.GetHex()));
     result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
@@ -147,6 +181,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
         result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
     return result;
 }
+
 
 UniValue getblockcount(const UniValue& params, bool fHelp)
 {
@@ -559,19 +594,24 @@ UniValue getblockheaders(const UniValue& params, bool fHelp)
 }
 /*popchain ghost*/
 
+
+
 UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() < 1 || params.size() > 2)
+    if (fHelp || params.size() < 2 || params.size() > 3)
         throw runtime_error(
-            "getblock \"hash\" ( verbose )\n"
-            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
+            "getuncleblockheader \"hash\" hashuncle\" ( verbose )\n"
+            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block header 'hash'.\n"
             "If verbose is true, returns an Object with information about block <hash>.\n"
             "\nArguments:\n"
             "1. \"hash\"          (string, required) The block hash\n"
-            "2. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
+            "2. \"hashuncle\"     (string, required) The uncle block header hash\n"
+            "3. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
             "\nResult (for verbose = true):\n"
             "{\n"
-            "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
+            "  \"hash\" : \"hash\",     (string) the uncle block header hash (same as provided)\n"
+            "  \"CURRENT_VERSION\" : \"CURRENT_VERSION\",     (string) the uncle block header CURRENT_VERSION \n"
+            "  \"nVersion\" : \"nVersion\",     (string) the uncle block header nVersion \n"
             "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
             "  \"size\" : n,            (numeric) The block size\n"
             "  \"height\" : n,          (numeric) The block height or index\n"
@@ -580,6 +620,10 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
             "  \"nameclaimroot\" : \"xxxx\",  (string) The hash of the root of the name claim trie\n"
             "  \"tx\" : [               (array of string) The transaction ids\n"
             "     \"transactionid\"     (string) The transaction id\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"uh\" : [               (array of string) The uncle block header hash\n"
+            "     \"hash\"              (string) The block header hash\n"
             "     ,...\n"
             "  ],\n"
             "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
@@ -603,51 +647,15 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
     std::string strHash = params[0].get_str();
     uint256 hash(uint256S(strHash));
 
+	std::string strHashUncle = params[1].get_str();
+	uint256 hashuncle(uint256S(strHashUncle));
+
     bool fVerbose = true;
-    if (params.size() > 1)
-        fVerbose = params[1].get_bool();
+    if (params.size() > 2)
+        fVerbose = params[2].get_bool();
 
 	UniValue result(UniValue::VOBJ);
-	
-	const CChainParams& chainparams = Params();
-	//std::vector<CBlockIndex*> containUncleBlockIndex;
-	bool bGetUncle = false;
-	UniValue ucb(UniValue::VARR);
-	for(BlockMap::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi){
-		CBlockIndex* blockindex = (*mi).second;	
-		if(blockindex->hashUncles == uint256()){
-			continue;
-		}
 
-		CBlock block;
-		if(!ReadBlockFromDisk(block, blockindex, chainparams.GetConsensus())){
-			LogPrintf("getuncleblockheader : OpenBlockFile failed for %s ,BlockStatus %d \n",blockindex->GetBlockHash().ToString(),\
-				blockindex->nStatus);
-			LogPrintf("blockhash: %s,pprev: %s,nHeight: %d,nFile: %d,nDataPos: %d,nUndoPos: %d,nChainWork: %s,nTx: %d,nChainTx: %d,nStatus: %d \n",\
-				blockindex->GetBlockHash().ToString(),\
-				blockindex->pprev->GetBlockHash().ToString(),blockindex->nHeight,\
-				blockindex->nFile,blockindex->nDataPos,blockindex->nUndoPos,\
-				blockindex->nChainWork.ToString(),blockindex->nTx,blockindex->nChainTx,\
-				blockindex->nStatus);
-		} else{
-			//LogPrintf("getuncleblockheader : OpenBlockFile successfor %s ,BlockStatus %d \n",blockindex->GetBlockHash().ToString(),\
-			//	blockindex->nStatus);
-		}
-		std::vector<CBlockHeader> vuh = block.vuh;
-		for(std::vector<CBlockHeader>::iterator bi = vuh.begin(); bi != vuh.end(); ++bi){
-			if(hash == (*bi).GetHash()){
-				ucb.push_back(block.GetHash().GetHex());
-				if(!bGetUncle){
-					result.push_back(Pair("uncle", (*bi).ToString()));
-					bGetUncle = true;
-				}
-			}
-		}
-	}
-	result.push_back(Pair("block contain uncle give",ucb));
-
-	
-/*
     if (mapBlockIndex.count(hash) == 0)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
 
@@ -660,22 +668,44 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
     if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
 
+	bool bGetUncle = false;
+	UniValue objUh(UniValue::VOBJ);
+	std::vector<CBlockHeader> vuh = block.vuh;
+	CBlockHeader blockheader;
+	
+	for(std::vector<CBlockHeader>::iterator bi = vuh.begin(); bi != vuh.end(); ++bi){
+		blockheader = (*bi);
+		//std::cout<<"hashuncle: "<<hashuncle.ToString()<<endl;
+		//std::cout<<"blockheader.GetHash(): "<<blockheader.GetHash().ToString()<<endl;
+		if(hashuncle == blockheader.GetHash()){
+			bGetUncle = true;
+			const CBlockHeader& cblockheader = (*bi);
+            uncleblockheaderToJSON(cblockheader,objUh);
+		}
+	}
+	
+
+	if(!bGetUncle){
+		throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Uncle block header not found");
+	}
+
     if (!fVerbose)
     {
         CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
-        ssBlock << block;
+        ssBlock << blockheader;
         std::string strHex = HexStr(ssBlock.begin(), ssBlock.end());
         return strHex;
     }
-*/
-    return result;
-    //return blockToJSON(block, pblockindex);
+	
+	//result.push_back(Pair("uh",objUh));
+    //return result;
+    return objUh;
 }
 
 
-UniValue getalluncleblockheader(const UniValue& params, bool fHelp)
+UniValue getalluncleblock(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() < 1 || params.size() > 2)
+    if (fHelp || params.size() != 0)
         throw runtime_error(
             "getblock \"hash\" ( verbose )\n"
             "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
@@ -714,51 +744,24 @@ UniValue getalluncleblockheader(const UniValue& params, bool fHelp)
 
     LOCK(cs_main);
 
-    std::string strHash = params[0].get_str();
-    uint256 hash(uint256S(strHash));
-
-    bool fVerbose = true;
-    if (params.size() > 1)
-        fVerbose = params[1].get_bool();
-
 	UniValue result(UniValue::VOBJ);
 	
 	const CChainParams& chainparams = Params();
 	//std::vector<CBlockIndex*> containUncleBlockIndex;
 	bool bGetUncle = false;
-	UniValue ucb(UniValue::VARR);
-	int uncleCount =0;
+	//UniValue ucb(UniValue::VARR);
+	//int uncleCount =0;
+	int blockcount = 0;
 	for(BlockMap::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi){
 		CBlockIndex* blockindex = (*mi).second;	
 		if(blockindex->hashUncles == uint256()){
 			continue;
 		}
-		LogPrintf("block contain uncle: %s\n",blockindex->GetBlockHash().ToString());
-
-		CBlock block;
-		if(!ReadBlockFromDisk(block, blockindex, chainparams.GetConsensus())){
-			LogPrintf("uncleheader : OpenBlockFile failed  for %s \n",blockindex->GetBlockHash().ToString());
-			/*
-			LogPrintf("blockhash: %s,pprev: %s,nHeight: %d,nFile: %d,nDataPos: %d,nUndoPos: %d,nChainWork: %s,nTx: %d,nChainTx: %d,nStatus: %d \n",\
-				blockindex->GetBlockHash().ToString(),\
-				blockindex->pprev->GetBlockHash().ToString(),blockindex->nHeight,\
-				blockindex->nFile,blockindex->nDataPos,blockindex->nUndoPos,\
-				blockindex->nChainWork.ToString(),blockindex->nTx,blockindex->nChainTx,\
-				blockindex->nStatus);
-				*/
-		} else{
-			//LogPrintf("uncleheader : OpenBlockFile success for %s \n",blockindex->GetBlockHash().ToString());
-		}
-		std::vector<CBlockHeader> vuh = block.vuh;
-		for(std::vector<CBlockHeader>::iterator bi = vuh.begin(); bi != vuh.end(); ++bi){
-			LogPrintf("uncleheader : %s \n",(*bi).ToString());
-			//result.push_back(Pair("uncle", (*bi).ToString()));
-			uncleCount++;
-
-			
-		}
+		//LogPrintf("block contain uncle: %s\n",blockindex->GetBlockHash().ToString());
+		result.push_back(Pair("blockcotainuncle", blockindex->GetBlockHash().ToString()));
+		blockcount++;
 	}
-	result.push_back(Pair("unclesize",uncleCount));
+	result.push_back(Pair("blockcount",blockcount));
 
     return result;
 }
