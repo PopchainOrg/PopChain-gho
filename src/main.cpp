@@ -3673,9 +3673,9 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
                 possibleBlockHash = pindexPossibleBlock->GetBlockHash();
                 ReadBlockFromDisk(possibleBlock, pindexPossibleBlock, chainparams.GetConsensus());
                 mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
-                std::cout<<"ActivateBestChainStep add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
-                std::cout<<"ActivateBestChainStep add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
-                std::cout<<"ActivateBestChainStep after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+//                std::cout<<"ActivateBestChainStep add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+//                std::cout<<"ActivateBestChainStep add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+//                std::cout<<"ActivateBestChainStep after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
                 LogPrintf("ActivateBestChainStep possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
 		}
 		/*popchain ghost*/
@@ -3768,9 +3768,9 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
                         uint256 possibleBlockHash = possibleBlock.GetHash();
                         mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
                          //mapPossibleUncles.insert(std::make_pair(pblock->GetHash(),*pblock));
-                        std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
-                        std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
-                        std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+//                        std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+//                        std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+//                        std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
                         LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
                     }
 				return true;
