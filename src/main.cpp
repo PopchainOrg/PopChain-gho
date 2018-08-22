@@ -3769,13 +3769,14 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip()){
                 if(mapArgs.count("-gen")){
                     if (mapArgs["-gen"] == "1"){
-                        CBlock possibleBlock = *pblock;
-                        uint256 possibleBlockHash = possibleBlock.GetHash();
-                        mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
-                        std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
-                        std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
-                        std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
-                        LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
+                        //CBlock *possibleBlock = pblock;
+                        //uint256 possibleBlockHash = possibleBlock.GetHash();
+                        //mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
+                         mapPossibleUncles.insert(std::make_pair(pblock->GetHash(),*pblock));
+                        //std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+                        //std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+                        //std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+                        //LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
                     }
 				}
 				return true;
