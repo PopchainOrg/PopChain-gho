@@ -3664,7 +3664,7 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
     while (chainActive.Tip() && chainActive.Tip() != pindexFork) {
 		/*popchain ghost*/
         if(mapArgs.count("-gen")){
-            if (mapArgs["-gen"])
+            if (mapArgs["-gen"] == "1")
                 pindexPossibleBlock = chainActive.Tip();
 		}
 		/*popchain ghost*/
@@ -3672,7 +3672,7 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
             return false;
 		/*popchain ghost*/
         if(mapArgs.count("-gen")){
-            if (mapArgs["-gen"]){
+            if (mapArgs["-gen"] == "1"){
                 possibleBlockHash = pindexPossibleBlock->GetBlockHash();
                 ReadBlockFromDisk(possibleBlock, pindexPossibleBlock, chainparams.GetConsensus());
                 mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
@@ -3768,7 +3768,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             /*popchain ghost*/
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip()){
                 if(mapArgs.count("-gen")){
-                    if (mapArgs["-gen"]){
+                    if (mapArgs["-gen"] == "1"){
                         CBlock possibleBlock = *pblock;
                         uint256 possibleBlockHash = possibleBlock.GetHash();
                         mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
