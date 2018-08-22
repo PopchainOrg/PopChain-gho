@@ -3663,16 +3663,13 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
 	/*popchain ghost*/
     while (chainActive.Tip() && chainActive.Tip() != pindexFork) {
 		/*popchain ghost*/
-        if(mapArgs.count("-gen")){
-            if (mapArgs["-gen"] == "1")
-                pindexPossibleBlock = chainActive.Tip();
-		}
+        if (GetBoolArg("-gen", false) && pblock != NULL)
+             pindexPossibleBlock = chainActive.Tip();
 		/*popchain ghost*/
         if (!DisconnectTip(state, chainparams.GetConsensus()))
             return false;
 		/*popchain ghost*/
-        if(mapArgs.count("-gen")){
-            if (mapArgs["-gen"] == "1"){
+        if (GetBoolArg("-gen", false) && pblock != NULL){
                 possibleBlockHash = pindexPossibleBlock->GetBlockHash();
                 ReadBlockFromDisk(possibleBlock, pindexPossibleBlock, chainparams.GetConsensus());
                 mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
@@ -3680,7 +3677,6 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
                 std::cout<<"ActivateBestChainStep add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
                 std::cout<<"ActivateBestChainStep after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
                 LogPrintf("ActivateBestChainStep possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
-            }
 		}
 		/*popchain ghost*/
         fBlocksDisconnected = true;
@@ -3767,16 +3763,15 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             // Whether we have anything to do at all.
             /*popchain ghost*/
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip()){
-                if(mapArgs.count("-gen")){
-                    if (mapArgs["-gen"] == "1"){
-                        //CBlock *possibleBlock = pblock;
-                        //uint256 possibleBlockHash = possibleBlock.GetHash();
-                        //mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
-                         mapPossibleUncles.insert(std::make_pair(pblock->GetHash(),*pblock));
-                        //std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
-                        //std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
-                        //std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
-                        //LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
+                if (GetBoolArg("-gen", false) && pblock != NULL){
+                        CBlock possibleBlock = *pblock;
+                        uint256 possibleBlockHash = possibleBlock.GetHash();
+                        mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
+                         //mapPossibleUncles.insert(std::make_pair(pblock->GetHash(),*pblock));
+                        std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
+                        std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
+                        std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
+                        LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
                     }
 				}
 				return true;
