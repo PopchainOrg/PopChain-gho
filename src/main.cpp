@@ -3773,7 +3773,6 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
                         std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
                         LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
                     }
-				}
 				return true;
 			}
 			/*popchain ghost*/
