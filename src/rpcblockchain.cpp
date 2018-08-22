@@ -609,37 +609,25 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
             "3. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
             "\nResult (for verbose = true):\n"
             "{\n"
-            "  \"hash\" : \"hash\",     (string) the uncle block header hash (same as provided)\n"
-            "  \"CURRENT_VERSION\" : \"CURRENT_VERSION\",     (string) the uncle block header CURRENT_VERSION \n"
-            "  \"nVersion\" : \"nVersion\",     (string) the uncle block header nVersion \n"
-            "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
-            "  \"size\" : n,            (numeric) The block size\n"
-            "  \"height\" : n,          (numeric) The block height or index\n"
-            "  \"version\" : n,         (numeric) The block version\n"
-            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
-            "  \"nameclaimroot\" : \"xxxx\",  (string) The hash of the root of the name claim trie\n"
-            "  \"tx\" : [               (array of string) The transaction ids\n"
-            "     \"transactionid\"     (string) The transaction id\n"
-            "     ,...\n"
-            "  ],\n"
-            "  \"uh\" : [               (array of string) The uncle block header hash\n"
-            "     \"hash\"              (string) The block header hash\n"
-            "     ,...\n"
-            "  ],\n"
-            "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
-            "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
-            "  \"nonce\" : n,           (numeric) The nonce\n"
-            "  \"bits\" : \"1d00ffff\", (string) The bits\n"
-            "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
-            "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
-            "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
-            "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
+            "  \"hash\" :            \"hash\",     (string) the uncle block header hash (same as provided)\n"
+            "  \"CURRENT_VERSION\" : n,            (numeric) the uncle block header CURRENT_VERSION \n"
+            "  \"nVersion\" :        n,            (numeric) the uncle block header nVersion \n"
+            "  \"hashPrevBlock\" :   \"hash\",     (string) the uncle block header hashPrevBlock \n"
+            "  \"hashUncles\" :      \"hash\",     (string) the uncle block header hashUncles \n"
+            "  \"nCoinbase\" :       \"hash\",     (string) the uncle block header nCoinbase \n"
+            "  \"nDifficulty\" :     n,            (numeric) the uncle block header nDifficulty \n"
+            "  \"nNumber\" :         n,            (numeric) the uncle block header nNumber \n"
+            "  \"hashMerkleRoot\" :  \"hash\",     (string) the uncle block header hashMerkleRoot \n"
+            "  \"hashClaimTrie\" :   \"hash\",     (string) the uncle block header hashClaimTrie \n"
+            "  \"nTime\" :           n,            (numeric) the uncle block header nTime \n"
+            "  \"nBits\" :           n,            (hex) the uncle block header nBits \n"
+            "  \"nNonce\" :          \"hash\",     (string) the uncle block header nNonce \n"
             "}\n"
             "\nResult (for verbose=false):\n"
-            "\"data\"             (string) A string that is serialized, hex-encoded data for block 'hash'.\n"
+            "\"data\"             (string) A string that is serialized, hex-encoded data for uncle block header 'hash'.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getblock", "\"00000000000fd08c2fb661d2fcb0d49abb3a91e5f27082ce64feed3b4dede2e2\"")
-            + HelpExampleRpc("getblock", "\"00000000000fd08c2fb661d2fcb0d49abb3a91e5f27082ce64feed3b4dede2e2\"")
+            + HelpExampleCli("getuncleblockheader", "\"0001c608305b44804b7345f3032242981958e860d4c03ae632e05c45615920a9\" 00010cfa2058317dc1b39e64d1cc790d61859e188b6a342ef5e5494cb7ae8e5f")
+            + HelpExampleRpc("getuncleblockheader", "\"0001c608305b44804b7345f3032242981958e860d4c03ae632e05c45615920a9\" 00010cfa2058317dc1b39e64d1cc790d61859e188b6a342ef5e5494cb7ae8e5f")
         );
 
     LOCK(cs_main);
@@ -705,64 +693,56 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 
 UniValue getalluncleblock(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() != 0)
+    if (fHelp || params.size() < 0 || params.size() > 1)
         throw runtime_error(
-            "getblock \"hash\" ( verbose )\n"
+            "getalluncleblock \n"
             "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
             "If verbose is true, returns an Object with information about block <hash>.\n"
             "\nArguments:\n"
-            "1. \"hash\"          (string, required) The block hash\n"
-            "2. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
-            "\nResult (for verbose = true):\n"
+            "1. fGetAll           (boolean, optional, default=true) true for get all block contain uncle, false for main chain block cotain uncle \n"
+            "\nResult :\n"
             "{\n"
-            "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
-            "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
-            "  \"size\" : n,            (numeric) The block size\n"
-            "  \"height\" : n,          (numeric) The block height or index\n"
-            "  \"version\" : n,         (numeric) The block version\n"
-            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
-            "  \"nameclaimroot\" : \"xxxx\",  (string) The hash of the root of the name claim trie\n"
-            "  \"tx\" : [               (array of string) The transaction ids\n"
-            "     \"transactionid\"     (string) The transaction id\n"
-            "     ,...\n"
-            "  ],\n"
-            "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
-            "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
-            "  \"nonce\" : n,           (numeric) The nonce\n"
-            "  \"bits\" : \"1d00ffff\", (string) The bits\n"
-            "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
-            "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
-            "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
-            "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
+            "  \"blockcotainuncle\" : \"hash\",     (string) the block hash\n"
             "}\n"
-            "\nResult (for verbose=false):\n"
-            "\"data\"             (string) A string that is serialized, hex-encoded data for block 'hash'.\n"
             "\nExamples:\n"
-            + HelpExampleCli("getblock", "\"00000000000fd08c2fb661d2fcb0d49abb3a91e5f27082ce64feed3b4dede2e2\"")
-            + HelpExampleRpc("getblock", "\"00000000000fd08c2fb661d2fcb0d49abb3a91e5f27082ce64feed3b4dede2e2\"")
+            + HelpExampleCli("getalluncleblock", "")
+            + HelpExampleRpc("getalluncleblock", "")
         );
 
     LOCK(cs_main);
-
-	UniValue result(UniValue::VOBJ);
 	
-	const CChainParams& chainparams = Params();
-	//std::vector<CBlockIndex*> containUncleBlockIndex;
-	bool bGetUncle = false;
-	//UniValue ucb(UniValue::VARR);
-	//int uncleCount =0;
+	UniValue result(UniValue::VOBJ);
+	bool fGetAll = true;
+    if (params.size() > 0)
+        fGetAll = params[0].get_bool();
+	
 	int blockcount = 0;
-	for(BlockMap::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi){
-		CBlockIndex* blockindex = (*mi).second;	
-		if(blockindex->hashUncles == uint256()){
-			continue;
+	CBlockIndex* blockindex;
+	if(fGetAll){
+		for(BlockMap::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi){
+			blockindex = (*mi).second;	
+			if(blockindex->hashUncles == uint256()){
+				continue;
+			}
+			result.push_back(Pair("blockcotainuncle", blockindex->GetBlockHash().ToString()));
+			blockcount++;
 		}
-		//LogPrintf("block contain uncle: %s\n",blockindex->GetBlockHash().ToString());
-		result.push_back(Pair("blockcotainuncle", blockindex->GetBlockHash().ToString()));
-		blockcount++;
+	} else{
+		blockindex = chainActive.Genesis();
+		do{
+			blockindex = chainActive.Next(blockindex);
+			
+			if(blockindex->hashUncles == uint256()){
+				continue;
+			}
+			//std::cout<<blockcount<<":"<<blockindex->GetBlockHash().ToString()<<endl;
+			result.push_back(Pair("blockcotainuncle", blockindex->GetBlockHash().ToString()));
+			blockcount++;
+		}while(blockindex != chainActive.Tip());
 	}
+	
 	result.push_back(Pair("blockcount",blockcount));
-
+	
     return result;
 }
 
@@ -786,14 +766,15 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"size\" : n,            (numeric) The block size\n"
             "  \"height\" : n,          (numeric) The block height or index\n"
             "  \"version\" : n,         (numeric) The block version\n"
-            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
-            "  \"nameclaimroot\" : \"xxxx\",  (string) The hash of the root of the name claim trie\n"
+            "  \"merkleroot\" : \"hash\", (string) The merkle root\n"
+            "  \"nameclaimroot\" : \"hash\",  (string) The hash of the root of the name claim trie\n"
             "  \"tx\" : [               (array of string) The transaction ids\n"
             "     \"transactionid\"     (string) The transaction id\n"
             "     ,...\n"
             "  ],\n"
             "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
             "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"unclesize\" : n,       (numeric) The size of block uncle header\n"
             "  \"nonce\" : n,           (numeric) The nonce\n"
             "  \"bits\" : \"1d00ffff\", (string) The bits\n"
             "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
