@@ -34,7 +34,7 @@ uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlockHeader *pblo
     if (pindex->nHeight < params.nYolandaTime){
         if (timestampDiff < 15) difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyRapidFitDivisor;
         else difficulty = pindex->nDifficulty - pindex->nDifficulty / params.difficultyRapidFitDivisor;
-        //std::cout<<"AStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
+        std::cout<<"AStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
     } else {
         int64_t const adjFactor = std::max((pindex->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
         difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyBoundDivisor * adjFactor;
