@@ -270,7 +270,6 @@ public:
         arith_uint256 a("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938aL");
 		/*popchain ghost*/
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
-		//std::cout << "\tpow:\t" << a.GetCompact()  << " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
         //findGenesis(&genesis, "main");
 #endif
@@ -401,7 +400,6 @@ public:
         arith_uint256 a("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 		/*popchain ghost*/
         std::cout << "pow limit : " << a.GetCompact()<< " "<< nTempBit.GetCompact() << std::endl;
-		//std::cout << "pow limit : " << a.GetCompact()<< " "<< ArithToUint256(a) << std::endl;
 		/*popchain ghost*/
         //findGenesis(&genesis, "testnet");
 #endif
