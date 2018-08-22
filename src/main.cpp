@@ -4147,13 +4147,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 		uint256 hashUncleRoot = BlockUncleRoot(block);
 		if(block.hashUncles != hashUncleRoot){
 			/*popchain ghost*/
-			std::cout<<"bad-uncleshash block.hashUncles: "<<block.hashUncles.ToString()<<endl;
-			std::cout<<"bad-uncleshash hashUncleRoot: "<<hashUncleRoot.ToString()<<endl;
-			std::cout<<"bad-uncleshash block.vuh.size(): "<<block.vuh.size()<<endl;
+//			std::cout<<"bad-uncleshash block.hashUncles: "<<block.hashUncles.ToString()<<endl;
+//			std::cout<<"bad-uncleshash hashUncleRoot: "<<hashUncleRoot.ToString()<<endl;
+//			std::cout<<"bad-uncleshash block.vuh.size(): "<<block.vuh.size()<<endl;
 			CBlock dBlock = block;
 			for(std::vector<CBlockHeader>::iterator it = dBlock.vuh.begin(); it != dBlock.vuh.end(); ++it){
 				CBlockHeader blockheader = *it;
-				std::cout<<" bad-uncleshash block.vuh[]: "<<blockheader.ToString()<<endl;
+                //std::cout<<" bad-uncleshash block.vuh[]: "<<blockheader.ToString()<<endl;
 				
 			}
 			/*popchain ghost*/
@@ -4269,7 +4269,6 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
     if (block.nDifficulty != calculateDifficulty(pindexPrev, &block, consensusParams))
     {
-        std::cout<<"just for test"<<std::endl;
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
                REJECT_INVALID, "bad-diffbits");
     }
@@ -4552,7 +4551,7 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, c
 	/*popchain ghost*/
 	if(pblock->hashUncles != uint256()){
 		CBlock blockhasuncle = *pblock;
-		std::cout<<"ProcessNewBlock block have uncles: "<<blockhasuncle.ToString()<<endl;
+        //std::cout<<"ProcessNewBlock block have uncles: "<<blockhasuncle.ToString()<<endl;
 		LogPrintf("%s :block %s has uncle \n", __func__,blockhasuncle.ToString());
 	}
 	/*popchain ghost*/
