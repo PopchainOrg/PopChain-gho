@@ -124,6 +124,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getaddressutxos", 0},
     { "getaddressmempool", 0},
     { "getuncleblockheader",2},
+    { "getalluncleblock",0},
 };
 
 class CRPCConvertTable
