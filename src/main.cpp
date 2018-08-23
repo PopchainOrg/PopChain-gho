@@ -4333,47 +4333,78 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
     return true;
 }
 /*popchain ghost*/
-static bool AcceptUnclesHeader(const CBlock & block, CValidationState& state, const CChainParams& chainparams)
+static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  const CChainParams& chainparams, bool fCheckPOW = true)
 {
+	std::vector<CBlockHeader> blockUncles = block.vuh;
+	int tmpSize = blockUncles.size();
+	if (tmpSize > 2 || tmpSize < 0){
+		return false;
+	} 		
 
-	std::vector<CBlockHeader> blockHeaders = block.vuh;
-	if (blockHeaders.size() > 2 || blockHeaders.size() < 0)
-		{
+	if(tmpSize ==0 && block.hashUncles == uint256()){
+		return true;
+	}
+	LogPrintf("AcceptUnclesHeader block:%s \n", block.GetHash().ToString());
+	//LogPrintf("AcceptUnclesHeader uncles size: %d \n", tmpSize);
+
+	//const CChainParams& chainparams = Params();
+	std::vector<CBlockIndex*> vecAncestor;
+	if(!GetAncestorBlocksFromHash(block.hashPrevBlock,7,vecAncestor))
+		return false;
+	//LogPrintf("AcceptUnclesHeader vecAncestor size: %d \n", vecAncestor.size());
+	
+	CBlock tmpBlock;
+	CBlockIndex* tmpBlockIndex;
+	CBlockHeader tmpBlockHeader;
+
+	std::set<uint256> ancestorset;
+	std::set<uint256> unclesset;
+	
+	for(std::vector<CBlockIndex*>::iterator it = vecAncestor.begin(); it != vecAncestor.end(); ++it){
+		tmpBlockIndex = *it;
+		if(ReadBlockFromDisk(tmpBlock, tmpBlockIndex, chainparams.GetConsensus())){
+			for(std::vector<CBlockHeader>::iterator bi = tmpBlock.vuh.begin(); bi != tmpBlock.vuh.end(); ++bi){
+				tmpBlockHeader = *bi;
+				unclesset.insert(tmpBlockHeader.GetHash());
+				//LogPrintf("AcceptUnclesHeader unclesset nNmber: %d , hash:%s \n",tmpBlockHeader.nNumber,tmpBlockHeader.GetHash().ToString());
+			}
+			ancestorset.insert(tmpBlockIndex->GetBlockHash());
+			//LogPrintf("AcceptUnclesHeader ancestorset nNmber: %d , hash:%s \n",tmpBlockIndex->nNumber,tmpBlockIndex->GetBlockHash().ToString());
+		} else{
 			return false;
 		}
-	
+	}	
 
-	uint256 hashHeaders;
-	hashHeaders.SetNull();
-
-	
-	if(blockHeaders.size() > 0)
-		{
-			vector<CBlockHeader>::iterator it = blockHeaders.begin();			
-			while( it != blockHeaders.end()) {
-				CBlockHeader tmpBH = *it;
-				uint256 tmpHash;
-				tmpHash.SetNull();
-				if(!CheckBlockHeader(tmpBH, state, true))
-					{
-						return false;
-					}
-				tmpHash = tmpBH.GetHash();
-				CHash256().Write(tmpHash.begin(), 32).Write(hashHeaders.begin(), 32).Finalize(hashHeaders.begin());
-				it++;
+	LogPrintf("AcceptUnclesHeader ancestorset size: %d \n", ancestorset.size());
+	//LogPrintf("AcceptUnclesHeader unclesset size: %d \n", unclesset.size());
+		
+	for(std::vector<CBlockHeader>::iterator it = blockUncles.begin(); it != blockUncles.end(); ++it){
+		tmpBlockHeader = *it;
+		uint256 tmpHash = tmpBlockHeader.GetHash();
+		if(unclesset.count(tmpHash) != 0){
+			return false;
+		}
+	//LogPrintf("AcceptUnclesHeader unclesset check ok\n");
+		if(ancestorset.count(tmpBlockHeader.hashPrevBlock) == 0){
+			return false;
+		}
+	//LogPrintf("AcceptUnclesHeader ancestorset parent check ok\n");
+		if(ancestorset.count(tmpHash) !=0){
+			return false;
+		}
+	//LogPrintf("AcceptUnclesHeader ancestorset self check ok\n");
+		if(fCheckPOW){
+			if(!CheckBlockHeader(tmpBlockHeader,state,fCheckPOW)){
+				return false;
 			}
 		}
-	else
-		{
-			return true;
-		}
+	//LogPrintf("AcceptUnclesHeader CheckBlockHeader check ok\n");
+	}
 
-	if(block.hashUncles != hashHeaders)
-		{
-			return false;
-		}
+	LogPrintf("AcceptUnclesHeader OK \n");
 	return true;
 }
+
 
 /*popchain ghost*/
 
@@ -4452,6 +4483,9 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
 
     if (!AcceptBlockHeader(block, state, chainparams, &pindex))
         return false;
+
+	if(!AcceptUnclesHeader(block, state, chainparams))
+		return false;
 
     // Try to process all requested blocks that we don't have, but only
     // process an unrequested block if it's new and has enough work to
