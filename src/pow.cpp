@@ -32,13 +32,13 @@ uint64_t calculateDifficulty(const CBlockIndex* pindex, const CBlockHeader *pblo
     int32_t const timestampDiff = pblock->nTime - pindex->nTime;
 
     if (pindex->nHeight < params.nYolandaTime){
-        if (timestampDiff < 15) difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyRapidFitDivisor;
+        if (timestampDiff < 120) difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyRapidFitDivisor;
         else difficulty = pindex->nDifficulty - pindex->nDifficulty / params.difficultyRapidFitDivisor;
         std::cout<<"AStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" difficulty: "<<difficulty<<std::endl;
     } else {
-        int64_t const adjFactor = std::max((pindex->hasUncles() ? 2 : 1) - timestampDiff / 10, -99);
+        int64_t const adjFactor = std::max((pindex->hasUncles() ? 2 : 1) - timestampDiff / 80, -99);
         difficulty = pindex->nDifficulty + pindex->nDifficulty / params.difficultyBoundDivisor * adjFactor;
-        //std::cout<<"BStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
+        std::cout<<"BStep"<<" height "<<pindex->nHeight<<" nTime: "<<pindex->nTime<<" timestampDiff: "<<timestampDiff<<" adjFactor: "<<adjFactor<<" difficulty: "<<difficulty<<std::endl;
     }
 
     assert(difficulty > 0);

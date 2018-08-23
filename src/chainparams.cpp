@@ -359,7 +359,7 @@ public:
         consensus.difficultyRapidFitDivisor = 20;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
-        consensus.nYolandaTime = 200;
+        consensus.nYolandaTime = 300;
       
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
