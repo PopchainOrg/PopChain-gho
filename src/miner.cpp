@@ -448,6 +448,8 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         nLastBlockSize = nBlockSize;
         LogPrintf("CreateNewBlock(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOps);
 
+        // Fill in header
+        pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
 
 		/*popchain ghost*/
 		
@@ -468,7 +470,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 			if(uncleCount < 2){
 				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
-				CAmount nAmount = 1 ;
+				CAmount nAmount = COIN ;
 				CTxOut outNew(nAmount,uncleScriptPubKeyIn);
 				txNew.vout.push_back(outNew);
 				LogPrintf("createnewblock: add %d uncle block reward %s \n",uncleCount,outNew.ToString());
@@ -477,7 +479,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 			uncleCount++;
 		}
 
-		txNew.vout[0].nValue = blockReward - uncleCount;
+		txNew.vout[0].nValue = blockReward - (uncleCount * COIN);
 		LogPrintf("createnewblock uncle reward %d \n",uncleCount);
 
 		pblock->hashUncles = BlockUncleRoot(*pblock);
@@ -488,8 +490,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         pblock->vtx[0] = txNew;
         pblocktemplate->vTxFees[0] = -nFees;
 
-        // Fill in header
-        pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
+
 		/*popchain ghost*/
 		pblock->nNumber = pindexPrev->nNumber + 1;
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
