@@ -1789,6 +1789,20 @@ CAmount GetMinerSubsidy(const int height, const Consensus::Params &cp)
         }
     }
 }
+/*
+CAmount GetMainMinerSubsidy(const int height, const Consensus::Params &cp, int uc)
+{
+	if(uc < 0 || uc > 2){
+		return 0;
+	}
+	CAmount reward = GetMinerSubsidy(height,cp);
+	return (reward + (reward * uc / 32));
+}
+
+CAmount GetUncleMinerSubsidey()
+*/
+
+
 
 CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
 {
@@ -4176,6 +4190,22 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     if (block.vtx.empty() || !block.vtx[0].IsCoinBase())
         return state.DoS(100, error("CheckBlock(): first tx is not coinbase"),
                          REJECT_INVALID, "bad-cb-missing");
+	/*popchain ghost*/
+	uint160 coinBaseAddress;
+	int addressType;
+	CScript scriptPubKeyIn = block.vtx[0].vout[0].scriptPubKey;
+	if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
+			if(!(block.nCoinbase == coinBaseAddress) && (block.nNumber!=0)){
+				return state.DoS(100, error("CheckBlock(): first tx coinbase not match"),
+                         REJECT_INVALID, "bad-cb-notmatch");
+			}
+			LogPrintf("CheckBlock nNumber: %d nCoinBase match \n",block.nNumber);
+	} else{
+			return state.DoS(100, error("CheckBlock(): first tx coinbase address error"),
+                         REJECT_INVALID, "bad-cb-addresserror");
+	}
+	
+	/*popchain ghost*/
     for (unsigned int i = 1; i < block.vtx.size(); i++)
         if (block.vtx[i].IsCoinBase())
             return state.DoS(100, error("CheckBlock(): more than one coinbase"),
@@ -4318,7 +4348,33 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
             return state.DoS(10, error("%s: contains a non-final transaction", __func__), REJECT_INVALID, "bad-txns-nonfinal");
         }
     }
+	/*popchain ghost*/
 
+	uint160 coinBaseAddress;
+	int addressType;
+	CScript scriptPubKeyIn;
+	
+	if(block.vuh.size() != 0){
+		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
+			scriptPubKeyIn = block.vtx[0].vout[uncleCount + 1].scriptPubKey;
+			if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
+				if(!(block.vuh[uncleCount].nCoinbase == coinBaseAddress) && (block.vuh[uncleCount].nNumber!=0)){
+					return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase not match"),
+                         REJECT_INVALID, "bad-cb-notmatch");
+				}
+			
+				LogPrintf("CheckBlock nNumber: %d uncle header %d nCoinBase match \n",block.nNumber,uncleCount);
+
+			} else{
+				return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase address error"),
+                         REJECT_INVALID, "bad-cb-addresserror");
+			}
+			
+		}
+		
+	}
+	
+	/*popchain ghost*/
     // Enforce block.nVersion=2 rule that the coinbase starts with serialized block height
     // if 750 of the last 1,000 blocks are version 2 or greater (51/100 if testnet):
     if (block.nVersion >= 2 && IsSuperMajority(2, pindexPrev, consensusParams.nMajorityEnforceBlockUpgrade, consensusParams))

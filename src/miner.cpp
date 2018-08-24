@@ -434,6 +434,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
         // Compute regular coinbase transaction.
         txNew.vout[0].nValue = blockReward;
+		
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
 
         // get some info back to pass to getblocktemplate
@@ -446,6 +447,42 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
         LogPrintf("CreateNewBlock(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOps);
+
+
+		/*popchain ghost*/
+		
+		uint160 coinBaseAddress;
+		int addressType;
+		if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
+			pblock->nCoinbase = coinBaseAddress;
+		} else{
+			return NULL;
+		}
+			
+		std::vector<CBlock> unclesBlock;
+		FindBlockUncles(pblock->hashPrevBlock,unclesBlock);
+		CBlock uncleBlock;
+		int uncleCount = 0;
+		for(std::vector<CBlock>::iterator it = unclesBlock.begin();it != unclesBlock.end(); ++it){
+			uncleBlock = *it;
+			if(uncleCount < 2){
+				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
+				CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
+				CAmount nAmount = 1 ;
+				CTxOut outNew(nAmount,uncleScriptPubKeyIn);
+				txNew.vout.push_back(outNew);
+				LogPrintf("createnewblock: add %d uncle block reward %s \n",uncleCount,outNew.ToString());
+				
+			}
+			uncleCount++;
+		}
+
+		txNew.vout[0].nValue = blockReward - uncleCount;
+		LogPrintf("createnewblock uncle reward %d \n",uncleCount);
+
+		pblock->hashUncles = BlockUncleRoot(*pblock);
+
+		/*popchain ghost*/
 
         // Update block coinbase
         pblock->vtx[0] = txNew;
@@ -461,21 +498,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
         /*popchain ghost*/
 
-		/*popchain ghost*/
-		std::vector<CBlock> unclesBlock;
-		FindBlockUncles(pblock->hashPrevBlock,unclesBlock);
-		CBlock uncleBlock;
-		int uncleCount = 0;
-		for(std::vector<CBlock>::iterator it = unclesBlock.begin();it != unclesBlock.end(); ++it){
-			uncleBlock = *it;
-			if(uncleCount < 2){
-				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
-			}
-			uncleCount++;
-		}
 
-		pblock->hashUncles = BlockUncleRoot(*pblock);
-		/*popchain ghost*/
 
         // Randomise nonce
         arith_uint256 nonce = UintToArith256(GetRandHash());
