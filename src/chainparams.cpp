@@ -356,10 +356,10 @@ public:
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.difficultyBoundDivisor = 2048;
-        consensus.difficultyRapidFitDivisor = 20;
+        consensus.difficultyRapidFitDivisor = 50;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
-        consensus.nYolandaTime = 200;
+        consensus.nYolandaTime = 500;
       
         /* popchain ghost */
         consensus.nPowAveragingWindow = 17;
