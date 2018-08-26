@@ -413,10 +413,20 @@ bool GetProofForName(const CBlockIndex* pindexProof, const std::string& name, CC
 bool GetTransaction(const uint256 &hash, CTransaction &tx, const Consensus::Params& params, uint256 &hashBlock, bool fAllowSlow = false);
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, const CBlock* pblock = NULL);
+/*popchain ghsot*/
 
 CAmount GetMinerSubsidy(const int height, const Consensus::Params &cp);
+
+CAmount GetMainMinerSubsidy(int height, const Consensus::Params &cp, int uc);
+CAmount GetUncleMinerSubsidy(int height, const Consensus::Params &cp, int uh);
+
+
+
 CAmount GetFoundersReward(const int height, const Consensus::Params &cp);
-CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp);
+
+//CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp);
+CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp, const CBlock& block);
+/*popchain ghost*/
 
 /**
  * Prune block and undo files (blk???.dat and undo???.dat) so that the disk space used is less than a user-defined target.
