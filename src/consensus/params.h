@@ -84,7 +84,7 @@ struct Params {
     uint64_t minimumDifficulty;
     /* popchain ghost */
     bool fPowAllowMinDifficultyBlocks;
-    int64_t nPowAveragingWindow;
+    //int64_t nPowAveragingWindow;
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     uint32_t nYolandaTime;

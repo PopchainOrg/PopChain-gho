@@ -10,7 +10,7 @@ static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
 /*popchain ghost*/
 //100 to 10
-static const int COINBASE_MATURITY = 10;
+static const int COINBASE_MATURITY = 100;
 /*popchain ghost*/
 /** Flags for nSequence and nLockTime locks */
 enum {

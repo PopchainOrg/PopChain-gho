@@ -230,7 +230,7 @@ public:
         consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
         consensus.nYolandaTime = 172800;
 		/*popchain ghost*/
-        consensus.nPowAveragingWindow = 17;
+        //consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
         //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
@@ -345,7 +345,7 @@ public:
         consensus.nSubsidyHalvingInterval = 840960;
         consensus.nInstantSendKeepLock = 6;
         consensus.nSuperblockStartBlock = 30;
-        consensus.nSuperblockCycle = 50; 				 // Superblocks can be issued hourly on testnet
+        consensus.nSuperblockCycle = 500; 				 // Superblocks can be issued hourly on testnet
         consensus.nPopnodeMinimumConfirmations = 2;
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
@@ -362,7 +362,7 @@ public:
         consensus.nYolandaTime = 500;
       
         /* popchain ghost */
-        consensus.nPowAveragingWindow = 17;
+        //consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         //consensus.nPowMaxAdjustUp = 16;                                 // 16% adjustment up
         //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
@@ -483,7 +483,7 @@ public:
         consensus.BIP34Hash = uint256();
         // ghost
         consensus.powLimit = uint256S("0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
-        consensus.nPowAveragingWindow = 17;
+        //consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
         //consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
         //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
