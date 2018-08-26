@@ -104,15 +104,17 @@ bool CSuperblock::IsValidBlockHeight(int nBlockHeight)
 
 
 // Popchain DevTeam
-CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight)
+/*popchain ghost*/
+//CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight)
+CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight, const CBlock& block)
 {
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
     if(!IsValidBlockHeight(nBlockHeight)) {
         return 0;
     }
-    CAmount nPaymentsLimit = GetBlockSubsidy(nBlockHeight, consensusParams);
-    LogPrint("gobject", "CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
+    CAmount nPaymentsLimit = GetBlockSubsidy(nBlockHeight, consensusParams, block);
+    LogPrintf("gobject", "CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
     LogPrintf("popchain CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
     return nPaymentsLimit;
 }

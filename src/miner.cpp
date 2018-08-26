@@ -470,7 +470,8 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 			if(uncleCount < 2){
 				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
-				CAmount nAmount = COIN ;
+				//CAmount nAmount = COIN ;
+				CAmount nAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), uncleBlock.nNumber);
 				CTxOut outNew(nAmount,uncleScriptPubKeyIn);
 				txNew.vout.push_back(outNew);
 				LogPrintf("createnewblock: add %d uncle block reward %s \n",uncleCount,outNew.ToString());
@@ -479,7 +480,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 			uncleCount++;
 		}
 
-		txNew.vout[0].nValue = blockReward - (uncleCount * COIN);
+		txNew.vout[0].nValue = nFees + GetMainMinerSubsidy(nHeight, Params().GetConsensus(),uncleCount);
 		LogPrintf("createnewblock uncle reward %d \n",uncleCount);
 
 		pblock->hashUncles = BlockUncleRoot(*pblock);

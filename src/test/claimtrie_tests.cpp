@@ -104,7 +104,9 @@ bool CreateBlock(CBlockTemplate* pblocktemplate)
     pblock->nTime = chainActive.Tip()->GetBlockTime()+Params().GetConsensus().nPowTargetSpacing;
     CMutableTransaction txCoinbase(pblock->vtx[0]);
     txCoinbase.vin[0].scriptSig = CScript() << CScriptNum(unique_block_counter++) << CScriptNum(chainActive.Height());
-    txCoinbase.vout[0].nValue = GetBlockSubsidy(chainActive.Height() + 1, chainparams.GetConsensus());
+	/*popchain ghost*/
+    txCoinbase.vout[0].nValue = GetBlockSubsidy(chainActive.Height() + 1, chainparams.GetConsensus(), *pblock);
+	/*popchain ghost*/
     pblock->vtx[0] = CTransaction(txCoinbase);
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
     //pblock->nBits=GetNextWorkRequired(chainActive.Tip(),pblock,chainparams.GetConsensus());

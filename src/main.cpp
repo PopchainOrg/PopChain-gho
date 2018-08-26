@@ -1789,19 +1789,32 @@ CAmount GetMinerSubsidy(const int height, const Consensus::Params &cp)
         }
     }
 }
-/*
-CAmount GetMainMinerSubsidy(const int height, const Consensus::Params &cp, int uc)
+
+/*popchain ghost*/
+CAmount GetMainMinerSubsidy(int height, const Consensus::Params &cp, int uc)
 {
 	if(uc < 0 || uc > 2){
 		return 0;
 	}
 	CAmount reward = GetMinerSubsidy(height,cp);
-	return (reward + (reward * uc / 32));
+	CAmount ret = (reward + (reward * uc / 32));
+	LogPrintf("GetMainMinerSubsidy at height: %d,uc: %d amount: %d",height,uc,ret);
+	return ret;
 }
 
-CAmount GetUncleMinerSubsidey()
-*/
+CAmount GetUncleMinerSubsidy(int height, const Consensus::Params &cp, int uh)
+{
+	int diff = uh + 8 - height;
+	if(diff <= 0){
+		return 0;
+	}
+	CAmount reward = GetMinerSubsidy(height,cp);
+	CAmount ret = ( diff * reward / 8);
+	LogPrintf("GetUncleMinerSubsidy at height: %d,uh: %d amount: %d",height,uh,ret);
+	return ret;
+}
 
+/*popchain ghost*/
 
 
 CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
@@ -1816,10 +1829,27 @@ CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
 }
 
 // return all subsidy
-CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp)
-{
+/*popchain ghost*/
+//CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp)
+CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp, const CBlock& block)
+{	
+	/*
     return GetMinerSubsidy(height, cp) +
            GetFoundersReward(height, cp);
+	*/
+	CAmount ret = GetMainMinerSubsidy(height, cp, block.vuh.size());
+	/*
+	for(std::vector<CBlockHeader>::iterator it = block.vuh.begin(); it != block.vuh.end(); ++it){
+		ret += GetUncleMinerSubsidy(height, cp, (*it).nNumber);
+	}
+	*/
+	for(int i = 0;i < block.vuh.size(); i++){
+		ret += GetUncleMinerSubsidy(height, cp, block.vuh[i].nNumber);
+	}
+		
+	ret += GetFoundersReward(height, cp);
+	//LogPrintf("GetBlockSubsidy at height: %d ,hash: s%,amount: %d",height,(*block).GetHash(),ret);
+	return ret;
 }
 
 bool IsInitialBlockDownload()
@@ -3161,7 +3191,10 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // the peer who sent us this block is missing some data and wasn't able
     // to recognize that block is actually invalid.
     // TODO: resync data (both ways?) and try to reprocess this block later.
-    CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
+    /*popchain ghost*/
+    //CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
+	CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), block);
+	/*popchain ghost*/
     std::string strError = "";
     if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
         return state.DoS(0, error("ConnectBlock(PCH): %s", strError), REJECT_INVALID, "bad-cb-amount");

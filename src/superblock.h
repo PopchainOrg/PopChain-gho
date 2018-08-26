@@ -46,7 +46,10 @@ public:
     CSuperblock(uint256& nHash);
 
     static bool IsValidBlockHeight(int nBlockHeight);
-    static CAmount GetPaymentsLimit(int nBlockHeight); 
+	/*popchain ghost*/
+	//static CAmount GetPaymentsLimit(int nBlockHeight);
+    static CAmount GetPaymentsLimit(int nBlockHeight, const CBlock& block); 
+	/*popchain ghost*/
 	static bool IsFounderValid(const CTransaction& txNew, int nBlockHeight, CAmount blockReward);
 
     // may use in the future

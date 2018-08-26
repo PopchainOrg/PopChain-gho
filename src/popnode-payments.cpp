@@ -30,8 +30,9 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
     }
 
     // superblocks started
-
-    CAmount nSuperblockMaxValue = CSuperblock::GetPaymentsLimit(nBlockHeight);
+/*popchain ghost*/
+    CAmount nSuperblockMaxValue = CSuperblock::GetPaymentsLimit(nBlockHeight,block);
+/*popchain ghost*/
     bool isSuperblockMaxValueMet = (block.vtx[0].GetValueOut() <= nSuperblockMaxValue);
 
     if(CSuperblock::IsValidBlockHeight(nBlockHeight)) {
