@@ -1840,7 +1840,7 @@ CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp, const CBl
 	CAmount ret = GetMainMinerSubsidy(height, cp, block.vuh.size());
     int tmpBlockHeight = 0;  
 	for(int i = 0;i < block.vuh.size(); i++){
-        if(GetBlockHeight(block.vuh[i].hashPrevBlock,tmpBlockHeight)){
+        if(GetBlockHeight(block.vuh[i].hashPrevBlock,&tmpBlockHeight)){
             ret += GetUncleMinerSubsidy(height, cp, (tmpBlockHeight + 1));
         }	
 	}	
@@ -4221,12 +4221,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         return state.DoS(100, error("CheckBlock(): first tx is not coinbase"),
                          REJECT_INVALID, "bad-cb-missing");
 	/*popchain ghost*/
+	/*
 	uint160 coinBaseAddress;
 	int addressType;
 	CScript scriptPubKeyIn = block.vtx[0].vout[0].scriptPubKey;
     const CChainParams& chainparams = Params();
 	if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
-			if(!(block.nCoinbase == coinBaseAddress) && (block.GetHash() != chainparams.hashGenesisBlock)){
+			if(!(block.nCoinbase == coinBaseAddress) && (block.GetHash() != chainparams.GetConsensus().hashGenesisBlock)){
 				return state.DoS(100, error("CheckBlock(): first tx coinbase not match"),
                          REJECT_INVALID, "bad-cb-notmatch");
 			}
@@ -4235,7 +4236,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 			return state.DoS(100, error("CheckBlock(): first tx coinbase address error"),
                          REJECT_INVALID, "bad-cb-addresserror");
 	}
-	
+	*/
 	/*popchain ghost*/
     for (unsigned int i = 1; i < block.vtx.size(); i++)
         if (block.vtx[i].IsCoinBase())
@@ -4386,7 +4387,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 			scriptPubKeyIn = block.vtx[0].vout[uncleCount + 1].scriptPubKey;
 			if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
                 const CChainParams& chainparams = Params();
-				if(!(block.vuh[uncleCount].nCoinbase == coinBaseAddress) && (block.GetHash != chainparams.hashGenesisBlock)){
+				if(!(block.vuh[uncleCount].nCoinbase == coinBaseAddress) && (nHeight != 0)){
 					return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase not match"),
                          REJECT_INVALID, "bad-cb-notmatch");
 				}

@@ -146,7 +146,6 @@ public:
 		block.hashUncles = hashUncles;
 		block.nCoinbase = nCoinbase;
 		block.nDifficulty = nDifficulty;
-		block.nNumber = nNumber;
 		/*popchian ghost*/
         block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;

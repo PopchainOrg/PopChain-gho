@@ -471,7 +471,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
 				int tmpBlockHeight = 0;
-				if(!GetBlockHeight(uncleBlock.hashPrevBlock,tmpBlockHeight)){
+				if(!GetBlockHeight(uncleBlock.hashPrevBlock,&tmpBlockHeight)){
 					return NULL;
 				}
 				CAmount nAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), (tmpBlockHeight + 1));

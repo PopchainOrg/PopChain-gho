@@ -193,7 +193,6 @@ public:
 		hashUncles = block.hashUncles;
 		nCoinbase = block.nCoinbase;
 		nDifficulty = block.nDifficulty;
-		nNumber = block.nNumber;
 		/*popchain ghost*/
         hashMerkleRoot = block.hashMerkleRoot;
 		hashClaimTrie  = block.hashClaimTrie;
@@ -230,7 +229,6 @@ public:
 		block.hashUncles = hashUncles;
 		block.nCoinbase = nCoinbase;
 		block.nDifficulty = nDifficulty;
-		block.nNumber = nNumber;
 		/*popchain ghost*/
 		block.hashMerkleRoot = hashMerkleRoot;
 		block.hashClaimTrie   = hashClaimTrie;
@@ -386,7 +384,6 @@ public:
 		block.hashUncles = hashUncles;
 		block.nCoinbase = nCoinbase;
 		block.nDifficulty = nDifficulty;
-		block.nNumber = nNumber;
 		/*popchain ghost*/
         block.hashMerkleRoot  = hashMerkleRoot;
 		block.hashClaimTrie    = hashClaimTrie;
