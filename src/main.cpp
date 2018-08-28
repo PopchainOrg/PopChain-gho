@@ -1798,7 +1798,7 @@ CAmount GetMainMinerSubsidy(int height, const Consensus::Params &cp, int uc)
 	}
 	CAmount reward = GetMinerSubsidy(height,cp);
 	CAmount ret = (reward + (reward * uc / 32));
-	LogPrintf("GetMainMinerSubsidy at height: %d,uc: %d amount: %d",height,uc,ret);
+	LogPrintf("GetMainMinerSubsidy at height: %d,uc: %d amount: %d \n",height,uc,ret);
 	return ret;
 }
 
@@ -1810,7 +1810,7 @@ CAmount GetUncleMinerSubsidy(int height, const Consensus::Params &cp, int uh)
 	}
 	CAmount reward = GetMinerSubsidy(height,cp);
 	CAmount ret = ( diff * reward / 8);
-	LogPrintf("GetUncleMinerSubsidy at height: %d,uh: %d amount: %d",height,uh,ret);
+	LogPrintf("GetUncleMinerSubsidy at height: %d,uh: %d amount: %d \n",height,uh,ret);
 	return ret;
 }
 
@@ -1823,8 +1823,10 @@ CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
     const int end = cp.endOfFoundersReward();
     if (height >= beg && height < end)			// before super block starting
     {
+    	LogPrintf("GetFoundersReward at height: %d, amount: %d \n",height,cp.foundersReward);
         return cp.foundersReward;
     }
+	LogPrintf("GetFoundersReward at height: %d, amount: 0 \n",height);
     return 0;
 }
 
@@ -4392,7 +4394,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
                          REJECT_INVALID, "bad-cb-notmatch");
 				}
 			
-				LogPrintf("CheckBlock hash: %d uncle header %d nCoinBase match \n",block.GetHash().ToString());
+				LogPrintf("CheckBlock hash: %s nCoinBase match \n",block.GetHash().ToString());
 
 			} else{
 				return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase address error"),
