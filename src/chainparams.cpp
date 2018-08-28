@@ -410,7 +410,10 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("uosrguosio.org","popchain.uosio.org"));
+        vSeeds.push_back(CDNSSeedData("uosio.org","popchain.uosio.org"));
+        vSeeds.push_back(CDNSSeedData("uosio.org","popchain2.uosio.org"));
+        vSeeds.push_back(CDNSSeedData("uosio.org","popchain3.uosio.org"));
+        vSeeds.push_back(CDNSSeedData("uosio.org","popchain4.uosio.org"));
 
         // Testnet Pop addresses start with 'p'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,118);
