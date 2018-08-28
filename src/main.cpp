@@ -1838,15 +1838,12 @@ CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp, const CBl
            GetFoundersReward(height, cp);
 	*/
 	CAmount ret = GetMainMinerSubsidy(height, cp, block.vuh.size());
-	/*
-	for(std::vector<CBlockHeader>::iterator it = block.vuh.begin(); it != block.vuh.end(); ++it){
-		ret += GetUncleMinerSubsidy(height, cp, (*it).nNumber);
-	}
-	*/
+    int tmpBlockHeight = 0;  
 	for(int i = 0;i < block.vuh.size(); i++){
-		ret += GetUncleMinerSubsidy(height, cp, block.vuh[i].nNumber);
-	}
-		
+        if(GetBlockHeight(block.vuh[i].hashPrevBlock,tmpBlockHeight)){
+            ret += GetUncleMinerSubsidy(height, cp, (tmpBlockHeight + 1));
+        }	
+	}	
 	ret += GetFoundersReward(height, cp);
 	//LogPrintf("GetBlockSubsidy at height: %d ,hash: s%,amount: %d",height,(*block).GetHash(),ret);
 	return ret;
@@ -2631,14 +2628,14 @@ bool GetBlockHash(uint256& hashRet, int nBlockHeight)
 }
 
 /*popchain ghost*/
-bool GetBlockNumber(uint256 hash, uint32_t* number)
+bool GetBlockHeight(uint256 hash, int* hight)
 {
 	LOCK(cs_main);
 	if (hash != uint256()) {
         BlockMap::iterator mi = mapBlockIndex.find(hash);
         if (mi != mapBlockIndex.end() && (*mi).second) {
             CBlockIndex* pindex = (*mi).second;
-			*number = pindex->nNumber;
+			*hight = pindex->nHeight;
 			return true;
         }
     }
@@ -4227,12 +4224,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 	uint160 coinBaseAddress;
 	int addressType;
 	CScript scriptPubKeyIn = block.vtx[0].vout[0].scriptPubKey;
+    const CChainParams& chainparams = Params();
 	if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
-			if(!(block.nCoinbase == coinBaseAddress) && (block.nNumber!=0)){
+			if(!(block.nCoinbase == coinBaseAddress) && (block.GetHash() != chainparams.hashGenesisBlock)){
 				return state.DoS(100, error("CheckBlock(): first tx coinbase not match"),
                          REJECT_INVALID, "bad-cb-notmatch");
 			}
-			LogPrintf("CheckBlock nNumber: %d nCoinBase match \n",block.nNumber);
+			LogPrintf("CheckBlock hash: %s nCoinBase match \n",block.GetHash());
 	} else{
 			return state.DoS(100, error("CheckBlock(): first tx coinbase address error"),
                          REJECT_INVALID, "bad-cb-addresserror");
@@ -4323,10 +4321,6 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     LogPrintf("check block header height  %d  \n", nHeight);	
 
 	/*popchain ghost*/
-	// check nNumber against prev
-	if (block.nNumber != (pindexPrev->nNumber+ 1))
-	    return state.DoS(100, error("%s : incorrect nNumber at %d", __func__, nHeight),
-               REJECT_INVALID, "bad-nNumber");
 
     // Check proof of work
     //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
@@ -4391,12 +4385,13 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
 			scriptPubKeyIn = block.vtx[0].vout[uncleCount + 1].scriptPubKey;
 			if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
-				if(!(block.vuh[uncleCount].nCoinbase == coinBaseAddress) && (block.vuh[uncleCount].nNumber!=0)){
+                const CChainParams& chainparams = Params();
+				if(!(block.vuh[uncleCount].nCoinbase == coinBaseAddress) && (block.GetHash != chainparams.hashGenesisBlock)){
 					return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase not match"),
                          REJECT_INVALID, "bad-cb-notmatch");
 				}
 			
-				LogPrintf("CheckBlock nNumber: %d uncle header %d nCoinBase match \n",block.nNumber,uncleCount);
+				LogPrintf("CheckBlock hash: %d uncle header %d nCoinBase match \n",block.GetHash().ToString());
 
 			} else{
 				return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase address error"),
@@ -6591,11 +6586,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             }
 
 			/*popchain ghost*/
-			if (pindexLast != NULL && header.nNumber != (pindexLast->nNumber + 1)) {
-                Misbehaving(pfrom->GetId(), 20);
-                return error("non-continuous headers number");
-            }
-			
             if (!AcceptBlockHeader(header, state, chainparams, &pindexLast)) {
                 int nDoS;
                 if (state.IsInvalid(nDoS)) {

@@ -1062,7 +1062,8 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
 bool GetBlockHash(uint256& hashRet, int nBlockHeight = -1);
 
 /*popchain ghost*/
-bool GetBlockNumber(uint256 hash, uint32_t* number);
+bool GetBlockHeight(uint256 hash, int* hight);
+
 bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vCbi);
 bool MakeCurrentCycle(uint256 hash);
 bool CommitUncle(CBlockHeader uncle);

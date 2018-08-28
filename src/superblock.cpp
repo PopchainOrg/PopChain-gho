@@ -114,7 +114,7 @@ CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight, const CBlock& block)
         return 0;
     }
     CAmount nPaymentsLimit = GetBlockSubsidy(nBlockHeight, consensusParams, block);
-    LogPrintf("gobject", "CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
+    LogPrint("gobject", "CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
     LogPrintf("popchain CSuperblock::GetPaymentsLimit -- Valid superblock height %d, payments max %lld\n", nBlockHeight, nPaymentsLimit);
     return nPaymentsLimit;
 }

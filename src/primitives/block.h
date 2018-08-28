@@ -25,7 +25,6 @@ public:
 	uint256 hashUncles;//the hash256 of uncles or uncle block header
 	uint160 nCoinbase;//the autor address of this block header
     uint64_t nDifficulty;//the difficulty of this block
-	uint32_t nNumber;//the height of this block header
 	/*popchain ghost*/
     uint256 hashMerkleRoot;
     uint256 hashClaimTrie; 							   // for claim operation
@@ -49,7 +48,6 @@ public:
 		READWRITE(hashUncles);
 		READWRITE(nCoinbase);
 		READWRITE(nDifficulty);
-		READWRITE(nNumber);
 		/*popchain ghost*/
         READWRITE(hashMerkleRoot);
         READWRITE(hashClaimTrie);
@@ -66,7 +64,6 @@ public:
 		hashUncles.SetNull();
 		nCoinbase.SetNull();
         nDifficulty = 0;
-		nNumber=0;
 		/*popchain ghost*/
         hashMerkleRoot.SetNull();
         hashClaimTrie.SetNull();

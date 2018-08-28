@@ -332,7 +332,6 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
 				pindexNew->hashUncles     = diskindex.hashUncles;
 				pindexNew->nCoinbase      = diskindex.nCoinbase;
 				pindexNew->nDifficulty    = diskindex.nDifficulty;
-				pindexNew->nNumber        = diskindex.nNumber;
 				/*popchain ghost*/
                 pindexNew->hashMerkleRoot = diskindex.hashMerkleRoot;
                 pindexNew->hashClaimTrie  = diskindex.hashClaimTrie;

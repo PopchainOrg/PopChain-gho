@@ -470,8 +470,11 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 			if(uncleCount < 2){
 				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
-				//CAmount nAmount = COIN ;
-				CAmount nAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), uncleBlock.nNumber);
+				int tmpBlockHeight = 0;
+				if(!GetBlockHeight(uncleBlock.hashPrevBlock,tmpBlockHeight)){
+					return NULL;
+				}
+				CAmount nAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), (tmpBlockHeight + 1));
 				CTxOut outNew(nAmount,uncleScriptPubKeyIn);
 				txNew.vout.push_back(outNew);
 				LogPrintf("createnewblock: add %d uncle block reward %s \n",uncleCount,outNew.ToString());
@@ -493,7 +496,6 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
 
 		/*popchain ghost*/
-		pblock->nNumber = pindexPrev->nNumber + 1;
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
         pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
         //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
@@ -538,9 +540,6 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
     }
     ++nExtraNonce;
     unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
-    /*popchain ghost*/
-	//pblock->nNumber = pindexPrev->nNumber + 1;
-	/*popchain ghost*/
     CMutableTransaction txCoinbase(pblock->vtx[0]);
     txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
     assert(txCoinbase.vin[0].scriptSig.size() <= 100);

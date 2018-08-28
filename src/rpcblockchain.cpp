@@ -106,7 +106,6 @@ void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry)
 	entry.push_back(Pair("hashUncles", blockheader.hashUncles.GetHex()));
 	entry.push_back(Pair("nCoinbase", blockheader.nCoinbase.GetHex()));
 	entry.push_back(Pair("nDifficulty", strprintf("%d", blockheader.nDifficulty)));
-	entry.push_back(Pair("nNumber", strprintf("%d", blockheader.nNumber)));
 	entry.push_back(Pair("hashMerkleRoot", blockheader.hashMerkleRoot.GetHex()));
 	entry.push_back(Pair("hashClaimTrie", blockheader.hashClaimTrie.GetHex()));
 	entry.push_back(Pair("nTime", strprintf("%d", blockheader.nTime)));
@@ -131,7 +130,6 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 	/*popchain ghost*/
 	result.push_back(Pair("hashUncles",block.hashUncles.GetHex()));
 	result.push_back(Pair("coinbase",block.nCoinbase.GetHex()));
-	result.push_back(Pair("number",strprintf("%d", block.nNumber)));
 	/*popchain ghost*/
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
     result.push_back(Pair("nameclaimroot", block.hashClaimTrie.GetHex()));
@@ -616,7 +614,6 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
             "  \"hashUncles\" :      \"hash\",     (string) the uncle block header hashUncles \n"
             "  \"nCoinbase\" :       \"hash\",     (string) the uncle block header nCoinbase \n"
             "  \"nDifficulty\" :     n,            (numeric) the uncle block header nDifficulty \n"
-            "  \"nNumber\" :         n,            (numeric) the uncle block header nNumber \n"
             "  \"hashMerkleRoot\" :  \"hash\",     (string) the uncle block header hashMerkleRoot \n"
             "  \"hashClaimTrie\" :   \"hash\",     (string) the uncle block header hashClaimTrie \n"
             "  \"nTime\" :           n,            (numeric) the uncle block header nTime \n"
