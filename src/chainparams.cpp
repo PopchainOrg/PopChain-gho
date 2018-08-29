@@ -344,7 +344,7 @@ public:
         consensus.nSubsidyHalvingInterval = 840960;
         consensus.nInstantSendKeepLock = 6;
         consensus.nSuperblockStartBlock = 30;
-        consensus.nSuperblockCycle = 500; 				 // Superblocks can be issued hourly on testnet
+        consensus.nSuperblockCycle = 30; 				 // Superblocks can be issued hourly on testnet
         consensus.nPopnodeMinimumConfirmations = 2;
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;

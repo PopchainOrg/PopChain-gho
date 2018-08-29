@@ -4381,9 +4381,46 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 	/*popchain ghost*/
 
 	uint160 coinBaseAddress;
+	uint160 tmpAddress;
 	int addressType;
 	CScript scriptPubKeyIn;
-	
+	CAmount tmpAmount = 0;
+	int tmpBlockHeight = 0;
+	CAmount tmpSubAmount =0;
+	const CChainParams& chainparams = Params();
+
+	if(block.vuh.size() != 0 && nHeight != 0){
+		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
+			coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
+			for (const CTxOut &out: block.vtx[0].vout){
+				if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
+					if(coinBaseAddress == tmpAddress){
+						tmpAmount += out.nValue;
+					}
+				} else{
+					LogPrintf("CheckBlock():ERROR DecodeAddressHash uncle header %d error \n",uncleCount);
+					return false;
+				}
+			}
+			if(GetBlockHeight(block.vuh[uncleCount].hashPrevBlock,&tmpBlockHeight)){
+				tmpSubAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), (tmpBlockHeight + 1));
+			} else{
+				LogPrintf("CheckBlock():ERROR GetBlockHeight uncle header %d error \n",uncleCount);
+				return false;
+			}
+			if(tmpAmount >= tmpSubAmount){
+				LogPrintf("CheckBlock(): %d uncle header coinbase match \n",uncleCount);
+			} else{
+				LogPrintf("CheckBlock():ERROR %d uncle header coinbase not match \n",uncleCount);
+				return false;
+			}
+			tmpAmount = 0;
+			tmpBlockHeight = 0;
+			tmpSubAmount =0;
+		}
+	}
+			
+	/*
 	if(block.vuh.size() != 0){
 		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
 			scriptPubKeyIn = block.vtx[0].vout[uncleCount + 1].scriptPubKey;
@@ -4404,6 +4441,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 		}
 		
 	}
+
+	*/
 	
 	/*popchain ghost*/
     // Enforce block.nVersion=2 rule that the coinbase starts with serialized block height
