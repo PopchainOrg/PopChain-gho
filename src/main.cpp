@@ -7391,15 +7391,13 @@ bool SendMessages(CNode* pto)
             QueuedBlock &queuedBlock = state.vBlocksInFlight.front();
             int nOtherPeersWithValidatedDownloads = nPeersWithValidatedDownloads - (state.nBlocksInFlightValidHeaders > 0);
 
-
-            std::cout << "nOtherPeersWithValidatedDownloads" << nOtherPeersWithValidatedDownloads <<std::endl;
-            std::cout << "nPeersWithValidatedDownloads" << nPeersWithValidatedDownloads <<std::endl;
-            std::cout << "state.nBlocksInFlightValidHeaders" << state.nBlocksInFlightValidHeaders <<std::endl;
-            std::cout << "nNow" << nNow <<std::endl;
-            std::cout << "state.nDownloadingSince" << state.nDownloadingSince <<std::endl;
-            std::cout << "consensusParams.nPowTargetSpacing" << consensusParams.nPowTargetSpacing <<std::endl;
-            std::cout << "BLOCK_DOWNLOAD_TIMEOUT_BASE" << BLOCK_DOWNLOAD_TIMEOUT_BASE <<std::endl;
-            std::cout << "BLOCK_DOWNLOAD_TIMEOUT_PER_PEER" << BLOCK_DOWNLOAD_TIMEOUT_PER_PEER <<std::endl<<std::endl;
+            LogPrintf("nOtherPeersWithValidatedDownloads = %d \n", nOtherPeersWithValidatedDownloads);
+            LogPrintf("state.nBlocksInFlightValidHeaders = %d \n", state.nBlocksInFlightValidHeaders);
+            LogPrintf("nNow = %d \n", nNow);
+            LogPrintf("state.nDownloadingSince = %d \n", state.nDownloadingSince);
+            LogPrintf("consensusParams.nPowTargetSpacing = %d \n", consensusParams.nPowTargetSpacing);
+            LogPrintf("BLOCK_DOWNLOAD_TIMEOUT_BASE = %d \n", BLOCK_DOWNLOAD_TIMEOUT_BASE);
+            LogPrintf("BLOCK_DOWNLOAD_TIMEOUT_PER_PEER = %d \n\n", BLOCK_DOWNLOAD_TIMEOUT_PER_PEER);
 
             if (nNow > state.nDownloadingSince + consensusParams.nPowTargetSpacing * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)) {
                 LogPrintf("Timeout downloading block %s from peer=%d, disconnecting\n", queuedBlock.hash.ToString(), pto->id);
