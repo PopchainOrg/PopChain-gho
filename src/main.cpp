@@ -7390,6 +7390,17 @@ bool SendMessages(CNode* pto)
         if (!pto->fDisconnect && state.vBlocksInFlight.size() > 0) {
             QueuedBlock &queuedBlock = state.vBlocksInFlight.front();
             int nOtherPeersWithValidatedDownloads = nPeersWithValidatedDownloads - (state.nBlocksInFlightValidHeaders > 0);
+
+
+            std::cout << "nOtherPeersWithValidatedDownloads" << nOtherPeersWithValidatedDownloads <<std::endl;
+            std::cout << "nPeersWithValidatedDownloads" << nPeersWithValidatedDownloads <<std::endl;
+            std::cout << "state.nBlocksInFlightValidHeaders" << state.nBlocksInFlightValidHeaders <<std::endl;
+            std::cout << "nNow" << nNow <<std::endl;
+            std::cout << "state.nDownloadingSince" << state.nDownloadingSince <<std::endl;
+            std::cout << "consensusParams.nPowTargetSpacing" << consensusParams.nPowTargetSpacing <<std::endl;
+            std::cout << "BLOCK_DOWNLOAD_TIMEOUT_BASE" << BLOCK_DOWNLOAD_TIMEOUT_BASE <<std::endl;
+            std::cout << "BLOCK_DOWNLOAD_TIMEOUT_PER_PEER" << BLOCK_DOWNLOAD_TIMEOUT_PER_PEER <<std::endl<<std::endl;
+
             if (nNow > state.nDownloadingSince + consensusParams.nPowTargetSpacing * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)) {
                 LogPrintf("Timeout downloading block %s from peer=%d, disconnecting\n", queuedBlock.hash.ToString(), pto->id);
                 pto->fDisconnect = true;
