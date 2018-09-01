@@ -3195,7 +3195,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 	CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), block);
 	/*popchain ghost*/
     std::string strError = "";
-    if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
+    if (!IsBlockValueValid(block, pindex->nHeight,nFees, blockReward, strError)) {
         return state.DoS(0, error("ConnectBlock(PCH): %s", strError), REJECT_INVALID, "bad-cb-amount");
     }
 

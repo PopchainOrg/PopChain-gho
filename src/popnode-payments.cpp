@@ -13,7 +13,7 @@
 #include <boost/lexical_cast.hpp>
 
 // Popchain DevTeam
-bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockReward, std::string &strErrorRet)
+bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount nFees,CAmount blockReward, std::string &strErrorRet)
 {
     strErrorRet = "";
     bool isBlockRewardValueMet = (block.vtx[0].GetValueOut() <= blockReward);
@@ -33,7 +33,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 /*popchain ghost*/
     CAmount nSuperblockMaxValue = CSuperblock::GetPaymentsLimit(nBlockHeight,block);
 /*popchain ghost*/
-    bool isSuperblockMaxValueMet = (block.vtx[0].GetValueOut() <= nSuperblockMaxValue);
+    bool isSuperblockMaxValueMet = (block.vtx[0].GetValueOut() <= (nSuperblockMaxValue+nFees));  
 
     if(CSuperblock::IsValidBlockHeight(nBlockHeight)) {
         if(CSuperblock::IsFounderValid( block.vtx[0], nBlockHeight, blockReward )==false)
