@@ -2645,7 +2645,7 @@ bool GetBlockHeight(uint256 hash, int* hight)
 }
 bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vCbi)
 {
-	//LOCK(cs_main);
+	LOCK(cs_main);
 	LogPrintf("GetAncestorBlocksFromHash \n");
 	//uint32_t number=0;
 	if(hash == uint256())
@@ -2690,8 +2690,10 @@ bool MakeCurrentCycle(uint256 hash)
 			}
 			setCurrentFamily.insert(block.GetHash());
 			setCurrentAncestor.insert(block.GetHash());
+		}else {
+			return false;
 		}
-		return false;
+		
 	}	
 	currentParenthash = hash;
 	return true;
@@ -4495,6 +4497,7 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 	
 	for(std::vector<CBlockIndex*>::iterator it = vecAncestor.begin(); it != vecAncestor.end(); ++it){
 		tmpBlockIndex = *it;
+		LogPrintf("AcceptUnclesHeader():ReadBlockFromDisk %s", tmpBlockIndex->GetBlockHash().ToString());
 		if(ReadBlockFromDisk(tmpBlock, tmpBlockIndex, chainparams.GetConsensus())){
 			for(std::vector<CBlockHeader>::iterator bi = tmpBlock.vuh.begin(); bi != tmpBlock.vuh.end(); ++bi){
 				tmpBlockHeader = *bi;
