@@ -2682,7 +2682,7 @@ bool MakeCurrentCycle(uint256 hash)
 	CBlockHeader blockheader;
 	for(std::vector<CBlockIndex*>::iterator it = ancestor.begin(); it != ancestor.end(); ++it){
 		pBlockIndex = *it;
-		LogPrintf("MakeCurrentCycle():ReadBlockFromDisk %s", pBlockIndex->GetBlockHash().ToString());
+		LogPrintf("MakeCurrentCycle():ReadBlockFromDisk %s \n", pBlockIndex->GetBlockHash().ToString());
 		if(ReadBlockFromDisk(block, pBlockIndex, chainparams.GetConsensus())){
 			for(std::vector<CBlockHeader>::iterator bi = block.vuh.begin(); bi != block.vuh.end(); ++bi){
 				blockheader = *bi;
@@ -4497,7 +4497,7 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 	
 	for(std::vector<CBlockIndex*>::iterator it = vecAncestor.begin(); it != vecAncestor.end(); ++it){
 		tmpBlockIndex = *it;
-		LogPrintf("AcceptUnclesHeader():ReadBlockFromDisk %s", tmpBlockIndex->GetBlockHash().ToString());
+		LogPrintf("AcceptUnclesHeader():ReadBlockFromDisk %s\n", tmpBlockIndex->GetBlockHash().ToString());
 		if(ReadBlockFromDisk(tmpBlock, tmpBlockIndex, chainparams.GetConsensus())){
 			for(std::vector<CBlockHeader>::iterator bi = tmpBlock.vuh.begin(); bi != tmpBlock.vuh.end(); ++bi){
 				tmpBlockHeader = *bi;
