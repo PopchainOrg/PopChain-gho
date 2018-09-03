@@ -2621,7 +2621,7 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
 
 bool GetBlockHash(uint256& hashRet, int nBlockHeight)
 {
-    LOCK(cs_main);
+    //LOCK(cs_main);
     if(chainActive.Tip() == NULL) return false;
     if(nBlockHeight < -1 || nBlockHeight > chainActive.Height()) return false;
     if(nBlockHeight == -1) nBlockHeight = chainActive.Height();
@@ -2632,7 +2632,7 @@ bool GetBlockHash(uint256& hashRet, int nBlockHeight)
 /*popchain ghost*/
 bool GetBlockHeight(uint256 hash, int* hight)
 {
-	LOCK(cs_main);
+	//LOCK(cs_main);
 	if (hash != uint256()) {
         BlockMap::iterator mi = mapBlockIndex.find(hash);
         if (mi != mapBlockIndex.end() && (*mi).second) {
@@ -2645,7 +2645,7 @@ bool GetBlockHeight(uint256 hash, int* hight)
 }
 bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vCbi)
 {
-	LOCK(cs_main);
+	//LOCK(cs_main);
 	LogPrintf("GetAncestorBlocksFromHash \n");
 	//uint32_t number=0;
 	if(hash == uint256())
@@ -2666,7 +2666,7 @@ bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vC
 
 bool MakeCurrentCycle(uint256 hash)
 {
-	LOCK(cs_main);
+	//LOCK(cs_main);
 	LogPrintf("MakeCurrentCycle \n");
 	if(hash == uint256())
 		return false;
@@ -2682,13 +2682,16 @@ bool MakeCurrentCycle(uint256 hash)
 	CBlockHeader blockheader;
 	for(std::vector<CBlockIndex*>::iterator it = ancestor.begin(); it != ancestor.end(); ++it){
 		pBlockIndex = *it;
-		ReadBlockFromDisk(block, pBlockIndex, chainparams.GetConsensus());
-		for(std::vector<CBlockHeader>::iterator bi = block.vuh.begin(); bi != block.vuh.end(); ++bi){
-			blockheader = *bi;
-			setCurrentFamily.insert(blockheader.GetHash());
+		LogPrintf("MakeCurrentCycle():ReadBlockFromDisk %s", pBlockIndex->GetBlockHash().ToString());
+		if(ReadBlockFromDisk(block, pBlockIndex, chainparams.GetConsensus())){
+			for(std::vector<CBlockHeader>::iterator bi = block.vuh.begin(); bi != block.vuh.end(); ++bi){
+				blockheader = *bi;
+				setCurrentFamily.insert(blockheader.GetHash());
+			}
+			setCurrentFamily.insert(block.GetHash());
+			setCurrentAncestor.insert(block.GetHash());
 		}
-		setCurrentFamily.insert(block.GetHash());
-		setCurrentAncestor.insert(block.GetHash());
+		return false;
 	}	
 	currentParenthash = hash;
 	return true;
@@ -2696,7 +2699,7 @@ bool MakeCurrentCycle(uint256 hash)
 
 bool CommitUncle(CBlockHeader uncle)
 {	
-	LOCK(cs_main);
+	//LOCK(cs_main);
 	LogPrintf("CommitUncle \n");
 	uint256 hash = uncle.GetHash();
 	if(setCurrentUncle.count(hash) != 0){
@@ -4452,6 +4455,9 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
         CScript expect = CScript() << nHeight;
         if (block.vtx[0].vin[0].scriptSig.size() < expect.size() ||
             !std::equal(expect.begin(), expect.end(), block.vtx[0].vin[0].scriptSig.begin())) {
+            /*popchain ghost*/
+            LogPrintf("ContextualCheckBlock():nHeighet %d,vin[0].scriptSig %s,expect %s,\n", nHeight,  HexStr(block.vtx[0].vin[0].scriptSig), HexStr(expect));
+            /*popchain ghost*/
             return state.DoS(100, error("%s: block height mismatch in coinbase", __func__), REJECT_INVALID, "bad-cb-height");
         }
     }
@@ -4474,6 +4480,7 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 	//LogPrintf("AcceptUnclesHeader uncles size: %d \n", tmpSize);
 
 	//const CChainParams& chainparams = Params();
+	LogPrintf("AcceptUnclesHeader() GetAncestorBlocksFromHash block.hashPrevBlock %s \n", block.hashPrevBlock.ToString());
 	std::vector<CBlockIndex*> vecAncestor;
 	if(!GetAncestorBlocksFromHash(block.hashPrevBlock,7,vecAncestor))
 		return false;
