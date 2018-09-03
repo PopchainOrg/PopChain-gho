@@ -148,7 +148,13 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("tx", txs));
 	/*popchain ghost*/
 	UniValue uhs(UniValue::VARR);
+	UniValue uhsr(UniValue::VARR);
 	//uhDetails  =true;
+	int uncleCount =0;
+	uint160 coinBaseAddress;
+	uint160 tmpAddress;
+	CAmount tmpAmount = 0;
+	int addressType;
 	BOOST_FOREACH(const CBlockHeader&uh, block.vuh)
 	{
 		//UniValue objUh(UniValue::VOBJ);
@@ -161,8 +167,20 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 		} else{
 			uhs.push_back(uh.GetHash().GetHex());
 		}
+		coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
+		for (const CTxOut &out: block.vtx[0].vout){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
+				if(coinBaseAddress == tmpAddress){
+						tmpAmount += out.nValue;
+				}
+			}
+		}
+		uhsr.push_back(ValueFromAmount(tmpAmount));
+		tmpAmount = 0;
+		uncleCount++;
 	}
 	result.push_back(Pair("uh",uhs));
+	result.push_back(Pair("uhr",uhsr));
 	/*popchain ghost*/
     result.push_back(Pair("time", block.GetBlockTime()));
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
@@ -763,10 +781,20 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"size\" : n,            (numeric) The block size\n"
             "  \"height\" : n,          (numeric) The block height or index\n"
             "  \"version\" : n,         (numeric) The block version\n"
+            "  \"hashUncles\" : \"hash\",(string) the block hashUncles \n"
+            "  \"coinbase\" : \"hash\",(string) the block coinbase \n"
             "  \"merkleroot\" : \"hash\", (string) The merkle root\n"
             "  \"nameclaimroot\" : \"hash\",  (string) The hash of the root of the name claim trie\n"
             "  \"tx\" : [               (array of string) The transaction ids\n"
             "     \"transactionid\"     (string) The transaction id\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"uh\" : [               (array of string) The uncle block header hash \n"
+            "     \"uncleheaderhash\"   (string) The transaction id\n"
+            "     ,...\n"
+            "  ],\n"
+            "  \"uhr\" : [              (array of string) The uncle block reward \n"
+            "     \"uncleheaderhash\"   (numeric) The value of uncle block reward in COIN \n"
             "     ,...\n"
             "  ],\n"
             "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
