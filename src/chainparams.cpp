@@ -252,10 +252,10 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xb3;
-        pchMessageStart[1] = 0x01;
-        pchMessageStart[2] = 0x6f;
-        pchMessageStart[3] = 0xb1;
+        pchMessageStart[0] = 0xd6;
+        pchMessageStart[1] = 0xa5;
+        pchMessageStart[2] = 0x3f;
+        pchMessageStart[3] = 0xc9;
 		vAlertPubKey = ParseHex("028efd0f3c697689f8f1f6744edbbc1f85871b8c51218ddd89d90a3e435d1a8691");
         nDefaultPort = 2888;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
@@ -381,10 +381,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1524057440;               // 2018/4/18 20:57:16
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout =   1555592236;               // 2019/4/18 20:57:16
 
-        pchMessageStart[0] = 0xc2;
-        pchMessageStart[1] = 0xe6;
-        pchMessageStart[2] = 0xce;
-        pchMessageStart[3] = 0xf3;
+        pchMessageStart[0] = 0xd3;
+        pchMessageStart[1] = 0x5a;
+        pchMessageStart[2] = 0xc8;
+        pchMessageStart[3] = 0x4f;
         vAlertPubKey = ParseHex("0244a0bb22e931bf59cc8a434d9d22bd2fa493f579bd2659bc9188361d78bdc45f");
         nDefaultPort = 12888;
         nMaxTipAge = 0x7fffffff; 		// allow mining on top of old blocks for testnet
@@ -508,10 +508,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1000000000000ULL;
 
-        pchMessageStart[0] = 0xf0;
-        pchMessageStart[1] = 0xc5;
-        pchMessageStart[2] = 0xbb;
-        pchMessageStart[3] = 0xd0;
+        pchMessageStart[0] = 0xf7;
+        pchMessageStart[1] = 0x5b;
+        pchMessageStart[2] = 0xc9;
+        pchMessageStart[3] = 0xe3;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nDefaultPort = 12888;
         nPruneAfterHeight = 1000;
