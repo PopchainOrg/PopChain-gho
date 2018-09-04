@@ -288,7 +288,7 @@ extern UniValue getblockhash(const UniValue& params, bool fHelp);
 extern UniValue getblockheader(const UniValue& params, bool fHelp);
 extern UniValue getblockheaders(const UniValue& params, bool fHelp);
 /*popchain ghost*/
-extern void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry);
+extern void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry,int blockhight);
 extern UniValue getuncleblockheader(const UniValue& params, bool fHelp);
 extern UniValue getalluncleblock(const UniValue& params, bool fHelp);
 
