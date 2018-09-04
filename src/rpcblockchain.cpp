@@ -105,6 +105,11 @@ void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry)
 {
     entry.push_back(Pair("hash", blockheader.GetHash().GetHex()));
     entry.push_back(Pair("CURRENT_VERSION", blockheader.CURRENT_VERSION));
+	CBlockIndex* pblockindex = mapBlockIndex[blockheader.hashPrevBlock];
+	if (chainActive.Contains(pblockindex)){
+		int hight = pblockindex->nHeight + 1;
+		entry.push_back(Pair("nHeight", strprintf("%d", hight)));
+	}
     entry.push_back(Pair("nVersion", blockheader.nVersion));
 	entry.push_back(Pair("hashPrevBlock", blockheader.hashPrevBlock.GetHex()));
 	entry.push_back(Pair("hashUncles", blockheader.hashUncles.GetHex()));
