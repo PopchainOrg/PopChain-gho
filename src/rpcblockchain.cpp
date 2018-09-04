@@ -81,7 +81,8 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("version", blockindex->nVersion));
 	/*popchain ghost*/
 	result.push_back(Pair("hashUncles",blockindex->hashUncles.GetHex()));
-	result.push_back(Pair("coinbase",blockindex->nCoinbase.GetHex()));
+	//result.push_back(Pair("coinbase",blockindex->nCoinbase.GetHex()));
+	result.push_back(Pair("coinbase",CBitcoinAddress(CKeyID(blockindex->nCoinbase)).ToString()));
 	/*popchain ghost*/
     result.push_back(Pair("merkleroot", blockindex->hashMerkleRoot.GetHex()));
     result.push_back(Pair("nameclaimroot", blockindex->hashClaimTrie.GetHex()));
@@ -113,7 +114,8 @@ void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry,int 
     entry.push_back(Pair("version", blockheader.nVersion));
 	entry.push_back(Pair("hashPrevBlock", blockheader.hashPrevBlock.GetHex()));
 	entry.push_back(Pair("hashUncles", blockheader.hashUncles.GetHex()));
-	entry.push_back(Pair("coinbase", blockheader.nCoinbase.GetHex()));
+	//entry.push_back(Pair("coinbase", blockheader.nCoinbase.GetHex()));
+	entry.push_back(Pair("coinbase",CBitcoinAddress(CKeyID(blockheader.nCoinbase)).ToString()));
 	entry.push_back(Pair("difficulty", strprintf("%d", blockheader.nDifficulty)));
 	entry.push_back(Pair("hashMerkleRoot", blockheader.hashMerkleRoot.GetHex()));
 	entry.push_back(Pair("hashClaimTrie", blockheader.hashClaimTrie.GetHex()));
@@ -137,8 +139,9 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("height", blockindex->nHeight));
     result.push_back(Pair("version", block.nVersion));
 	/*popchain ghost*/
-	result.push_back(Pair("hashUncles",block.hashUncles.GetHex()));
-	result.push_back(Pair("coinbase",block.nCoinbase.GetHex()));
+	result.push_back(Pair("hashUncles",block.hashUncles.GetHex()));	
+	result.push_back(Pair("coinbase",CBitcoinAddress(CKeyID(block.nCoinbase)).ToString()));
+	//result.push_back(Pair("coinbase",block.nCoinbase.GetHex()));
 	/*popchain ghost*/
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
     result.push_back(Pair("nameclaimroot", block.hashClaimTrie.GetHex()));
