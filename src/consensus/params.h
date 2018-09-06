@@ -41,7 +41,7 @@ struct Params {
     i64 premine;		// premine
     i64 genesisReward;          // genesis reward
     i64 minerReward4;		// block reward to miners per block in the 1st 4 years
-    i64 minerReward5;		// block reward to miners per block in the 2nd 4 years
+    //i64 minerReward5;		// block reward to miners per block in the 2nd 4 years
 	
     // founders reward
     i64 foundersReward;         // super block reward to founders in first 4 years
@@ -59,6 +59,7 @@ struct Params {
 
     int nSuperblockStartBlock;
     int nSuperblockCycle; // in blocks
+    double nUncleblockRatio;
     int nPopnodeMinimumConfirmations;
     /** Used to check majorities for block version upgrade */
     int nMajorityEnforceBlockUpgrade;

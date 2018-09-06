@@ -1772,18 +1772,18 @@ CAmount GetMinerSubsidy(const int height, const Consensus::Params &cp)
         // first 4 years
         if (height < intval)
         {
-            return cp.minerReward4;
+            return cp.minerReward4*(1-cp.nUncleblockRatio);
         }
         // from the 5th year on
         else
         {
             int halvings = (height - intval) / intval;
  	    // force subsidy to 0 when right shift 64 bit is undifined
-            if (halvings > 63)
+            if (halvings > 3)
 	    {
 	        return 0;
 	    }
-	    CAmount subsidy(cp.minerReward5);
+        CAmount subsidy(cp.minerReward4/2*(1-cp.nUncleblockRatio));
 	    subsidy >>= halvings;
             return subsidy;
         }

@@ -203,17 +203,18 @@ public:
         strNetworkID = "main";
 
         // reward setting
-        consensus.premine = int64_t(1e8 * COIN);                            // premine
+        consensus.premine = int64_t(6e8 * COIN);                            // premine
         consensus.genesisReward = int64_t(1 * COIN);                        // genesis
-        consensus.minerReward4 = int64_t(112.966 * COIN);                   // miners
-        consensus.minerReward5 = int64_t(133.775 * COIN);
-        consensus.foundersReward = int64_t(4166666.667 * COIN);             // founders
+        consensus.minerReward4 = int64_t(73.648 * COIN);                   // miners
+        //consensus.minerReward5 = int64_t(133.775 * COIN);
+        consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
 
-        consensus.nSubsidyHalvingInterval = 840960;                     // 4 years, 24 * 60 / 2.5 * 365 * 4 
+        consensus.nSubsidyHalvingInterval = 2803200;                     // 4 years, 24 * 60 * 60 * 365 * 4/ 45
         consensus.nInstantSendKeepLock = 24;
         consensus.nSuperblockStartBlock = 100;
-        consensus.nSuperblockCycle = 576 * 30; 				            // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nSuperblockCycle = 57600;
+        consensus.nUncleblockRatio = 0.1;
         consensus.nPopnodeMinimumConfirmations = 15;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
@@ -224,16 +225,16 @@ public:
         //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938a");
         consensus.difficultyBoundDivisor = 2048;
-        consensus.difficultyRapidFitDivisor = 200;
+        consensus.difficultyRapidFitDivisor = 1024;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
-        consensus.nYolandaTime = 172800;
+        consensus.nYolandaTime = 57600;
 		/*popchain ghost*/
         //consensus.nPowAveragingWindow = 17;
         //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
         //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
         //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
+        consensus.nPowTargetSpacing = 45;                         // Pop: 45 second
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916;                // 95% of 2016
@@ -333,18 +334,18 @@ public:
         strNetworkID = "test";
 
         // reward setting
-        consensus.premine = int64_t(1e7 * COIN);                            // premine
+        consensus.premine = int64_t(6e8 * COIN);                            // premine
         consensus.genesisReward = int64_t(1 * COIN);                        // genesis                                                           
-        consensus.minerReward4 = int64_t(300 * COIN);                   // miners
-        consensus.minerReward5 = int64_t(535.103 * COIN);
-        consensus.foundersReward = int64_t(200000 * COIN);             // founders
-
+        consensus.minerReward4 = int64_t(73.648 * COIN);                   // miners
+        //consensus.minerReward5 = int64_t(535.103 * COIN);
+        consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
 
-        consensus.nSubsidyHalvingInterval = 840960;
+        consensus.nSubsidyHalvingInterval = 1920;           //1 day
         consensus.nInstantSendKeepLock = 6;
-        consensus.nSuperblockStartBlock = 30;
-        consensus.nSuperblockCycle = 30; 				 // Superblocks can be issued hourly on testnet
+        consensus.nSuperblockStartBlock = 40;
+        consensus.nSuperblockCycle = 40;                    //30 minutes
+        consensus.nUncleblockRatio = 0.1;
         consensus.nPopnodeMinimumConfirmations = 2;
         consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
@@ -354,11 +355,11 @@ public:
         /* popchain ghost */
         //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyBoundDivisor = 1024;
         consensus.difficultyRapidFitDivisor = 50;
         //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
-        consensus.nYolandaTime = 500;
+        consensus.nYolandaTime = 960;
       
         /* popchain ghost */
         //consensus.nPowAveragingWindow = 17;
@@ -367,7 +368,7 @@ public:
         //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
         //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
         //consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
-        consensus.nPowTargetSpacing = 15;
+        consensus.nPowTargetSpacing = 45;
         consensus.fPowAllowMinDifficultyBlocks = true;
         //consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512;                // 75% for testchains
@@ -467,16 +468,17 @@ public:
     CRegTestParams() {
         strNetworkID = "regtest";
         // reward setting
-        consensus.premine = int64_t(1e8 * COIN);                            // premine    
+        consensus.premine = int64_t(6e8 * COIN);                            // premine
         consensus.genesisReward = int64_t(1 * COIN);                        // genesis
-        consensus.minerReward4 = int64_t(112.966 * COIN);                   // miners
-        consensus.minerReward5 = int64_t(535.103 * COIN);
-        consensus.foundersReward = int64_t(4166666.667 * COIN);             // founders
+        consensus.minerReward4 = int64_t(73.648 * COIN);                   // miners
+        //consensus.minerReward5 = int64_t(535.103 * COIN);
+        consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nInstantSendKeepLock = 6;
         consensus.nSuperblockStartBlock = 1500;
         consensus.nSuperblockCycle = 10;
+        consensus.nUncleblockRatio = 0.1;
         consensus.nPopnodeMinimumConfirmations = 1;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
@@ -489,7 +491,7 @@ public:
         //consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
         //consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
         //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
+        consensus.nPowTargetSpacing = 45;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         /*popchain ghost*/
