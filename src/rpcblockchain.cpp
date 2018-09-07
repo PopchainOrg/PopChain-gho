@@ -102,26 +102,27 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
 }
 
 /*popchain ghost*/
-void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry,int blockhight)
+void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry,int blockhight,CAmount unclereward)
 {
 	entry.push_back(Pair("blockhight", blockhight));
     entry.push_back(Pair("hash", blockheader.GetHash().GetHex()));
 	CBlockIndex* pblockindex = mapBlockIndex[blockheader.hashPrevBlock];
 	if (chainActive.Contains(pblockindex)){
 		int hight = pblockindex->nHeight + 1;
-		entry.push_back(Pair("height", strprintf("%d", hight)));
+		entry.push_back(Pair("height", hight));
 	}
     entry.push_back(Pair("version", blockheader.nVersion));
 	entry.push_back(Pair("hashPrevBlock", blockheader.hashPrevBlock.GetHex()));
 	entry.push_back(Pair("hashUncles", blockheader.hashUncles.GetHex()));
 	//entry.push_back(Pair("coinbase", blockheader.nCoinbase.GetHex()));
 	entry.push_back(Pair("coinbase",CBitcoinAddress(CKeyID(blockheader.nCoinbase)).ToString()));
-	entry.push_back(Pair("difficulty", strprintf("%d", blockheader.nDifficulty)));
+	entry.push_back(Pair("difficulty", blockheader.nDifficulty));
 	entry.push_back(Pair("hashMerkleRoot", blockheader.hashMerkleRoot.GetHex()));
 	entry.push_back(Pair("hashClaimTrie", blockheader.hashClaimTrie.GetHex()));
-	entry.push_back(Pair("time", strprintf("%d", blockheader.nTime)));
+	entry.push_back(Pair("time", (int64_t)blockheader.nTime));
 	entry.push_back(Pair("bits", strprintf("%08x", blockheader.nBits)));
 	entry.push_back(Pair("nonce", blockheader.nNonce.GetHex()));
+	entry.push_back(Pair("unclereward", ValueFromAmount(unclereward)));	
 }
 
 /*popchain ghost*/
@@ -169,16 +170,6 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 	int addressType;
 	BOOST_FOREACH(const CBlockHeader&uh, block.vuh)
 	{
-		//UniValue objUh(UniValue::VOBJ);
-		//uhs.push_back(uh.GetHash().GetHex());
-		//uhs.push_back(uh.ToString());
-		if(uhDetails){
-			UniValue objUh(UniValue::VOBJ);
-            uncleblockheaderToJSON(uh,objUh,blockindex->nHeight);
-            uhs.push_back(objUh);
-		} else{
-			uhs.push_back(uh.GetHash().GetHex());
-		}
 		coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
 			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
@@ -188,6 +179,16 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 			}
 		}
 		uhsr.push_back(ValueFromAmount(tmpAmount));
+
+
+		if(uhDetails){
+			UniValue objUh(UniValue::VOBJ);
+            uncleblockheaderToJSON(uh,objUh,blockindex->nHeight,tmpAmount);
+            uhs.push_back(objUh);
+		} else{
+			uhs.push_back(uh.GetHash().GetHex());
+		}
+
 		tmpAmount = 0;
 		uncleCount++;
 	}
@@ -698,7 +699,20 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 		blockheader = block.vuh[nIndex];
 		const CBlockHeader& cblockheader = block.vuh[nIndex];
 		//uncleblockheaderToJSON(cblockheader,objUh);
-		uncleblockheaderToJSON(cblockheader,objUh,pblockindex->nHeight);
+		
+		uint160 coinBaseAddress;
+		uint160 tmpAddress;
+		CAmount tmpAmount = 0;
+		int addressType;
+		coinBaseAddress  = block.vuh[nIndex].nCoinbase;
+		for (const CTxOut &out: block.vtx[0].vout){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
+				if(coinBaseAddress == tmpAddress){
+					tmpAmount += out.nValue;
+				}
+			}
+		}
+		uncleblockheaderToJSON(cblockheader,objUh,pblockindex->nHeight,tmpAmount);
 	}
 
 	/*
