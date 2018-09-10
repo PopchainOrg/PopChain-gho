@@ -168,11 +168,12 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 	uint160 tmpAddress;
 	CAmount tmpAmount = 0;
 	int addressType;
+	const CChainParams& chainparams = Params();
 	BOOST_FOREACH(const CBlockHeader&uh, block.vuh)
 	{
 		coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
-			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue < GetMinerSubsidy(blockindex->nHeight,chainparams.GetConsensus()))){
 				if(coinBaseAddress == tmpAddress){
 						tmpAmount += out.nValue;
 				}
@@ -694,6 +695,8 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 	//std::vector<CBlockHeader> vuh = block.vuh;
 	CBlockHeader blockheader;
 
+	const CChainParams& chainparams = Params();
+
 	if((nIndex >= 0)&&(nIndex < block.vuh.size())){
 		bGetUncle = true;
 		blockheader = block.vuh[nIndex];
@@ -706,7 +709,7 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 		int addressType;
 		coinBaseAddress  = block.vuh[nIndex].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
-			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue < GetMinerSubsidy(pblockindex->nHeight,chainparams.GetConsensus()))){
 				if(coinBaseAddress == tmpAddress){
 					tmpAmount += out.nValue;
 				}
