@@ -123,6 +123,8 @@ void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry,int 
 	entry.push_back(Pair("bits", strprintf("%08x", blockheader.nBits)));
 	entry.push_back(Pair("nonce", blockheader.nNonce.GetHex()));
 	entry.push_back(Pair("unclereward", ValueFromAmount(unclereward)));	
+	entry.push_back(Pair("valueSat", unclereward));	
+	
 }
 
 /*popchain ghost*/
