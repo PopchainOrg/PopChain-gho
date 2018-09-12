@@ -173,7 +173,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 	{
 		coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
-			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue < GetMinerSubsidy(blockindex->nHeight,chainparams.GetConsensus()))){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue <= (7 * GetMinerSubsidy(blockindex->nHeight,chainparams.GetConsensus()) / 8))){
 				if(coinBaseAddress == tmpAddress){
 						tmpAmount += out.nValue;
 				}
@@ -709,7 +709,7 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 		int addressType;
 		coinBaseAddress  = block.vuh[nIndex].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
-			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue < GetMinerSubsidy(pblockindex->nHeight,chainparams.GetConsensus()))){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue <= (7 * GetMinerSubsidy(pblockindex->nHeight,chainparams.GetConsensus()) / 8))){
 				if(coinBaseAddress == tmpAddress){
 					tmpAmount += out.nValue;
 				}

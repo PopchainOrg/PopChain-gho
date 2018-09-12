@@ -4384,6 +4384,10 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
         }
     }
 	/*popchain ghost*/
+	if(block.vuh.size() > 2){
+		LogPrintf("CheckBlock():ERROR uncle header size %d error \n",block.vuh.size());
+		return false;
+	}
 
 	uint160 coinBaseAddress;
 	uint160 tmpAddress;
@@ -4393,6 +4397,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 	int tmpBlockHeight = 0;
 	CAmount tmpSubAmount =0;
 	const CChainParams& chainparams = Params();
+	uint160 preCoinBaseAddress = uint160();
+	CAmount tmpPreAmount = 0;
 
 	if(block.vuh.size() != 0 && nHeight != 0){
 		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
@@ -4419,6 +4425,20 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 				LogPrintf("CheckBlock():ERROR %d uncle header coinbase not match \n",uncleCount);
 				return false;
 			}
+			/*only work uncle header size 2*/
+			if(preCoinBaseAddress == coinBaseAddress){
+				tmpPreAmount += tmpSubAmount;
+				if(tmpAmount >= tmpPreAmount){
+					LogPrintf("CheckBlock(): %s two same uncle miner uncle header coinbase match \n",CBitcoinAddress(CKeyID(coinBaseAddress)).ToString());
+				} else{
+					LogPrintf("CheckBlock():ERROR %s  two same uncle miner uncle header coinbase not match \n",CBitcoinAddress(CKeyID(coinBaseAddress)).ToString());
+					return false;
+				}
+			} else{
+				tmpPreAmount = tmpSubAmount;
+				preCoinBaseAddress = coinBaseAddress;
+			}
+			
 			tmpAmount = 0;
 			tmpBlockHeight = 0;
 			tmpSubAmount =0;
