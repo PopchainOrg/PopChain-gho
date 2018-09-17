@@ -94,13 +94,6 @@ namespace Checkpoints {
     }
 
     
-    /*PairCheckpoints ForceGetLastCheckpoint(const CCheckpointData& data){
-        const MapCheckpoints& checkpoints = data.mapCheckpoints;
 
-        BOOST_REVERSE_FOREACH(const MapCheckpoints::value_type& i, checkpoints){
-            return i;
-        }
-    }
-    */
 
 } // namespace Checkpoints
