@@ -89,7 +89,6 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
 static void findGenesis(CBlockHeader *pb, const std::string &net)
 {
 	/*popchain ghost*/
-    //arith_uint256 hashTarget = arith_uint256().SetCompact(pb->nBits);
     arith_uint256 hashTarget = maxUint256Div(pb->nDifficulty);
 
 	/*popchain ghost*/
@@ -99,7 +98,7 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
     std::vector<std::thread> threads;
 
     for (int i = 0; i < std::min(GetNumCores(), 100); ++i)
-    //for (int i = 0; i < 1; ++i)
+    
     {
         if (i >= 0)
         {
@@ -109,7 +108,7 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
         	nonce <<= 32;
         	nonce >>= 16;
         	pb->nNonce = ArithToUint256(nonce);
-		//std::cout<<"i = "<<i<<"    nNonce = "<<pb->nNonce.ToString()<<std::endl;	
+		
         }
         threads.push_back(std::thread(_get, pb, hashTarget));
     }
@@ -122,7 +121,6 @@ static void findGenesis(CBlockHeader *pb, const std::string &net)
 #endif
 /*popchain ghost*/
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint64_t nDifficulty, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
-//static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint256 nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward)
 {
     CMutableTransaction txNew;
     txNew.nVersion = 1;
@@ -153,40 +151,22 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     return genesis;
 }
 /*popchain ghost*/
-/**
- * Build the genesis block. Note that the output of its generation
- * transaction cannot be spent since it did not originally exist in the
- * database.
- *
- * CBlock(hash=00000ffd590b14, ver=1, hashPrevBlock=00000000000000, hashMerkleRoot=e0028e, nTime=1390095618, nBits=1e0ffff0, nNonce=28917698, vtx=1)
- *   CTransaction(hash=e0028e, ver=1, vin.size=1, vout.size=1, nLockTime=0)
- *     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d01044c5957697265642030392f4a616e2f3230313420546865204772616e64204578706572696d656e7420476f6573204c6976653a204f76657273746f636b2e636f6d204973204e6f7720416363657074696e6720426974636f696e73)
- *     CTxOut(nValue=50.00000000, scriptPubKey=0xA9037BAC7050C479B121CF)
- *   vMerkleTree: e0028e
- */
- /*popchain ghost*/
 
-//static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const int64_t& genesisReward)
+
+/*popchain ghost*/
 static CBlock CreateGenesisBlock(uint32_t nTime, uint256 nNonce, uint64_t nDifficulty, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "pop hold value testnet.";
-    //const char* pszTimestamp = "hope u happiness in canada gg by armin.";
     const CScript genesisOutputScript = CScript() << ParseHex("034c73d75f59061a08032b68369e5034390abc5215b3df79be01fb4319173a88f8") << OP_CHECKSIG;
-    //std::vector<unsigned char > printscript(genesisOutputScript.begin(),genesisOutputScript.end);
-    //std::cout<< StrHex(printscript)<<endl ;
-    //return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nBits, nVersion, genesisReward);
 }
 /*popchain ghost*/
 
 /*popchain ghost*/
-//static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint256 nDifficulty, int32_t nVersion, const int64_t& genesisReward)                                                                                                                
 static CBlock CreateGenesisBlock1(uint32_t nTime, uint256 nNonce, uint64_t nDifficulty, uint32_t nBits, int32_t nVersion, const int64_t& genesisReward)
 {
     const char* pszTimestamp = "Change the World with Us. 22/May/2018, 00:00:00, GMT";
-    //const char* pszTimestamp = "Shall I compare thee to a summer's day? 23/Jan/2011, Sy Forever";
     const CScript genesisOutputScript = CScript() << ParseHex("041c508f27e982c369486c0f1a42779208b3f5dc96c21a2af6004cb18d1529f42182425db1e1632dc6e73ff687592e148569022cee52b4b4eb10e8bb11bd927ec0") << OP_CHECKSIG;
-    //return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nVersion, genesisReward);
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nDifficulty, nBits, nVersion, genesisReward);
 }
 /*popchain ghost*/
@@ -222,18 +202,13 @@ public:
         consensus.BIP34Height = 0; 
         consensus.BIP34Hash = uint256S("0x0000083331b8aa57aaae020d79aabe4136ebea6ce29be3a50fcaa2a55777e79c");
 		/*popchain ghost*/
-        //consensus.powLimit = uint256S("0x000009b173000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938a");
         consensus.difficultyBoundDivisor = 2048;
         consensus.difficultyRapidFitDivisor = 1024;
-        //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 1730830;                          // minidifficulty for target
         consensus.nYolandaTime = 57600;
 		/*popchain ghost*/
-        //consensus.nPowAveragingWindow = 17;
-        //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
-        //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
-        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
+
         consensus.nPowTargetSpacing = 45;                         // Pop: 45 second
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
@@ -266,7 +241,7 @@ public:
         genesis = CreateGenesisBlock1(1535450353, uint256S("0x0000822e5bbe1008065a348e3d2e3e846076a26172ce25659b1e37f6ed1e699c"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, consensus.genesisReward);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        //arith_uint256 a("0x000009b173000000000000000000000000000000000000000000000000000000");
+        
         arith_uint256 a("0x000009b173149ff8b3a49a388d7ebdd0e1eb76d294f9e5f648f254d81ad0938aL");
 		/*popchain ghost*/
         std::cout << "\tpow:\t" << a.GetCompact()  << " "<< nTempBit.GetCompact() << std::endl;
@@ -352,25 +327,17 @@ public:
         consensus.nMajorityWindow = 100;
         consensus.BIP34Height = 0;
         consensus.BIP34Hash = uint256S("00065185c3ffa77ff797ea3141fba9b1ab76a0f336863dec1199042ca5560fc4");
+		
         /* popchain ghost */
-        //consensus.powLimit = uint256S("0x000fffffff000000000000000000000000000000000000000000000000000000");
         consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.difficultyBoundDivisor = 1024;
         consensus.difficultyRapidFitDivisor = 50;
-        //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 4096;
         consensus.nYolandaTime = 960;
-      
         /* popchain ghost */
-        //consensus.nPowAveragingWindow = 17;
-        //consensus.nPowMaxAdjustDown = 32;                               // 32% adjustment down
-        //consensus.nPowMaxAdjustUp = 16;                                 // 16% adjustment up
-        //consensus.nPowMaxAdjustUp = 48;                                 // 48% adjustment up
-        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
-        //consensus.nPowTargetSpacing = 2.5 * 60;                         // Pop: 2.5 minutes
+
         consensus.nPowTargetSpacing = 45;
         consensus.fPowAllowMinDifficultyBlocks = true;
-        //consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512;                // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; 			// nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -392,7 +359,6 @@ public:
         nPruneAfterHeight = 1000;
 	    /*popchain ghost*/
    		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit); 
-        //genesis = CreateGenesisBlock(1529894661, uint256S("0000374f752799accf0ae43870b1764e17fc0e4a45ebd19adb80597bf0c30097"), nTempBit.GetCompact(), 1,  1 * COIN);
         genesis = CreateGenesisBlock(1529894661, uint256S("0x00005f1403ee998d921de9a0d0b5d53a9a37ef9f58d9cefb8ae1936ae07c00e8"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1,  1 * COIN);
 
 		/*popchain ghost*/
@@ -404,7 +370,6 @@ public:
         //findGenesis(&genesis, "testnet");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("00077ade31e190b0dccd194c02c8e84bf77db7d037d8a8c3c2c82f89145e3e0a"));
         assert(consensus.hashGenesisBlock == uint256S("0x0009d363a3cb4f69655dc06f4fcd8f648b38e0b35ca545fb05f21f2e1f2ba92d"));
         assert(genesis.hashMerkleRoot == uint256S("0x6f73646aa71aeec2163e047e0028e2c4313f3e88d4fb3e1ade176c56e1a148c4"));
 
@@ -471,7 +436,6 @@ public:
         consensus.premine = int64_t(6e8 * COIN);                            // premine
         consensus.genesisReward = int64_t(1 * COIN);                        // genesis
         consensus.minerReward4 = int64_t(73.648 * COIN);                   // miners
-        //consensus.minerReward5 = int64_t(535.103 * COIN);
         consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
         consensus.nSubsidyHalvingInterval = 150;
@@ -487,20 +451,17 @@ public:
         consensus.BIP34Hash = uint256();
         // ghost
         consensus.powLimit = uint256S("0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f");
-        //consensus.nPowAveragingWindow = 17;
-        //consensus.nPowMaxAdjustDown = 0;                                // Turn off adjustment down
-        //consensus.nPowMaxAdjustUp = 0;                                  // Turn off adjustment up
-        //consensus.nPowTargetTimespan = 24 * 60 * 60;                    // Pop: 1 day
         consensus.nPowTargetSpacing = 45;                         // Pop: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
+		
         /*popchain ghost*/
         consensus.difficultyBoundDivisor = 2048;
         consensus.difficultyRapidFitDivisor = 20;
-        //consensus.durationLimit = 13;
         consensus.minimumDifficulty = 17;
         consensus.nYolandaTime = 100;
         /*popchain ghost*/
+		
         consensus.nRuleChangeActivationThreshold = 108;                 // 75% for testchains
         consensus.nMinerConfirmationWindow = 144;                       // Faster than normal for regtest (144 instead of 2016)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -522,10 +483,9 @@ public:
         genesis = CreateGenesisBlock1(1529894661, uint256S("0x0000ced7958e0eb78a0af58fde4dac17e48b249ff4f838cec072d47bbdf20000"), consensus.minimumDifficulty, nTempBit.GetCompact(), 1, 1 * COIN);
 		/*popchain ghost*/
 #ifdef GENESIS_GENERATION
-        findGenesis(&genesis, "regtest");
+       //findGenesis(&genesis, "regtest");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("01bb1c4d83e5cd73ad4fe568fa2b50469d33def5703dca7e90e06f32f273b95d"));
         assert(consensus.hashGenesisBlock == uint256S("0x09e79432d30ea2703e8e701d3d2885e56dd350c7e584a8cf4cc04998c1f99956"));
         assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
 

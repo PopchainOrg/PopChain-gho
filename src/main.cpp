@@ -136,25 +136,7 @@ namespace {
 
     struct CBlockIndexWorkComparator
     {
-//        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
-//            // First sort by most total work, ...
-//            std::cout<<"pa->nChainWork "<<pa->nChainWork.ToString()<<" pb->nChainWork "<<pb->nChainWork.ToString()<<std::endl;
-//            std::cout<<"pa->nSequenceId "<<pa->nSequenceId<<" pb->nSequenceId "<<pb->nSequenceId<<std::endl;
-//            if (pa->nChainWork > pb->nChainWork) return false;
-//            if (pa->nChainWork < pb->nChainWork) return true;
 
-//            // ... then by earliest time received, ...
-//            if (pa->nSequenceId < pb->nSequenceId) return false;
-//            if (pa->nSequenceId > pb->nSequenceId) return true;
-
-//            // Use pointer address as tie breaker (should only happen with blocks
-//            // loaded from disk, as those all have id 0).
-//            if (pa < pb) return false;
-//            if (pa > pb) return true;
-
-//            // Identical blocks.
-//            return false;
-//        }
 
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
@@ -1731,11 +1713,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
     }
 
     // Check the header
-
-//arith_uint256 k = UintToArith256(block.GetHash());
-//LogPrintf("\t\t\tblock = %s\n\t\t\thash = %s\n\t\t\tarith hash = %s\n", block.ToString().c_str(), block.GetHash().ToString().c_str(), k.ToString().c_str());	
 	/*popchain ghost*/
-	//if (!CheckProofOfWork(block.GetHash(), block.nDifficulty, consensusParams))
 	if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 	/*popchain ghost*/
@@ -1832,13 +1810,8 @@ CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
 
 // return all subsidy
 /*popchain ghost*/
-//CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp)
 CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp, const CBlock& block)
 {	
-	/*
-    return GetMinerSubsidy(height, cp) +
-           GetFoundersReward(height, cp);
-	*/
 	CAmount ret = GetMainMinerSubsidy(height, cp, block.vuh.size());
     int tmpBlockHeight = 0;  
 	for(int i = 0;i < block.vuh.size(); i++){
@@ -1847,7 +1820,6 @@ CAmount GetBlockSubsidy(const int height, const Consensus::Params &cp, const CBl
         }	
 	}	
 	ret += GetFoundersReward(height, cp);
-	//LogPrintf("GetBlockSubsidy at height: %d ,hash: s%,amount: %d",height,(*block).GetHash(),ret);
 	return ret;
 }
 
@@ -2621,7 +2593,6 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
 
 bool GetBlockHash(uint256& hashRet, int nBlockHeight)
 {
-    //LOCK(cs_main);
     if(chainActive.Tip() == NULL) return false;
     if(nBlockHeight < -1 || nBlockHeight > chainActive.Height()) return false;
     if(nBlockHeight == -1) nBlockHeight = chainActive.Height();
@@ -2632,7 +2603,6 @@ bool GetBlockHash(uint256& hashRet, int nBlockHeight)
 /*popchain ghost*/
 bool GetBlockHeight(uint256 hash, int* hight)
 {
-	//LOCK(cs_main);
 	if (hash != uint256()) {
         BlockMap::iterator mi = mapBlockIndex.find(hash);
         if (mi != mapBlockIndex.end() && (*mi).second) {
@@ -2647,7 +2617,6 @@ bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vC
 {
 	LOCK(cs_main);
 	LogPrintf("GetAncestorBlocksFromHash \n");
-	//uint32_t number=0;
 	if(hash == uint256())
 		return false;
 	BlockMap::iterator mi = mapBlockIndex.find(hash);
@@ -2666,7 +2635,6 @@ bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vC
 
 bool MakeCurrentCycle(uint256 hash)
 {
-	//LOCK(cs_main);
 	LogPrintf("MakeCurrentCycle \n");
 	if(hash == uint256())
 		return false;
@@ -2701,7 +2669,6 @@ bool MakeCurrentCycle(uint256 hash)
 
 bool CommitUncle(CBlockHeader uncle)
 {	
-	//LOCK(cs_main);
 	LogPrintf("CommitUncle \n");
 	uint256 hash = uncle.GetHash();
 	if(setCurrentUncle.count(hash) != 0){
@@ -2724,13 +2691,11 @@ void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 	LogPrintf("FindBlockUncles in \n");
 	if(parenthash == uint256()){
 		LogPrintf("FindBlockUncles out 1 \n");
-		//std::cout<<"parenthash == uint256()"<<endl;
 		return;
 	}
 	
 	if(parenthash == currentParenthash){
 		LogPrintf("FindBlockUncles out 2 \n");
-		//std::cout<<"parenthash == currentParenthash"<<endl;
 		for(BlockSetGho::iterator it = setCurrentUncle.begin(); it != setCurrentUncle.end(); ++it){
 			BlockMapGho::iterator mi = mapPossibleUncles.find(*it);
 			vuncles.push_back((*mi).second);	
@@ -2745,14 +2710,12 @@ void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 
 	if(!MakeCurrentCycle(parenthash)){
 		LogPrintf("FindBlockUncles out 3 \n");
-		//std::cout<<"!MakeCurrentCycle(parenthash"<<endl;
 		return;
 	}	
 
 	CBlock block;
 	CBlockHeader blockheader;
 	std::vector<uint256> badUncles;
-	//std::vector<CBlockHeader> goodUncles;
 	for(BlockMapGho::iterator it= mapPossibleUncles.begin(); it != mapPossibleUncles.end(); ++it){
 		if(vuncles.size() == 2){
 			break;
@@ -2766,22 +2729,14 @@ void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 		}
 	}
 
-	//std::cout<<"findblockuncle vunces size"<<vuncles.size()<<endl;
-	//std::cout<<"findblockuncle baduncles size "<<badUncles.size()<<endl;
-	
 	for(std::vector<uint256>::iterator it = badUncles.begin(); it != badUncles.end(); ++it){
 		BlockMapGho::iterator mi = mapPossibleUncles.find(*it);
 		mapPossibleUncles.erase(mi);
 	}
 	LogPrintf("FindBlockUncles mapPossibleUncles size %d\n",mapPossibleUncles.size());
-	//std::cout<<"findblockuncle parenthash "<<parenthash.ToString()<<endl;
-	//std::cout<<"findblockuncle curentrparenthash "<<currentParenthash.ToString()<<endl;
 	LogPrintf("FindBlockUncles out 4 \n");
 	return;
 }
-
-
-
 
 /*popchain ghost*/
 
@@ -3179,13 +3134,6 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     assert(trieCache.incrementBlock(blockundo.insertUndo, blockundo.expireUndo, blockundo.insertSupportUndo, blockundo.expireSupportUndo, blockundo.takeoverHeightUndo));
 
-    /*if (trieCache.getMerkleHash() != block.hashClaimTrie)
-    {
-        return state.DoS(100,error("ConnectBlock() : the merkle root of the claim trie does not match "
-                               "(actual=%s vs block=%s)", trieCache.getMerkleHash().GetHex(),
-                              block.hashClaimTrie.GetHex()), REJECT_INVALID, "bad-claim-merkle-hash");
-    }*/
-
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint("bench", "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
@@ -3196,7 +3144,6 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // to recognize that block is actually invalid.
     // TODO: resync data (both ways?) and try to reprocess this block later.
     /*popchain ghost*/
-    //CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
 	CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), block);
 	/*popchain ghost*/
     std::string strError = "";
@@ -3477,7 +3424,6 @@ bool static DisconnectTip(CValidationState& state, const Consensus::Params& cons
             return error("DisconnectTip(): DisconnectBlock %s failed", pindexDelete->GetBlockHash().ToString());
         assert(view.Flush());
         assert(trieCache.flush());
-        //assert(pindexDelete->pprev->hashClaimTrie == trieCache.getMerkleHash());
     }
     LogPrint("bench", "- Disconnect block: %.2fms\n", (GetTimeMicros() - nStart) * 0.001);
     // Write the chain state to disk, if necessary.
@@ -3724,9 +3670,6 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
                 possibleBlockHash = pindexPossibleBlock->GetBlockHash();
                 ReadBlockFromDisk(possibleBlock, pindexPossibleBlock, chainparams.GetConsensus());
                 mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
-//                std::cout<<"ActivateBestChainStep add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
-//                std::cout<<"ActivateBestChainStep add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
-//                std::cout<<"ActivateBestChainStep after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
                 LogPrintf("ActivateBestChainStep possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
 		}
 		/*popchain ghost*/
@@ -3818,10 +3761,6 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
                         CBlock possibleBlock = *pblock;
                         uint256 possibleBlockHash = possibleBlock.GetHash();
                         mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
-                         //mapPossibleUncles.insert(std::make_pair(pblock->GetHash(),*pblock));
-//                        std::cout<<"ActivateBestChain add to possibleUncles block hash: "<<possibleBlockHash.ToString()<<std::endl;
-//                        std::cout<<"ActivateBestChain add to possibleUncles block : "<<possibleBlock.ToString()<<std::endl;
-//                        std::cout<<"ActivateBestChain after add possibleUncles size : "<<mapPossibleUncles.size()<<std::endl;
                         LogPrintf("ActivateBestChain possibleUncles add %s,now possibleUncles size %d",possibleBlockHash.ToString(),mapPossibleUncles.size());
                     }
 				return true;
@@ -4149,7 +4088,6 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
 {
     // Check proof of work matches claimed amount
     /*popchain ghost*/
-	//if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nDifficulty, Params().GetConsensus()))
 	if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
 	{
 		LogPrintf("CheckBlockHeader(): \n--b-l-o-c-k---%s\n\n", block.ToString().c_str());
@@ -4198,14 +4136,9 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 		uint256 hashUncleRoot = BlockUncleRoot(block);
 		if(block.hashUncles != hashUncleRoot){
 			/*popchain ghost*/
-//			std::cout<<"bad-uncleshash block.hashUncles: "<<block.hashUncles.ToString()<<endl;
-//			std::cout<<"bad-uncleshash hashUncleRoot: "<<hashUncleRoot.ToString()<<endl;
-//			std::cout<<"bad-uncleshash block.vuh.size(): "<<block.vuh.size()<<endl;
 			CBlock dBlock = block;
 			for(std::vector<CBlockHeader>::iterator it = dBlock.vuh.begin(); it != dBlock.vuh.end(); ++it){
-				CBlockHeader blockheader = *it;
-                //std::cout<<" bad-uncleshash block.vuh[]: "<<blockheader.ToString()<<endl;
-				
+				CBlockHeader blockheader = *it;	
 			}
 			/*popchain ghost*/
 			return state.DoS(100, error("CheckBlock(): hashUncles mismatch"),
@@ -4227,24 +4160,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     if (block.vtx.empty() || !block.vtx[0].IsCoinBase())
         return state.DoS(100, error("CheckBlock(): first tx is not coinbase"),
                          REJECT_INVALID, "bad-cb-missing");
-	/*popchain ghost*/
-	/*
-	uint160 coinBaseAddress;
-	int addressType;
-	CScript scriptPubKeyIn = block.vtx[0].vout[0].scriptPubKey;
-    const CChainParams& chainparams = Params();
-	if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
-			if(!(block.nCoinbase == coinBaseAddress) && (block.GetHash() != chainparams.GetConsensus().hashGenesisBlock)){
-				return state.DoS(100, error("CheckBlock(): first tx coinbase not match"),
-                         REJECT_INVALID, "bad-cb-notmatch");
-			}
-			LogPrintf("CheckBlock hash: %s nCoinBase match \n",block.GetHash());
-	} else{
-			return state.DoS(100, error("CheckBlock(): first tx coinbase address error"),
-                         REJECT_INVALID, "bad-cb-addresserror");
-	}
-	*/
-	/*popchain ghost*/
+
     for (unsigned int i = 1; i < block.vtx.size(); i++)
         if (block.vtx[i].IsCoinBase())
             return state.DoS(100, error("CheckBlock(): more than one coinbase"),
@@ -4331,7 +4247,6 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
 	/*popchain ghost*/
 
     // Check proof of work
-    //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
     if (block.nDifficulty != calculateDifficulty(pindexPrev, &block, consensusParams))
     {
 	    return state.DoS(100, error("%s : incorrect proof of work at %d", __func__, nHeight),
@@ -4444,31 +4359,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 			tmpSubAmount =0;
 		}
 	}
-			
-	/*
-	if(block.vuh.size() != 0){
-		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
-			scriptPubKeyIn = block.vtx[0].vout[uncleCount + 1].scriptPubKey;
-			if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
-                const CChainParams& chainparams = Params();
-				if(!(block.vuh[uncleCount].nCoinbase == coinBaseAddress) && (nHeight != 0)){
-					return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase not match"),
-                         REJECT_INVALID, "bad-cb-notmatch");
-				}
-			
-				LogPrintf("CheckBlock hash: %s nCoinBase match \n",block.GetHash().ToString());
-
-			} else{
-				return state.DoS(100, error("CheckBlock(): first tx uncle header coinbase address error"),
-                         REJECT_INVALID, "bad-cb-addresserror");
-			}
-			
-		}
-		
-	}
-
-	*/
-	
+				
 	/*popchain ghost*/
     // Enforce block.nVersion=2 rule that the coinbase starts with serialized block height
     // if 750 of the last 1,000 blocks are version 2 or greater (51/100 if testnet):
@@ -4499,7 +4390,6 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 		return true;
 	}
 	LogPrintf("AcceptUnclesHeader block:%s \n", block.GetHash().ToString());
-	//LogPrintf("AcceptUnclesHeader uncles size: %d \n", tmpSize);
 
 	//const CChainParams& chainparams = Params();
 	LogPrintf("AcceptUnclesHeader() GetAncestorBlocksFromHash block.hashPrevBlock %s \n", block.hashPrevBlock.ToString());
@@ -4522,17 +4412,14 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 			for(std::vector<CBlockHeader>::iterator bi = tmpBlock.vuh.begin(); bi != tmpBlock.vuh.end(); ++bi){
 				tmpBlockHeader = *bi;
 				unclesset.insert(tmpBlockHeader.GetHash());
-				//LogPrintf("AcceptUnclesHeader unclesset nNmber: %d , hash:%s \n",tmpBlockHeader.nNumber,tmpBlockHeader.GetHash().ToString());
 			}
 			ancestorset.insert(tmpBlockIndex->GetBlockHash());
-			//LogPrintf("AcceptUnclesHeader ancestorset nNmber: %d , hash:%s \n",tmpBlockIndex->nNumber,tmpBlockIndex->GetBlockHash().ToString());
 		} else{
 			return false;
 		}
 	}	
 
 	LogPrintf("AcceptUnclesHeader ancestorset size: %d \n", ancestorset.size());
-	//LogPrintf("AcceptUnclesHeader unclesset size: %d \n", unclesset.size());
 		
 	for(std::vector<CBlockHeader>::iterator it = blockUncles.begin(); it != blockUncles.end(); ++it){
 		tmpBlockHeader = *it;
@@ -4540,21 +4427,20 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 		if(unclesset.count(tmpHash) != 0){
 			return false;
 		}
-	//LogPrintf("AcceptUnclesHeader unclesset check ok\n");
+		
 		if(ancestorset.count(tmpBlockHeader.hashPrevBlock) == 0){
 			return false;
 		}
-	//LogPrintf("AcceptUnclesHeader ancestorset parent check ok\n");
+
 		if(ancestorset.count(tmpHash) !=0){
 			return false;
 		}
-	//LogPrintf("AcceptUnclesHeader ancestorset self check ok\n");
+
 		if(fCheckPOW){
 			if(!CheckBlockHeader(tmpBlockHeader,state,fCheckPOW)){
 				return false;
 			}
 		}
-	//LogPrintf("AcceptUnclesHeader CheckBlockHeader check ok\n");
 	}
 
 	LogPrintf("AcceptUnclesHeader OK \n");
@@ -4741,7 +4627,6 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, c
 	/*popchain ghost*/
 	if(pblock->hashUncles != uint256()){
 		CBlock blockhasuncle = *pblock;
-        //std::cout<<"ProcessNewBlock block have uncles: "<<blockhasuncle.ToString()<<endl;
 		LogPrintf("%s :block %s has uncle \n", __func__,blockhasuncle.ToString());
 	}
 	/*popchain ghost*/
@@ -6633,24 +6518,10 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 
         CBlockIndex *pindexLast = NULL;
 	    
-	    //prevent chain sync.    
-	    /*PairCheckpoints lastCheckpoint_t;
-         const CChainParams& chainparams_t = Params();
-        if (fCheckpointsEnabled) {
-            lastCheckpoint_t = Checkpoints::ForceGetLastCheckpoint(chainparams_t.Checkpoints());
-        }*/
 	    
         BOOST_FOREACH(const CBlockHeader& header, headers) {
             CValidationState state;
 		
-	     /*if (pindexLast !=NULL && pindexLast->nHeight == lastCheckpoint_t.first && lastCheckpoint_t.first != 0){
-	         if (header.hashPrevBlock != lastCheckpoint_t.second){
-                	LogPrintf("synchronous chain hash = %s\n",header.hashPrevBlock.ToString());
-                    	LogPrintf("lastCheckpoint height = %d, lastCheckpoint hash = %s\n",lastCheckpoint_t.first,lastCheckpoint_t.second.ToString());
-                    	return error("prevent chain synchronization.\n");
-                }
-                else LogPrintf("checkpoint verify correct.\n");
-            }*/
 		
             if (pindexLast != NULL && header.hashPrevBlock != pindexLast->GetBlockHash()) {
                 Misbehaving(pfrom->GetId(), 20);

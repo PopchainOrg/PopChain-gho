@@ -44,7 +44,7 @@ void CSuperblockManager::AppendFoundersReward(CMutableTransaction& txNewRet, int
     
     CTxOut txout = CTxOut(foundersReward, foundersScript);
     txNewRet.vout.push_back(txout);
-    //voutSuperblockRet.push_back(txout);
+
 
     // PRINT NICE LOG OUTPUT FOR SUPERBLOCK PAYMENT
     txoutFound=txout;
@@ -105,7 +105,6 @@ bool CSuperblock::IsValidBlockHeight(int nBlockHeight)
 
 // Popchain DevTeam
 /*popchain ghost*/
-//CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight)
 CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight, const CBlock& block)
 {
     const Consensus::Params& consensusParams = Params().GetConsensus();
@@ -140,10 +139,8 @@ bool CSuperblock::IsFounderValid(const CTransaction& txNew, int nBlockHeight, CA
         {
             CTxDestination address1;
             ExtractDestination(out.scriptPubKey, address1);
-            CBitcoinAddress address2(address1);
-            //CBitcoinAddress address2(CScriptID(out.scriptPubKey));                                                                                                                                              
+            CBitcoinAddress address2(address1);                                                                                                                                        
             LogPrintf(" out.scriptPubKey [%s]  [%s] \n",address2.ToString(), address.ToString());
-            //if (out.scriptPubKey == Params().GetFoundersRewardScriptAtHeight(nBlockHeight))
             if (address2 == address)
             {
                 foundersActual += out.nValue;

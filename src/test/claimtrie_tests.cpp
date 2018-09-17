@@ -76,23 +76,10 @@ CMutableTransaction BuildTransaction(const CTransaction& prev, uint32_t prevout=
 
 void AddToMempool(CMutableTransaction& tx)
 {
-    //CCoinsView dummy;
-    //CCoinsViewCache view(&dummy);
-    //CAmount inChainInputValue;
-    //double dPriority = view.GetPriority(tx, chainActive.Height(), inChainInputValue);
-    //unsigned int nSigOps = GetLegacySigOpCount(tx);
-    //nSigOps += GetP2SHSigOpCount(tx, view);
-    //LockPoints lp;
-    //BOOST_CHECK(CheckSequenceLocks(tx, STANDARD_LOCKTIME_VERIFY_FLAGS, &lp));
-    //mempool.addUnchecked(tx.GetHash(), CTxMemPoolEntry(tx, 0, GetTime(), 111.1, chainActive.Height(), mempool.HasNoInputsOf(tx), 10000000000, false, nSigOps, lp));
     CValidationState state;
     
     BOOST_CHECK(AcceptToMemoryPool(mempool, state, tx, false, NULL));
-    //TestMemPoolEntryHelper entry;
-    //entry.nFee = 11;
-    //entry.dPriority = 111.0;
-    //entry.nHeight = 11;
-    //mempool.addUnchecked(tx.GetHash(), entry.Fee(10000).Time(GetTime()).FromTx(tx));
+
 }
 
 bool CreateBlock(CBlockTemplate* pblocktemplate)
@@ -109,14 +96,12 @@ bool CreateBlock(CBlockTemplate* pblocktemplate)
 	/*popchain ghost*/
     pblock->vtx[0] = CTransaction(txCoinbase);
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
-    //pblock->nBits=GetNextWorkRequired(chainActive.Tip(),pblock,chainparams.GetConsensus());
     pblock->nDifficulty = calculateDifficulty(chainActive.Tip(),pblock,chainparams.GetConsensus());
     pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
     for (arith_uint256 i = 0; ; ++i)
     {
 		pblock->nNonce = ArithToUint256(i);
 		/*popchain ghost*/
-		//if (CheckProofOfWork(pblock->GetHash(), pblock->nDifficulty, chainparams.GetConsensus()))
 		if (CheckProofOfWork(pblock->GetHash(), pblock->nBits, chainparams.GetConsensus()))
         {
             break;

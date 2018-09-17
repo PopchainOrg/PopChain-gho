@@ -220,56 +220,6 @@ void testPowFunction(uint8_t *mess, uint32_t messLen, const int64_t iterNum) {
 	view_data_u8("PoW", output, OUTPUT_LEN);
 	printf("*********************************************************************************************\n");
 
-	/*	
-	printf("*************************************************** Performance test (PoW function) ***************************************************\n");
-	uint8_t *result = (uint8_t *)malloc(iterNum * OUTPUT_LEN * sizeof(uint8_t));
-	assert(NULL != result);
-	memset(result, 0, iterNum * OUTPUT_LEN * sizeof(uint8_t));
-	
-	uint32_t threadNumArr[] = {1, 4, 8, 12, 16, 20, 24, 32, 48, 64};
-	uint32_t threadNumTypes = sizeof(threadNumArr) / sizeof(uint32_t);
-	printf("   %-18s", "Algorithm");
-	for (uint32_t ix = 0; ix < threadNumTypes; ++ix)
-		printf("%12d", threadNumArr[ix]);
-	printf("\n");
-	
-	printf("00 %-18s\t", "PoW");
-	for (uint32_t ix = 0; ix < threadNumTypes; ++ix) {
-		omp_set_num_threads(threadNumArr[ix]);
-		double startTime = get_wall_time();
-		if (threadNumArr[ix] == 1) {
-			for (j = 0; j < iterNum; ++j) {
-				powFunction(input, inputLen, Maddr, result + j * OUTPUT_LEN);
-			}
-		} else {
-			#pragma omp parallel for firstprivate(input), private(j) shared(result)
-			for (j = 0; j < iterNum; ++j) {
-				powFunction(input, inputLen, Maddr + omp_get_thread_num() * WORK_MEMORY_SIZE, result + j * OUTPUT_LEN);
-			}
-		}
-		double endTime = get_wall_time();
-		double costTime = endTime - startTime;
-		printf("%5.0f bps   ", iterNum / costTime); fflush(stdout);
-		
-		// Check result
-		for (j = 0; j < iterNum; j += 1) {
-			if (memcmp(output, result + j * OUTPUT_LEN, OUTPUT_LEN)) {
-				printf("Thread num: %d, j: %ld\n", threadNumArr[ix], j);
-				view_data_u8("output", output, OUTPUT_LEN);
-				view_data_u8("result", result + j * OUTPUT_LEN, OUTPUT_LEN);
-				abort();
-			}
-		}
-	}
-	printf("\n");
-	printf("***************************************************************************************************************************************\n");
-	
-	if (NULL != result) {
-		free(result);
-		result = NULL;
-	}
-	*/
-
 	if (NULL != Maddr) {
 		free(Maddr);
 		Maddr = NULL;
@@ -279,7 +229,6 @@ void testPowFunction(uint8_t *mess, uint32_t messLen, const int64_t iterNum) {
 
 #define OUTPUT_BUFFER_SIZE	(32 * 1024UL * 1024UL)
 /*popchain ghost*/
-//140 to 200
 #define MAX_TEST_INPUT_LEN		200
 /*popchain ghost*/
 #define MAX_OUT_FILE_NAME_LEN	25

@@ -10,15 +10,12 @@
 // popchain ghost calc blockheader hash
 uint256 CBlockHeader::GetHash() const
 {
-//	return SerializeHash(*this);
+
 	uint256 hash;
 /*popchain ghost*/
 	CryptoPop(this, (unsigned char *)&hash);
 /*popchain ghost*/
 
-//	view_data_u8("PoW 3", (unsigned char *)&hash, OUTPUT_LEN); 
-//	std::cout<<"gethex() ="<<hash.GetHex()<<std::endl;
-//	std::cout<<"tostring ="<<hash.ToString()<<std::endl; 
 	return hash;	
 }
 

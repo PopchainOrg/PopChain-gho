@@ -1615,12 +1615,7 @@ queueNameType::iterator CClaimTrieCache::getQueueCacheNameRow(const std::string&
 bool CClaimTrieCache::addClaim(const std::string& name, const COutPoint& outPoint, uint160 claimId, CAmount nAmount, int nHeight) const
 {
     LogPrintf("%s: name: %s, txhash: %s, nOut: %d, claimId: %s, nAmount: %d, nHeight: %d, nCurrentHeight: %d\n", __func__, name, outPoint.hash.GetHex(), outPoint.n, claimId.GetHex(), nAmount, nHeight, nCurrentHeight);
-    //assert(nHeight == nCurrentHeight + 1);
-    //if(nHeight != nCurrentHeight )
-    //{
-    //     LogPrintf("nHeight != nCurrentHeight is error %d,%s\n",__LINE__,__func__);
-	//    return false;
-    //}
+
     CClaimValue currentClaim;
     int delayForClaim;
     if (getOriginalInfoForName(name, currentClaim) && currentClaim.claimId == claimId)

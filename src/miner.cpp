@@ -71,10 +71,6 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     // Updating time can change work required on testnet:
     if (consensusParams.fPowAllowMinDifficultyBlocks)
     {
-        //std::cout<<"update time: nOldTime"<<nOldTime<< " newtime: "<<nNewTime<<std::endl;
-        //pblock->nBits = getNBits(getHashTraget(calculateDifficulty(pindexPrev, pblock, consensusParams)));
-        //pblock->nBits = GetNextWorkRequired(pindexPrev, pblock, consensusParams);
-
         pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, consensusParams);
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
     }
@@ -498,7 +494,6 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		/*popchain ghost*/
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
         pblock->nDifficulty = calculateDifficulty(pindexPrev, pblock, chainparams.GetConsensus());
-        //pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
         pblock->nBits = getNBits(getHashTraget(pblock->nDifficulty));
         /*popchain ghost*/
 
@@ -546,9 +541,7 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 
     pblock->vtx[0] = txCoinbase;
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
-	/*popchain ghost*/
-	//pblock->hashUncles = BlockUncleRoot(*pblock);
-	/*popchain ghost*/
+
 }
 
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
@@ -561,7 +554,6 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
         LOCK(cs_main);
         if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
 		{
-			//LogPrintf("hashPrevBlock = %s, Tip hash = %s\n", pblock->hashPrevBlock, chainActive.Tip()->GetBlockHash());
 			return error("ProcessBlockFound -- generated block is stale");
 		}
     }
@@ -638,7 +630,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
             // Search
             //
             int64_t nStart = GetTime();
-            //pblock->nDifficulty = calculateDifficulty()
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             while (true)
             {
@@ -668,7 +659,6 @@ void static BitcoinMiner(const CChainParams& chainparams)
 					//change parameter 0xFF to 0xffff to support the ghost protol
                     if ((UintToArith256(pblock->nNonce) & 0xFF) == 0)
 		            {
-			            //LogPrintf("PopMiner: %d   nExtraNonce: %d\n", pblock->nNonce, nExtraNonce);    
 		                break;
                     }
                 }

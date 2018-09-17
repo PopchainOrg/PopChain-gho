@@ -74,11 +74,9 @@ public:
 		CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
 		ss << *pblock;
 		/*popchain ghost*/
-        //140 to 200
         assert(ss.size() == 200);
         write((uchar *)&ss[0], 200).finalize(hash);
 		/*popchain ghost*/
-		//view_data_u8("PoW 2", hash, OUTPUT_LEN);
 	}
 
 	CryptoPop& write(uchar *data, size_t len)
