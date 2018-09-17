@@ -619,7 +619,9 @@ public:
     unsigned int GetSigOpCount(const CScript& scriptSig) const;
 
     bool IsNormalPaymentScript() const;
-	bool IsCrossChainPaymentScript()const;
+	/*popchain atomic swap*/
+	bool IsAtomicSwapPaymentScript()const;
+	/*popchain atomic swap*/
     bool IsPayToPublicKeyHash() const;
 
     bool IsPayToScriptHash() const;

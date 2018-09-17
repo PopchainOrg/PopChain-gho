@@ -254,6 +254,18 @@ uint160 CBitcoinAddress::GetData()const
     return id;
 }
 
+/*atomic swap*/
+uint160 CBitcoinAddress::GetUint160()const
+{
+	if (!IsValid())
+        return uint160();
+	uint160 id;
+    memcpy(&id, &vchData[0], 20);
+	 if (vchVersion == Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS))
+        return id;
+}
+
+/*atomic swap*/
 CTxDestination CBitcoinAddress::Get() const
 {
     if (!IsValid())

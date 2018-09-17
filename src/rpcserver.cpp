@@ -419,6 +419,13 @@ static const CRPCCommand vRPCCommands[] =
     { "Claimtrie",          "getclaimsfortx",         &getclaimsfortx,         true  },  
     { "Claimtrie",          "getnameproof",           &getnameproof,           true  },  
     { "Claimtrie",          "getclaimbyid",           &getclaimbyid,           true  },
+    /*atomic swap rpc interface*/
+	{ "atomicswap",			"atomicswapfirsttx", 	  &atomicswapfirsttx, 	   true  },
+	{ "atomicswap",			"atomicswapsecondtx",     &atomicswapsecondtx,     true  },
+	{ "atomicswap",			"atomicswapredeemtx", 	  &atomicswapredeemtx, 	   true	 },
+	{ "atomicswap",			"atomicswaprefundtx", 	  &atomicswaprefundtx, 	   true	 },
+	{ "atomicswap", 		"atomicswapgetrawhash",   &atomicswapgetrawhash,   true  },
+	{ "atomicswap", 		"atomicswapchecktx",      &atomicswapchecktx,      true  },
 #endif // ENABLE_WALLET
 };
 

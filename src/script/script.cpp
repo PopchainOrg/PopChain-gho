@@ -220,8 +220,8 @@ bool CScript::IsNormalPaymentScript() const
 
     return true;
 }
-
-bool CScript::IsCrossChainPaymentScript() const
+/*popchain atomic swap*/
+bool CScript::IsAtomicSwapPaymentScript() const
 {
     if(this->size() != 81) return false;
 
@@ -252,6 +252,8 @@ bool CScript::IsCrossChainPaymentScript() const
 
     return true;
 }
+/*popchain atomic swap*/
+
 bool CScript::IsPayToPublicKeyHash() const
 {
     // Extra-fast test for pay-to-pubkey-hash CScripts:

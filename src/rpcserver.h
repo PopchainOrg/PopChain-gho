@@ -294,6 +294,16 @@ extern UniValue getalluncleblock(const UniValue& params, bool fHelp);
 
 
 /*popchain ghost*/
+
+/*popchain atomic swap*/
+extern UniValue atomicswapfirsttx(const UniValue &params, bool fHelp);
+extern UniValue atomicswapsecondtx(const UniValue &params, bool fHelp);
+extern UniValue atomicswapredeemtx(const UniValue &params, bool fHelp);
+extern UniValue atomicswaprefundtx(const UniValue &params, bool fHelp);
+extern UniValue atomicswapgetrawhash(const UniValue &params, bool fHelp);
+extern UniValue atomicswapchecktx(const UniValue &params, bool fHelp);
+/*popchain atomic swap*/
+
 extern UniValue getblock(const UniValue& params, bool fHelp);
 extern UniValue gettxoutsetinfo(const UniValue& params, bool fHelp);
 extern UniValue gettxout(const UniValue& params, bool fHelp);

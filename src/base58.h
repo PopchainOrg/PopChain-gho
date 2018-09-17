@@ -111,6 +111,9 @@ public:
     CBitcoinAddress(const std::string& strAddress) { SetString(strAddress); }
     CBitcoinAddress(const char* pszAddress) { SetString(pszAddress); }
 	uint160 GetData()const;
+	/*popchain atomic swap*/
+	uint160 GetUint160()const;
+	/*popchain atomic swap*/
     CTxDestination Get() const;
     bool GetKeyID(CKeyID &keyID) const;
     bool GetIndexKey(uint160& hashBytes, int& type) const;
