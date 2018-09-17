@@ -60,7 +60,7 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
     {
         uint256 hash = pb->GetHash();
 
-		//std::cout<<"hex hash = "<<hash.GetHex()<<std::endl;
+		
 				
         if (UintToArith256(hash) <= hashTarget) break;
         pb->nNonce = ArithToUint256(UintToArith256(pb->nNonce) + 1);
@@ -186,7 +186,7 @@ public:
         consensus.premine = int64_t(6e8 * COIN);                            // premine
         consensus.genesisReward = int64_t(1 * COIN);                        // genesis
         consensus.minerReward4 = int64_t(73.648 * COIN);                   // miners
-        //consensus.minerReward5 = int64_t(133.775 * COIN);
+        
         consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
 
@@ -249,7 +249,6 @@ public:
         //findGenesis(&genesis, "main");
 #endif
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0x000000747aad802a9081bd47533cf105a6e7203ca6313155adf41bd11bf0f01f"));
         assert(consensus.hashGenesisBlock == uint256S("0x00000405ea05415dea82707713f47fe9bb40f877602b32f8b9303369c6040705"));
         assert(genesis.hashMerkleRoot == uint256S("0x69de4474f3172f2366a11b9d5a2b9138fb5bbb0b77713d42fdfe69fc64a34162"));
 
@@ -312,7 +311,6 @@ public:
         consensus.premine = int64_t(6e8 * COIN);                            // premine
         consensus.genesisReward = int64_t(1 * COIN);                        // genesis                                                           
         consensus.minerReward4 = int64_t(73.648 * COIN);                   // miners
-        //consensus.minerReward5 = int64_t(535.103 * COIN);
         consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
 
