@@ -4832,8 +4832,8 @@ for example: alertnotify=echo %%s | mail -s &quot;Pop Alert&quot; admin@foo.com
     </message>
     <message>
         <location line="+1"/>
-        <source>Copyright (C) 2014-%i The Dash Core Developers</source>
-        <translation>Copyright (C) 2014-%i The Dash Core Developers</translation>
+        <source>Copyright (C) 2017-%i The Pop Core Developers</source>
+        <translation>Copyright (C) 2017-%i The Pop Core Developers</translation>
     </message>
     <message>
         <location line="+2"/>

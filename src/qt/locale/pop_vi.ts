@@ -3795,7 +3795,7 @@ ví dụ: alertnotify=echo %%s | mail -s "Pop Alert" admin@foo.com
         <translation>Bản quyền (C) 2009-%i bởi Nhóm phát triển Bitcoin Core</translation>
     </message>
     <message>
-        <source>Copyright (C) 2014-%i The Dash Core Developers</source>
+        <source>Copyright (C) 2017-%i The Pop Core Developers</source>
         <translation>Bản quyền (C) 2014-%i bởi Nhóm phát triển Pop Core</translation>
     </message>
     <message>

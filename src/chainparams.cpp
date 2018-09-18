@@ -77,9 +77,9 @@ void _get(const ch * const pblock, const arith_uint256 hashTarget)
     }
     
     std::lock_guard<std::mutex> guard(mtx);
-    std::cout << "\n\t\t----------------------------------------\t" << std::endl;
-    std::cout << "\t" << pb->ToString() << std::endl;
-    std::cout << "\n\t\t----------------------------------------\t" << std::endl;
+//    std::cout << "\n\t\t----------------------------------------\t" << std::endl;
+//    std::cout << "\t" << pb->ToString() << std::endl;
+//    std::cout << "\n\t\t----------------------------------------\t" << std::endl;
     delete pb;
 
     // stop while found one
@@ -314,10 +314,10 @@ public:
         consensus.foundersReward = int64_t(20833333.333 * COIN);             // founders
         consensus.colleteral = int64_t(1e4 * COIN);                         // popnode colleteral
 
-        consensus.nSubsidyHalvingInterval = 1920;           //1 day
+        consensus.nSubsidyHalvingInterval = 2803200;           //4 year
         consensus.nInstantSendKeepLock = 6;
-        consensus.nSuperblockStartBlock = 40;
-        consensus.nSuperblockCycle = 40;                    //30 minutes
+        consensus.nSuperblockStartBlock = 100;
+        consensus.nSuperblockCycle = 57600;                    //30 minutes
         consensus.nUncleblockRatio = 0.1;
         consensus.nPopnodeMinimumConfirmations = 2;
         consensus.nMajorityEnforceBlockUpgrade = 51;
@@ -328,10 +328,10 @@ public:
 		
         /* popchain ghost */
         consensus.powLimit = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.difficultyBoundDivisor = 1024;
-        consensus.difficultyRapidFitDivisor = 50;
+        consensus.difficultyBoundDivisor = 2048;
+        consensus.difficultyRapidFitDivisor = 1024;
         consensus.minimumDifficulty = 4096;
-        consensus.nYolandaTime = 960;
+        consensus.nYolandaTime = 57600;
         /* popchain ghost */
 
         consensus.nPowTargetSpacing = 45;

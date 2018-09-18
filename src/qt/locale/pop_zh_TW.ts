@@ -3530,8 +3530,8 @@ https://www.transifex.com/projects/p/pop/</translation>
         <translation>版權為位元幣核心開發人員自西元 2009 至 %i 年起所有</translation>
     </message>
     <message>
-        <source>Copyright (C) 2014-%i The Dash Core Developers</source>
-        <translation>版權為Pop全节点钱包開發人員自西元 2014 至 %i 年起所有</translation>
+        <source>Copyright (C) 2017-%i The Pop Core Developers</source>
+        <translation>版權為Pop全节点钱包開發人員自西元 2017 至 %i 年起所有</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>

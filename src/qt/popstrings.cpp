@@ -232,7 +232,7 @@ QT_TRANSLATE_NOOP("pop-core", "Connect to KeePassHttp on port <port> (default: %
 QT_TRANSLATE_NOOP("pop-core", "Connect to a node to retrieve peer addresses, and disconnect"),
 QT_TRANSLATE_NOOP("pop-core", "Connection options:"),
 QT_TRANSLATE_NOOP("pop-core", "Copyright (C) 2009-%i The Bitcoin Core Developers"),
-QT_TRANSLATE_NOOP("pop-core", "Copyright (C) 2014-%i The Dash Core Developers"),
+QT_TRANSLATE_NOOP("pop-core", "Copyright (C) 2017-%i The Pop Core Developers"),
 QT_TRANSLATE_NOOP("pop-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("pop-core", "Could not parse -rpcbind value %s as network address"),
 QT_TRANSLATE_NOOP("pop-core", "Could not parse popnode.conf"),

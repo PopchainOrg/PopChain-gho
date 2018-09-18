@@ -3787,8 +3787,8 @@ for example: alertnotify=echo %%s | mail -s "Pop Alert" admin@foo.com
         <translation>Запазени права (C) 2009-%i Bitcoin Core разработчици</translation>
     </message>
     <message>
-        <source>Copyright (C) 2014-%i The Dash Core Developers</source>
-        <translation>Запазени права (C) 2014-%i Pop Core разработчиците</translation>
+        <source>Copyright (C) 2017-%i The Pop Core Developers</source>
+        <translation>Запазени права (C) 2017-%i Pop Core разработчиците</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>

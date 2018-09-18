@@ -3758,9 +3758,9 @@ bool CWallet::AbandonCash(const vector<CRecipient>& vecSend, CWalletTx& wtxNew, 
                     if (!SelectCoins(nValueToSelect, setCoins, nValueIn, coinControl, nCoinType, fUseInstantSend))
                     {
                         if (nCoinType == ONLY_NOT1000IFMN) {
-                            strFailReason = _("Unable to locate enough funds for this transaction that are not equal 1000 DASH.");
+                            strFailReason = _("Unable to locate enough funds for this transaction that are not equal 10000 PCH.");
                         } else if (nCoinType == ONLY_NONDENOMINATED_NOT1000IFMN) {
-                            strFailReason = _("Unable to locate enough PrivateSend non-denominated funds for this transaction that are not equal 1000 DASH.");
+                            strFailReason = _("Unable to locate enough PrivateSend non-denominated funds for this transaction that are not equal 10000 PCH.");
                         } else if (nCoinType == ONLY_DENOMINATED) {
                             strFailReason = _("Unable to locate enough PrivateSend denominated funds for this transaction.");
                             strFailReason += " " + _("PrivateSend uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.");
@@ -3769,7 +3769,7 @@ bool CWallet::AbandonCash(const vector<CRecipient>& vecSend, CWalletTx& wtxNew, 
                         }
                         if (fUseInstantSend) {
                             if (nValueIn > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
-                                strFailReason += " " + strprintf(_("InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 DASH."), sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE));
+                                strFailReason += " " + strprintf(_("InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 PCH."), sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE));
                             } else {
                                 // could be not true but most likely that's the reason
                                 strFailReason += " " + strprintf(_("InstantSend requires inputs with at least %d confirmations, you might need to wait a few minutes and try again."), INSTANTSEND_CONFIRMATIONS_REQUIRED);

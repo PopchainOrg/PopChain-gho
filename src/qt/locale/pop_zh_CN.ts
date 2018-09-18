@@ -2950,8 +2950,8 @@ https://www.transifex.com/projects/p/pop/</translation>
         <translation>Bitcoin Core的开发者</translation>
     </message>
     <message>
-        <source>The Dash Core developers</source>
-        <translation>Dash的开发者</translation>
+        <source>The Pop Core developers</source>
+        <translation>Pop的开发者</translation>
     </message>
     <message>
         <source>Pop Foundation Ltd.</source>
@@ -3898,7 +3898,7 @@ https://www.transifex.com/projects/p/pop/</translation>
         <translation>版权(C) 2009-%i The Bitcoin Core Developers</translation>
     </message>
     <message>
-        <source>Copyright (C) 2014-%i The Dash Core Developers</source>
+        <source>Copyright (C) 2014-%i The Pop Core Developers</source>
         <translation>版权 (C) 2017-%i Pop Foundation Ltd.</translation>
     </message>
     <message>
