@@ -997,10 +997,10 @@ UniValue sendfromAtoB(const UniValue &params, bool fHelp)
             "\nSend an amount from specified address to another one.\n" +
             HelpRequiringPassphrase() + "\nArguments:\n"
             "1. \"from\"                (string,"
-            "required) The btcnano address to send "
+            "required) The pop address to send "
             "from.\n"
             "2. \"to\"                  (string,"
-            "required) The btcnano address to send"
+            "required) The pop address to send"
             "to.\n"
             "3. \"amount\"              (numeric or string,"
             "required) The amount in " + CURRENCY_UNIT +
@@ -1017,7 +1017,7 @@ UniValue sendfromAtoB(const UniValue &params, bool fHelp)
             "6. subtractfeefromamount   (boolean, optional, default=false) The "
             "fee will be deducted from the amount being sent.\n"
             "The recipient will receive less "
-            "btcnanos than you enter in the amount filed.\n"
+            "pop than you enter in the amount filed.\n"
             "nResult:\n"
             "\"txid\"                   (string) The transaction id.\n"
             "\nExamples:\n" +
