@@ -4315,6 +4315,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 	uint160 preCoinBaseAddress = uint160();
 	CAmount tmpPreAmount = 0;
 
+	//check the pay to uncle miner
 	if(block.vuh.size() != 0 && nHeight != 0){
 		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
 			coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
