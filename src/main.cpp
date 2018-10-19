@@ -4099,6 +4099,16 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
     if (block.GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
         return state.Invalid(error("CheckBlockHeader(): block timestamp too far in the future"),
                              REJECT_INVALID, "time-too-new");
+	/*popchain ghost*/
+	 // Check the coinbaseaddress
+	CBitcoinAddress blockCoinBasePKHAddress(CTxDestination(CKeyID(block.nCoinbase)));
+	CBitcoinAddress blockCoinBaseP2SHAddress(CTxDestination(CScriptID(block.nCoinbase)));
+	if((block.nCoinbase != uint160() && (!blockCoinBasePKHAddress.IsValid()) && (!blockCoinBaseP2SHAddress.IsValid())){
+		LogPrintf("CheckBlockHeader() coinbase-not-valide: \n--b-l-o-c-k---%s\n nCoinBase %s\n", block.ToString().c_str(),block.nCoinbase.ToString());
+		return state.Invalid(error("%s: block's coinbase address is not valid", __func__),
+							 REJECT_INVALID, "coinbase-not-valide");
+	}
+	/*popchain ghost*/
 
     return true;
 }
