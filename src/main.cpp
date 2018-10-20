@@ -7334,8 +7334,22 @@ bool SendMessages(CNode* pto)
         if (!pto->fDisconnect && state.vBlocksInFlight.size() > 0) {
             QueuedBlock &queuedBlock = state.vBlocksInFlight.front();
             int nOtherPeersWithValidatedDownloads = nPeersWithValidatedDownloads - (state.nBlocksInFlightValidHeaders > 0);
-            if (nNow > state.nDownloadingSince + consensusParams.nPowTargetSpacing * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)) {
+			LogPrintf("SendMessages():check block download timeout %d > %d + %d * %d * (%d + %d * %d) ,adjust: %f\n", nNow, state.nDownloadingSince, consensusParams.nPowTargetSpacing, BLOCK_DOWNLOAD_TIMEOUT_ADJUSTMENT , BLOCK_DOWNLOAD_TIMEOUT_BASE , BLOCK_DOWNLOAD_TIMEOUT_PER_PEER , nOtherPeersWithValidatedDownloads,((float)(nNow - state.nDownloadingSince)/ (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)));
+            if (nNow > state.nDownloadingSince + consensusParams.nPowTargetSpacing * BLOCK_DOWNLOAD_TIMEOUT_ADJUSTMENT * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)) {
                 LogPrintf("Timeout downloading block %s from peer=%d, disconnecting\n", queuedBlock.hash.ToString(), pto->id);
+				LogPrintf("state.vBlocksInFlight.size() %d \n", state.vBlocksInFlight.size());
+				LogPrintf("nOtherPeersWithValidatedDownloads = nPeersWithValidatedDownloads - (state.nBlocksInFlightValidHeaders > 0) \n");
+				LogPrintf("nOtherPeersWithValidatedDownloads %d \n", nOtherPeersWithValidatedDownloads);
+				LogPrintf("nPeersWithValidatedDownloads %d \n", nPeersWithValidatedDownloads);
+				LogPrintf("state.nBlocksInFlightValidHeaders %d \n", state.nBlocksInFlightValidHeaders);
+				LogPrintf("nNow > state.nDownloadingSince + consensusParams.nPowTargetSpacing * BLOCK_DOWNLOAD_TIMEOUT_ADJUSTMENT * (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads) \n");
+				LogPrintf("nNow %d \n", nNow);
+				LogPrintf("state.nDownloadingSince %d \n", state.nDownloadingSince);
+				LogPrintf("consensusParams.nPowTargetSpacing %d \n", consensusParams.nPowTargetSpacing);
+				LogPrintf("BLOCK_DOWNLOAD_TIMEOUT_BASE %d \n", BLOCK_DOWNLOAD_TIMEOUT_BASE);
+				LogPrintf("BLOCK_DOWNLOAD_TIMEOUT_PER_PEER %d \n", BLOCK_DOWNLOAD_TIMEOUT_PER_PEER);
+				LogPrintf("nOtherPeersWithValidatedDownloads %d \n", nOtherPeersWithValidatedDownloads);
+				LogPrintf("(nNow - state.nDownloadingSince)/ (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads %f \n", ((float)(nNow - state.nDownloadingSince)/ (BLOCK_DOWNLOAD_TIMEOUT_BASE + BLOCK_DOWNLOAD_TIMEOUT_PER_PEER * nOtherPeersWithValidatedDownloads)));
                 pto->fDisconnect = true;
             }
         }
