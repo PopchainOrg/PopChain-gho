@@ -4100,10 +4100,18 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
         return state.Invalid(error("CheckBlockHeader(): block timestamp too far in the future"),
                              REJECT_INVALID, "time-too-new");
 	/*popchain ghost*/
-	 // Check the coinbaseaddress
+	 // Check the coinbaseaddress only p2pkh address
 	CBitcoinAddress blockCoinBasePKHAddress(CTxDestination(CKeyID(block.nCoinbase)));
-	CBitcoinAddress blockCoinBaseP2SHAddress(CTxDestination(CScriptID(block.nCoinbase)));
-	if((block.nCoinbase != uint160()) && (!blockCoinBasePKHAddress.IsValid()) && (!blockCoinBaseP2SHAddress.IsValid())){
+	const CChainParams& chainparams = Params();
+	if(block.nCoinbase == uint160()){
+		if(block.GetHash() != chainparams.GetConsensus().hashGenesisBlock){
+			LogPrintf("CheckBlockHeader() coinbase-not-valide: \n--b-l-o-c-k---%s\n nCoinBase %s\n", block.ToString().c_str(),block.nCoinbase.ToString());
+			return state.Invalid(error("%s: block's coinbase address is not valid", __func__),
+								 REJECT_INVALID, "coinbase-not-valide");
+		}
+	}
+
+	if((!blockCoinBasePKHAddress.IsValid())){
 		LogPrintf("CheckBlockHeader() coinbase-not-valide: \n--b-l-o-c-k---%s\n nCoinBase %s\n", block.ToString().c_str(),block.nCoinbase.ToString());
 		return state.Invalid(error("%s: block's coinbase address is not valid", __func__),
 							 REJECT_INVALID, "coinbase-not-valide");
