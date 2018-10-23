@@ -60,7 +60,7 @@
       <key>UTTypeIdentifier</key>
       <string>org.pop.paymentrequest</string>
       <key>UTTypeDescription</key>
-      <string>Pop payment request</string>
+      <string>payment request</string>
       <key>UTTypeConformsTo</key>
       <array>
         <string>public.data</string>

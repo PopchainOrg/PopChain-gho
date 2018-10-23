@@ -1,8 +1,8 @@
 Source: pop
 Section: utils
 Priority: optional
-Maintainer: Holger Schinzel <holger@pop.org>
-Uploaders: Holger Schinzel <holger@pop.org>
+Maintainer: Holger Schinzel <holger@popchain.org>
+Uploaders: Holger Schinzel <holger@popchain.org>
 Build-Depends: debhelper,
  devscripts,
  automake,

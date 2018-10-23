@@ -11,7 +11,7 @@ the same, tested dependencies are used and statically built into the executable.
 Multiple developers build the source code by following a specific descriptor
 ("recipe"), cryptographically sign the result, and upload the resulting signature.
 These results are compared and only if they match, the build is accepted and uploaded
-to pop.org.
+to popchain.org.
 
 More independent Gitian builders are needed, which is why this guide exists.
 It is preferred you follow these steps yourself instead of using someone else's
@@ -394,7 +394,7 @@ and inputs.
 
 For example:
 ```bash
-URL=https://github.com/crowning-/pop.git
+URL=https://github.com/PopchainOrg/PopChain-gho.git
 COMMIT=b616fb8ef0d49a919b72b0388b091aaec5849b96
 ./bin/gbuild --commit pop=${COMMIT} --url pop=${URL} ../pop/contrib/gitian-descriptors/gitian-linux.yml
 ./bin/gbuild --commit pop=${COMMIT} --url pop=${URL} ../pop/contrib/gitian-descriptors/gitian-win.yml
@@ -446,8 +446,8 @@ Then when building, override the remote URLs that gbuild would otherwise pull fr
 cd /some/root/path/
 git clone https://github.com/PopchainOrg/PopChain-gho.git
 
-UCPATH=/some/root/path/pop.git
-SIGPATH=/some/root/path/pop-detached-sigs.git
+UCPATH=/some/root/path/PopChain-gho.git
+SIGPATH=/some/root/path/PopChain-gho.git
 
 ./bin/gbuild --url pop=${UCPATH},signature=${SIGPATH} ../pop/contrib/gitian-descriptors/gitian-win-signer.yml
 ```
