@@ -95,7 +95,7 @@ Issue the following:
 Make note of the hash (which is your collateral_output) and index.
 
 ### Enter your Popnode details into your popnode.conf file
-[From the pop github repo](https://github.com/poppay/pop/blob/master/doc/popnode_conf.md)
+[From the pop github repo](https://github.com/PopchainOrg/PopChain-gho/doc/popnode_conf.md)
 
 `popnode.conf` format is a space seperated text file. Each line consisting of an alias, IP address followed by port, popnode private key, collateral output transaction id and collateral output index.
 
