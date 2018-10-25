@@ -4101,6 +4101,7 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
                              REJECT_INVALID, "time-too-new");
 	/*popchain ghost*/
 	 // Check the coinbaseaddress only p2pkh address
+	/*
 	CBitcoinAddress blockCoinBasePKHAddress(CTxDestination(CKeyID(block.nCoinbase)));
 	const CChainParams& chainparams = Params();
 	if(block.nCoinbase == uint160()){
@@ -4109,13 +4110,14 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
 			return state.Invalid(error("%s: block's coinbase address is not valid", __func__),
 								 REJECT_INVALID, "coinbase-not-valide");
 		}
+		return true;
 	}
-
 	if((!blockCoinBasePKHAddress.IsValid())){
 		LogPrintf("CheckBlockHeader() coinbase-not-valide: \n--b-l-o-c-k---%s\n nCoinBase %s\n", block.ToString().c_str(),block.nCoinbase.ToString());
 		return state.Invalid(error("%s: block's coinbase address is not valid", __func__),
 							 REJECT_INVALID, "coinbase-not-valide");
 	}
+	*/
 	/*popchain ghost*/
 
     return true;
@@ -4322,6 +4324,10 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 		return false;
 	}
 
+	/*popchain ghost*/
+		
+	/*popchain ghost*/
+
 	uint160 coinBaseAddress;
 	uint160 tmpAddress;
 	int addressType;
@@ -4332,11 +4338,19 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 	const CChainParams& chainparams = Params();
 	uint160 preCoinBaseAddress = uint160();
 	CAmount tmpPreAmount = 0;
+	CBitcoinAddress blockCoinBasePKHAddress;
 
 	//check the pay to uncle miner
 	if(block.vuh.size() != 0 && nHeight != 0){
 		for(int uncleCount = 0;uncleCount < block.vuh.size(); uncleCount++){
 			coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
+			
+			blockCoinBasePKHAddress = CBitcoinAddress(CTxDestination(CKeyID(coinBaseAddress)));
+			if((!blockCoinBasePKHAddress.IsValid())){
+				LogPrintf("CheckBlock() coinbase-not-valide: \n--b-l-o-c-k---%s\n nCoinBase %s\n", block.vuh[uncleCount].ToString().c_str(),coinBaseAddress.ToString());
+				return false;
+			}
+			
 			for (const CTxOut &out: block.vtx[0].vout){
 				if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)){
 					if(coinBaseAddress == tmpAddress){
@@ -4409,6 +4423,22 @@ static bool AcceptUnclesHeader(const CBlock& block, CValidationState& state,  co
 		return true;
 	}
 	LogPrintf("AcceptUnclesHeader block:%s \n", block.GetHash().ToString());
+
+	/*popchain ghost*/
+	/*
+	 // Check the coinbaseaddress only p2pkh address
+	 CBlockHeader uncleBlockHeader;
+	 for(std::vector<CBlockHeader>::iterator it = blockUncles.begin(); it != blockUncles.end(); ++it){
+		uncleBlockHeader = *it;
+		CBitcoinAddress blockCoinBasePKHAddress(CTxDestination(CKeyID(uncleBlockHeader.nCoinbase)));
+		 if((!blockCoinBasePKHAddress.IsValid())){
+			 LogPrintf("AcceptUnclesHeader() coinbase-not-valide: \n--b-l-o-c-k---%s\n nCoinBase %s\n", uncleBlockHeader.ToString().c_str(),uncleBlockHeader.nCoinbase.ToString());
+			 return false;
+		 }
+	}
+	*/
+		
+	/*popchain ghost*/
 
 	//const CChainParams& chainparams = Params();
 	LogPrintf("AcceptUnclesHeader() GetAncestorBlocksFromHash block.hashPrevBlock %s \n", block.hashPrevBlock.ToString());

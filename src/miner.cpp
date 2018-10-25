@@ -27,6 +27,8 @@
 #include "validationinterface.h"
 #include "arith_uint256.h"
 
+#include "base58.h"
+
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <queue>
@@ -453,7 +455,10 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		int addressType;
 		if(DecodeAddressHash(scriptPubKeyIn, coinBaseAddress, addressType)){
 			pblock->nCoinbase = coinBaseAddress;
-		} else{
+		}else if(*(scriptPubKeyIn.begin()) == OP_TRUE){
+			pblock->nCoinbase = uint160();
+		}
+		else{
 			return NULL;
 		}
 			
@@ -463,9 +468,17 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		int uncleCount = 0;
 		for(std::vector<CBlock>::iterator it = unclesBlock.begin();it != unclesBlock.end(); ++it){
 			uncleBlock = *it;
+			CScript uncleScriptPubKeyIn;
+			CBitcoinAddress blockCoinBasePKHAddress;
 			if(uncleCount < 2){
 				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
-				CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
+				blockCoinBasePKHAddress = CBitcoinAddress(CTxDestination(CKeyID(uncleBlock.nCoinbase)));	
+				if(blockCoinBasePKHAddress.IsValid()){
+					uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
+				}else {
+					continue;
+				}
+				//CScript uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
 				int tmpBlockHeight = 0;
 				if(!GetBlockHeight(uncleBlock.hashPrevBlock,&tmpBlockHeight)){
 					return NULL;
