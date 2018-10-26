@@ -106,8 +106,8 @@ static const int64_t BLOCK_DOWNLOAD_TIMEOUT_BASE = 250000;
 /** Additional block download timeout per parallel downloading peer (i.e. 1.25 min) */
 static const int64_t BLOCK_DOWNLOAD_TIMEOUT_PER_PEER = 125000;
 /*popchain ghost*/
-/** Block download timeout base adjustment paramater , > 1, <3*/
-static const int64_t BLOCK_DOWNLOAD_TIMEOUT_ADJUSTMENT = 2;
+/** Block download timeout base adjustment paramater , > 1*/
+static const int64_t BLOCK_DOWNLOAD_TIMEOUT_ADJUSTMENT = 5;
 /*popchain ghost*/
 
 static const unsigned int DEFAULT_LIMITFREERELAY = 15;

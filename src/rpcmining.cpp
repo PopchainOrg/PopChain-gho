@@ -579,7 +579,19 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 
         transactions.push_back(entry);
     }
+/*
+	std::string uncleheaderaddrss1 = "pnndY8hSqtogsgiXFpR87nCPCquKAACx7T";
+	CBitcoinAddress uncleaddress1(uncleheaderaddrss1);
+	std::string uncleheaderaddrss2 = "ppeSuqEwXkapogu7XUsHr47VKM3sLmkq6n";
+	CBitcoinAddress uncleaddress2(uncleheaderaddrss2);
 
+	CBlockHeader uncleheader1 = CBlockHeader();
+	uncleheader1.nCoinbase = uncleaddress1.GetData();
+	CBlockHeader uncleheader2 = CBlockHeader();
+	uncleheader2.nCoinbase = uncleaddress2.GetData();
+	pblock->vuh.push_back(uncleheader1);
+	pblock->vuh.push_back(uncleheader2);
+*/	
 	UniValue uncleheaders(UniValue::VARR);
     map<uint256, int64_t> setUhIndex;
     i = 0;
@@ -645,12 +657,17 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 	result.push_back(Pair("Foundnode", FoundnodeObj));
 
 	/*
-	std::string uncleheaderaddrss1 = "pnndY8hSqtogsgiXFpR87nCPCquKAACx7T";
-	std::string uncleheaderaddrss2 = "ppeSuqEwXkapogu7XUsHr47VKM3sLmkq6n";
-	CBitcoinAddress uncleaddress1(uncleheaderaddrss1);
+	//std::string uncleheaderaddrss1 = "pnndY8hSqtogsgiXFpR87nCPCquKAACx7T";
+	//CBitcoinAddress uncleaddress1(uncleheaderaddrss1);
 	CScript uncle1P2PkHScript = GetScriptForDestination(uncleaddress1.Get());
-	CTxOut tmpUncleblock(2899890000,uncle1P2PkHScript);
-	pblock->vTxoutUncle.push_back(tmpUncleblock);
+	CTxOut tmpUncleblock1(2899890000,uncle1P2PkHScript);
+	pblock->vTxoutUncle.push_back(tmpUncleblock1);
+
+	//std::string uncleheaderaddrss2 = "ppeSuqEwXkapogu7XUsHr47VKM3sLmkq6n";
+	//CBitcoinAddress uncleaddress2(uncleheaderaddrss2);
+	CScript uncle2P2PkHScript = GetScriptForDestination(uncleaddress2.Get());
+	CTxOut tmpUncleblock2(2899890000,uncle1P2PkHScript);
+	pblock->vTxoutUncle.push_back(tmpUncleblock2);
 	*/
 	
 	UniValue UncleBlockReward(UniValue::VARR);
