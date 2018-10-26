@@ -579,7 +579,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 
         transactions.push_back(entry);
     }
-/*
+
+	/*
 	std::string uncleheaderaddrss1 = "pnndY8hSqtogsgiXFpR87nCPCquKAACx7T";
 	CBitcoinAddress uncleaddress1(uncleheaderaddrss1);
 	std::string uncleheaderaddrss2 = "ppeSuqEwXkapogu7XUsHr47VKM3sLmkq6n";
@@ -591,7 +592,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 	uncleheader2.nCoinbase = uncleaddress2.GetData();
 	pblock->vuh.push_back(uncleheader1);
 	pblock->vuh.push_back(uncleheader2);
-*/	
+	*/
+	
 	UniValue uncleheaders(UniValue::VARR);
     map<uint256, int64_t> setUhIndex;
     i = 0;
@@ -627,6 +629,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("capabilities", aCaps));
     result.push_back(Pair("version", pblock->nVersion));
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
+	result.push_back(Pair("hashUncles", pblock->hashUncles.GetHex()));
+	result.push_back(Pair("difficulty", pblock->nDifficulty));
     result.push_back(Pair("transactions", transactions));
 	result.push_back(Pair("uncleblockheader", uncleheaders));
     result.push_back(Pair("coinbaseaux", aux));
@@ -640,7 +644,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SIZE));
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     // ghost
-    result.push_back(Pair("difficulty", pblock->nDifficulty));
+    
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
     result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
     result.push_back(Pair("claimtrie", pblock->hashClaimTrie.GetHex()));
