@@ -644,19 +644,32 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     }
 	result.push_back(Pair("Foundnode", FoundnodeObj));
 
-	UniValue UncleBlockRewardObj(UniValue::VOBJ);
+	/*
+	std::string uncleheaderaddrss1 = "pnndY8hSqtogsgiXFpR87nCPCquKAACx7T";
+	std::string uncleheaderaddrss2 = "ppeSuqEwXkapogu7XUsHr47VKM3sLmkq6n";
+	CBitcoinAddress uncleaddress1(uncleheaderaddrss1);
+	CScript uncle1P2PkHScript = GetScriptForDestination(uncleaddress1.Get());
+	CTxOut tmpUncleblock(2899890000,uncle1P2PkHScript);
+	pblock->vTxoutUncle.push_back(tmpUncleblock);
+	*/
+	
+	UniValue UncleBlockReward(UniValue::VARR);
     if(pblock->vTxoutUncle.size() != 0) {
+		
 		CTxDestination address1;
 		CBitcoinAddress address2;
 		BOOST_FOREACH (const CTxOut& uhTx, pblock->vTxoutUncle) {
+			UniValue UncleBlockRewardObj(UniValue::VOBJ);
 			ExtractDestination(uhTx.scriptPubKey, address1);
 			address2 = CBitcoinAddress(address1);
-			FoundnodeObj.push_back(Pair("unclepayee", address2.ToString().c_str()));
-        	FoundnodeObj.push_back(Pair("unclescript", HexStr(pblock->txoutFound.scriptPubKey.begin(), pblock->txoutFound.scriptPubKey.end())));
-        	FoundnodeObj.push_back(Pair("uncleamount", uhTx.nValue));
+			UncleBlockRewardObj.push_back(Pair("unclepayee", address2.ToString().c_str()));
+        	UncleBlockRewardObj.push_back(Pair("unclescript", HexStr(uhTx.scriptPubKey.begin(), uhTx.scriptPubKey.end())));
+        	UncleBlockRewardObj.push_back(Pair("uncleamount", uhTx.nValue));
+			UncleBlockReward.push_back(UncleBlockRewardObj);
     	}
+		
     }
-	result.push_back(Pair("UncleBlockReward", UncleBlockRewardObj));
+	result.push_back(Pair("UncleBlockReward", UncleBlockReward));
 
     return result;
 }
