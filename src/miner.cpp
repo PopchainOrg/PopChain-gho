@@ -486,6 +486,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 				CAmount nAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), (tmpBlockHeight + 1));
 				CTxOut outNew(nAmount,uncleScriptPubKeyIn);
 				txNew.vout.push_back(outNew);
+				pblock->vTxoutUncle.push_back(outNew);
 				LogPrintf("createnewblock: add %d uncle block reward %s \n",uncleCount,outNew.ToString());
 				
 			}

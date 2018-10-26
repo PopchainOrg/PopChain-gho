@@ -97,6 +97,9 @@ public:
 
     // memory only
     mutable CTxOut txoutFound; 			// Found  payment
+    /*popchain ghost*/
+	std::vector <CTxOut> vTxoutUncle; //uncle miner payment
+	/*popchain ghost*/
     mutable bool fChecked;
 
 	/*popchain ghost*/

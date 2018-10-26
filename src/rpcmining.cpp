@@ -580,6 +580,24 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         transactions.push_back(entry);
     }
 
+	UniValue uncleheaders(UniValue::VARR);
+    map<uint256, int64_t> setUhIndex;
+    i = 0;
+    BOOST_FOREACH (const CBlockHeader& uh, pblock->vuh) {
+        uint256 uhHash = uh.GetHash();
+        setUhIndex[uhHash] = i++;
+
+        UniValue entryUh(UniValue::VOBJ);
+		
+		CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
+        ssBlock << uh;
+        std::string strHex = HexStr(ssBlock.begin(), ssBlock.end());
+        entryUh.push_back(Pair("data", strHex));
+        entryUh.push_back(Pair("hash", uhHash.GetHex()));
+		
+        uncleheaders.push_back(entryUh);
+    }
+
     UniValue aux(UniValue::VOBJ);
     aux.push_back(Pair("flags", HexStr(COINBASE_FLAGS.begin(), COINBASE_FLAGS.end())));
 
@@ -598,6 +616,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("version", pblock->nVersion));
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
     result.push_back(Pair("transactions", transactions));
+	result.push_back(Pair("uncleblockheader", uncleheaders));
     result.push_back(Pair("coinbaseaux", aux));
     result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].GetValueOut()));
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHash().GetHex() + i64tostr(nTransactionsUpdatedLast)));
@@ -622,8 +641,22 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         FoundnodeObj.push_back(Pair("foundpayee", address2.ToString().c_str()));
         FoundnodeObj.push_back(Pair("foundscript", HexStr(pblock->txoutFound.scriptPubKey.begin(), pblock->txoutFound.scriptPubKey.end())));
         FoundnodeObj.push_back(Pair("foundamount", pblock->txoutFound.nValue));
-    }	
+    }
 	result.push_back(Pair("Foundnode", FoundnodeObj));
+
+	UniValue UncleBlockRewardObj(UniValue::VOBJ);
+    if(pblock->vTxoutUncle.size() != 0) {
+		CTxDestination address1;
+		CBitcoinAddress address2;
+		BOOST_FOREACH (const CTxOut& uhTx, pblock->vTxoutUncle) {
+			ExtractDestination(uhTx.scriptPubKey, address1);
+			address2 = CBitcoinAddress(address1);
+			FoundnodeObj.push_back(Pair("unclepayee", address2.ToString().c_str()));
+        	FoundnodeObj.push_back(Pair("unclescript", HexStr(pblock->txoutFound.scriptPubKey.begin(), pblock->txoutFound.scriptPubKey.end())));
+        	FoundnodeObj.push_back(Pair("uncleamount", uhTx.nValue));
+    	}
+    }
+	result.push_back(Pair("UncleBlockReward", UncleBlockRewardObj));
 
     return result;
 }
