@@ -98,6 +98,16 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     CBlockIndex *pnext = chainActive.Next(blockindex);
     if (pnext)
         result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+	/*popchain ghost*/
+	UniValue uhs(UniValue::VARR);
+	BOOST_FOREACH(const uint256&uh, pnext->vuh)
+	{
+		UniValue objUh(UniValue::VOBJ);
+		objUh.push_back(Pair("uh", uh.GetHex()));
+        uhs.push_back(objUh);
+	}
+	result.push_back(Pair("uhs",uhs));
+	/*popchain ghost*/
     return result;
 }
 

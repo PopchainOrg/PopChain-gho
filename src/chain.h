@@ -149,7 +149,7 @@ public:
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     uint32_t nSequenceId;
 	/*popchain ghost*/
-	std::vector<CBlockHeader> vuh;//vector of uncles or uncle block header
+	std::vector<uint256> vuh;//vector of uncles or uncle block header
 	/*popchain ghost*/
 
     void SetNull()
