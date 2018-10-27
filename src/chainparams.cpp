@@ -352,7 +352,7 @@ public:
         pchMessageStart[2] = 0xc8;
         pchMessageStart[3] = 0x4f;
         vAlertPubKey = ParseHex("0244a0bb22e931bf59cc8a434d9d22bd2fa493f579bd2659bc9188361d78bdc45f");
-        nDefaultPort = 12888;
+        nDefaultPort = 12960;//12888 to 12960
         nMaxTipAge = 0x7fffffff; 		// allow mining on top of old blocks for testnet
         nPruneAfterHeight = 1000;
 	    /*popchain ghost*/
@@ -474,7 +474,7 @@ public:
         pchMessageStart[2] = 0xc9;
         pchMessageStart[3] = 0xe3;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
-        nDefaultPort = 12960;//12888 to 12960
+        nDefaultPort = 22888;
         nPruneAfterHeight = 1000;
 		/*popchain ghost*/
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);
