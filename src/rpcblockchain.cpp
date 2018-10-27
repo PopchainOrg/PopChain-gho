@@ -103,7 +103,8 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
 	BOOST_FOREACH(const uint256&uh, pnext->vuh)
 	{
 		UniValue objUh(UniValue::VOBJ);
-		objUh.push_back(Pair("uh", uh.GetHex()));
+		uint256 uh256 = uh;
+		objUh.push_back(Pair("uh", uh256.GetHex()));
         uhs.push_back(objUh);
 	}
 	result.push_back(Pair("uhs",uhs));

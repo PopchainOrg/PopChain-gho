@@ -3963,6 +3963,8 @@ bool ReceivedBlockTransactions(const CBlock &block, CValidationState& state, CBl
 	BOOST_FOREACH(const CBlockHeader&uh, block.vuh)
 	{
 		pindexNew->vuh.push_back(uh.GetHash());
+		LogPrintf("ReceivedBlockTransactions block %s uncleblock %s",block.GetHash().ToString(),uh.GetHash().ToString());
+		
 	}
 	//pindexNew->vuh = block.vuh;
 	/*popchain ghost*/
