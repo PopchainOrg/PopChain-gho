@@ -374,7 +374,7 @@ public:
         READWRITE(nBits);
         READWRITE(nNonce);
 		/*popchain ghost*/
-		READWRITE(vuh)
+		READWRITE(vuh);
 		/*popchain ghost*/
     }
 
