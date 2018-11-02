@@ -4380,6 +4380,15 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 				return false;
 			}
 			/*only work uncle header size 2*/
+			if((preCoinBaseAddress == coinBaseAddress)||(coinBaseAddress == uint160())){
+				LogPrintf("CheckBlock():ERROR %s  two same uncle miner uncle header coinbase not match \n",CBitcoinAddress(CKeyID(coinBaseAddress)).ToString());
+					return false;
+			}
+
+			tmpPreAmount = tmpSubAmount;
+			preCoinBaseAddress = coinBaseAddress;
+			
+			/*
 			if(preCoinBaseAddress == coinBaseAddress){
 				tmpPreAmount += tmpSubAmount;
 				if(tmpAmount >= tmpPreAmount){
@@ -4392,7 +4401,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 				tmpPreAmount = tmpSubAmount;
 				preCoinBaseAddress = coinBaseAddress;
 			}
-			
+			*/
 			tmpAmount = 0;
 			tmpBlockHeight = 0;
 			tmpSubAmount =0;
