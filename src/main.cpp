@@ -83,6 +83,9 @@ int nScriptCheckThreads = 0;
 bool fImporting = false;
 bool fReindex = false;
 bool fTxIndex = true;
+/*popchain ghost*/
+bool fRpcMining = false;
+/*popchain ghost*/
 bool fAddressIndex = false;
 bool fTimestampIndex = false;
 bool fSpentIndex = false;
@@ -3660,13 +3663,13 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
 	/*popchain ghost*/
     while (chainActive.Tip() && chainActive.Tip() != pindexFork) {
 		/*popchain ghost*/
-        if (GetBoolArg("-gen", false) && pblock != NULL)
+        if ((GetBoolArg("-gen", false) || fRpcMining) && pblock != NULL)
              pindexPossibleBlock = chainActive.Tip();
 		/*popchain ghost*/
         if (!DisconnectTip(state, chainparams.GetConsensus()))
             return false;
 		/*popchain ghost*/
-        if (GetBoolArg("-gen", false) && pblock != NULL){
+        if ((GetBoolArg("-gen", false) || fRpcMining) && pblock != NULL){
                 possibleBlockHash = pindexPossibleBlock->GetBlockHash();
                 ReadBlockFromDisk(possibleBlock, pindexPossibleBlock, chainparams.GetConsensus());
                 mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
@@ -3757,7 +3760,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
             // Whether we have anything to do at all.
             /*popchain ghost*/
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip()){
-                if (GetBoolArg("-gen", false) && pblock != NULL){
+                if ((GetBoolArg("-gen", false) || fRpcMining) && pblock != NULL){
                         CBlock possibleBlock = *pblock;
                         uint256 possibleBlockHash = possibleBlock.GetHash();
                         mapPossibleUncles.insert(std::make_pair(possibleBlockHash,possibleBlock));
@@ -4356,10 +4359,13 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 					if(coinBaseAddress == tmpAddress){
 						tmpAmount += out.nValue;
 					}
-				} else{
+				}
+				/*
+					else{
 					LogPrintf("CheckBlock():ERROR DecodeAddressHash uncle header %d error \n",uncleCount);
 					return false;
 				}
+				*/
 			}
 			if(GetBlockHeight(block.vuh[uncleCount].hashPrevBlock,&tmpBlockHeight)){
 				tmpSubAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), (tmpBlockHeight + 1));

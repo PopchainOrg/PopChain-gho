@@ -464,6 +464,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     if (!popnodeSync.IsSynced())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Pop Core is syncing with network...");
 
+	fRpcMining = true;
+
     static unsigned int nTransactionsUpdatedLast;
 
     if (!lpval.isNull())

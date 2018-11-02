@@ -311,6 +311,9 @@ extern bool fImporting;
 extern bool fReindex;
 extern int nScriptCheckThreads;
 extern bool fTxIndex;
+/*popchain ghost*/
+extern bool fRpcMining;
+/*popchain ghost*/
 extern bool fIsBareMultisigStd;
 extern bool fRequireStandard;
 extern unsigned int nBytesPerSigOp;

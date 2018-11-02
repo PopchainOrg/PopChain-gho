@@ -466,6 +466,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 		FindBlockUncles(pblock->hashPrevBlock,unclesBlock);
 		CBlock uncleBlock;
 		int uncleCount = 0;
+		uint160 preCoinBase = uint160();
 		for(std::vector<CBlock>::iterator it = unclesBlock.begin();it != unclesBlock.end(); ++it){
 			uncleBlock = *it;
 			CScript uncleScriptPubKeyIn;
@@ -474,7 +475,13 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				blockCoinBasePKHAddress = CBitcoinAddress(CTxDestination(CKeyID(uncleBlock.nCoinbase)));	
 				if(blockCoinBasePKHAddress.IsValid()){
-					uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
+					if((uncleBlock.nCoinbase != uint160()) && (uncleBlock.nCoinbase != preCoinBase)){
+						uncleScriptPubKeyIn = GetScriptForDestination(CKeyID(uncleBlock.nCoinbase));
+						preCoinBase = uncleBlock.nCoinbase;
+					}
+					else{
+						continue;
+					}
 				}else {
 					continue;
 				}
