@@ -41,6 +41,10 @@
 #include "popnode-sync.h"
 #include "popnodeman.h"
 
+/*popchain ghost*/
+#include "superblock.h"
+/*popchain ghost*/
+
 #include <sstream>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -1802,6 +1806,9 @@ CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
 {
     const int beg = cp.nSuperblockStartBlock;
     const int end = cp.endOfFoundersReward();
+	if(!CSuperblock::IsValidBlockHeight(height)){
+  		return 0;	
+    } 
     if (height >= beg && height < end)			// before super block starting
     {
     	LogPrintf("GetFoundersReward at height: %d, amount: %d \n",height,cp.foundersReward);
