@@ -472,7 +472,6 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 			CScript uncleScriptPubKeyIn;
 			CBitcoinAddress blockCoinBasePKHAddress;
 			if(uncleCount < 2){
-				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				blockCoinBasePKHAddress = CBitcoinAddress(CTxDestination(CKeyID(uncleBlock.nCoinbase)));	
 				if(blockCoinBasePKHAddress.IsValid()){
 					if((uncleBlock.nCoinbase != uint160()) && (uncleBlock.nCoinbase != preCoinBase)){
@@ -493,6 +492,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 				CAmount nAmount = GetUncleMinerSubsidy(nHeight, Params().GetConsensus(), (tmpBlockHeight + 1));
 				CTxOut outNew(nAmount,uncleScriptPubKeyIn);
 				txNew.vout.push_back(outNew);
+				pblock->vuh.push_back(uncleBlock.GetBlockHeader());
 				pblock->vTxoutUncle.push_back(outNew);
 				LogPrintf("createnewblock: add %d uncle block reward %s \n",uncleCount,outNew.ToString());
 				
