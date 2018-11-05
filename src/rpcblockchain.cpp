@@ -30,7 +30,7 @@ uint64_t GetDifficulty(const CBlockIndex* blockindex)
 {
     // Floating point number that is a multiple of the minimum difficulty,
     // minimum difficulty = 1.0.
-    /*
+    
     if (blockindex == NULL)
     {
         if (chainActive.Tip() == NULL)
@@ -56,8 +56,8 @@ uint64_t GetDifficulty(const CBlockIndex* blockindex)
     }
 
     return dDiff;
-    */
-
+    
+	/*
     if (blockindex == NULL)
     {
         if (chainActive.Tip() == NULL)
@@ -66,6 +66,7 @@ uint64_t GetDifficulty(const CBlockIndex* blockindex)
             blockindex = chainActive.Tip();
     }
     return blockindex->nDifficulty;
+    */
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
