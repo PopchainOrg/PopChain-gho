@@ -632,7 +632,12 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("version", pblock->nVersion));
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
 	result.push_back(Pair("hashUncles", pblock->hashUncles.GetHex()));
-	result.push_back(Pair("difficulty", pblock->nDifficulty));
+	//pblock->nDifficulty = 0x123456789abcdef0;
+	CDataStream ssBlockDifficulty(SER_NETWORK, PROTOCOL_VERSION);
+    ssBlockDifficulty << (pblock->nDifficulty);
+    std::string strHexDifficulty = HexStr(ssBlockDifficulty.begin(), ssBlockDifficulty.end());
+	//result.push_back(Pair("difficulty", pblock->nDifficulty));
+	result.push_back(Pair("difficulty", strHexDifficulty));
     result.push_back(Pair("transactions", transactions));
 	result.push_back(Pair("uncleblockheader", uncleheaders));
     result.push_back(Pair("coinbaseaux", aux));
