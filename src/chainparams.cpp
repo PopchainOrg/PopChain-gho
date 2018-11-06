@@ -233,7 +233,7 @@ public:
         pchMessageStart[2] = 0x3f;
         pchMessageStart[3] = 0xc9;
 		vAlertPubKey = ParseHex("028efd0f3c697689f8f1f6744edbbc1f85871b8c51218ddd89d90a3e435d1a8691");
-        nDefaultPort = 2888;
+        nDefaultPort = 2778;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nPruneAfterHeight = 100000;
 		/*popchain ghost*/
@@ -474,7 +474,7 @@ public:
         pchMessageStart[2] = 0xc9;
         pchMessageStart[3] = 0xe3;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
-        nDefaultPort = 22888;
+        nDefaultPort = 22778;
         nPruneAfterHeight = 1000;
 		/*popchain ghost*/
 		arith_uint256 nTempBit =  UintToArith256( consensus.powLimit);

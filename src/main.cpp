@@ -1757,20 +1757,19 @@ CAmount GetMinerSubsidy(const int height, const Consensus::Params &cp)
         // first 4 years
         if (height < intval)
         {
-            return cp.minerReward4*(1-cp.nUncleblockRatio);
-			//return cp.minerReward4;
+            //return cp.minerReward4*(1-cp.nUncleblockRatio);
+			return cp.minerReward4;
         }
         // from the 5th year on
         else
         {
             int halvings = (height - intval) / intval;
  	    // force subsidy to 0 when right shift 64 bit is undifined
-            if (halvings > 3)
-	    {
-	        return 0;
-	    }
-        CAmount subsidy(cp.minerReward4/2*(1-cp.nUncleblockRatio));
-		//CAmount subsidy(cp.minerReward4*/2);
+            if (halvings > 0){
+	        	return 0;
+			}
+        //CAmount subsidy(cp.minerReward4/2*(1-cp.nUncleblockRatio));
+		CAmount subsidy(cp.minerReward4 / 2);
 	    subsidy >>= halvings;
             return subsidy;
         }
@@ -1784,8 +1783,11 @@ CAmount GetMainMinerSubsidy(int height, const Consensus::Params &cp, int uc)
 		return 0;
 	}
 	CAmount reward = GetMinerSubsidy(height,cp);
-	CAmount ret = (reward + (reward * uc / 32));
-	//CAmount ret = (reward* 3 / 4 + (reward * uc / 32));
+	//CAmount ret = (reward + (reward * uc / 32));
+	if(height < 2){
+		return reward;
+	}
+	CAmount ret = (reward* 3 / 4 + (reward * uc / 32));
 	LogPrintf("GetMainMinerSubsidy at height: %d,uc: %d amount: %d \n",height,uc,ret);
 	return ret;
 }
@@ -1797,8 +1799,11 @@ CAmount GetUncleMinerSubsidy(int height, const Consensus::Params &cp, int uh)
 		return 0;
 	}
 	CAmount reward = GetMinerSubsidy(height,cp);
-	CAmount ret = ( diff * reward / 8);
-	//CAmount ret = ( diff * reward * 3 / 32);
+	//CAmount ret = ( diff * reward / 8);
+	if(height < 2){
+		return 0;
+	}
+	CAmount ret = ( diff * reward * 3 / (32 * 7));
 	LogPrintf("GetUncleMinerSubsidy at height: %d,uh: %d amount: %d \n",height,uh,ret);
 	return ret;
 }
