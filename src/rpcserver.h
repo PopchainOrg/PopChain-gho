@@ -304,6 +304,12 @@ extern UniValue atomicswapgetrawhash(const UniValue &params, bool fHelp);
 extern UniValue atomicswapchecktx(const UniValue &params, bool fHelp);
 /*popchain atomic swap*/
 
+/*popchain ghost*/
+UniValue getblockrewarddata(const UniValue& params, bool fHelp);
+/*popchain ghost*/
+
+
+
 extern UniValue getblock(const UniValue& params, bool fHelp);
 extern UniValue gettxoutsetinfo(const UniValue& params, bool fHelp);
 extern UniValue gettxout(const UniValue& params, bool fHelp);

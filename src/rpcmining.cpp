@@ -326,7 +326,72 @@ static UniValue BIP22ValidationResult(const CValidationState& state)
     // Should be impossible
     return "valid?";
 }
+/*popchain ghost*/
+// Popchain DevTeam
+UniValue getblockrewarddata(const UniValue& params, bool fHelp)
+{
 
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "dumpwallet \"filename\"\n"
+            "\nDumps all wallet keys in a human-readable format.\n"
+            "\nArguments:\n"
+            "1. \"filename\"    (string, required) The filename\n"
+            "\nExamples:\n"
+            + HelpExampleCli("dumpwallet", "\"test\"")
+            + HelpExampleRpc("dumpwallet", "\"test\"")
+        );
+	ofstream file;
+    file.open(params[0].get_str().c_str());
+    if (!file.is_open())
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open block reward data file");
+	const CChainParams& chainParams = Params();
+
+	file << strprintf("# block reward created by Ulord Core %s (%s)\n", CLIENT_BUILD, CLIENT_DATE);
+	file << strprintf("# consensus.genesisReward %f \n", chainParams.GetConsensus().genesisReward);
+	file << strprintf("# consensus.premine %f \n", chainParams.GetConsensus().premine);
+	file << strprintf("# consensus.minerReward4 %f \n", chainParams.GetConsensus().minerReward4);
+	file << strprintf("# consensus.foundersReward %f \n", chainParams.GetConsensus().foundersReward);
+	file << strprintf("# consensus.colleteral %f \n", chainParams.GetConsensus().colleteral);
+	file << "# height MinerSubsidy FoundersReward maxMainMinerSubsidy maxUncleMinerSubsidy maxBlockSubsidey\n";
+
+	CAmount totalMinerSubsidy = 0;
+	CAmount totalFoundersReward = 0;
+	CAmount totalMaxMinerSubsidy = 0;
+	CAmount totalMaxUncleMinerSubsidy = 0;
+	CAmount totalMaxBlockSubsidy = 0;
+	
+	//for(int i =2;i<(chainParams.GetConsensus().nSubsidyHalvingInterval * 5 +1 );i++){
+	for(int i= 0;i<(chainParams.GetConsensus().nSubsidyHalvingInterval * 5 +1 );i++){
+		if(i==0){
+			continue;
+		}
+		if(i==1){
+			continue;
+		}
+		
+		
+		CAmount minerSubsidy = GetMinerSubsidy(i,chainParams.GetConsensus());
+		totalMinerSubsidy +=minerSubsidy;
+		CAmount foundersReward = GetFoundersReward(i, chainParams.GetConsensus());
+		totalFoundersReward +=foundersReward;
+		CAmount maxMinerSubsidy = GetMainMinerSubsidy(i,chainParams.GetConsensus(),2);
+		totalMaxMinerSubsidy +=totalMaxMinerSubsidy;
+		CAmount maxUncleMinerSubsidy = GetUncleMinerSubsidy(i,chainParams.GetConsensus(),(i-1)) + GetUncleMinerSubsidy(i,chainParams.GetConsensus(),(i-1));
+		totalMaxUncleMinerSubsidy +=maxUncleMinerSubsidy;
+		CAmount maxBlockSubsidy = foundersReward + maxMinerSubsidy + maxUncleMinerSubsidy;
+		totalMaxBlockSubsidy +=maxBlockSubsidy;
+		file << strprintf("#%d %d %d %d %d %d \n",i, (int64_t)minerSubsidy,(int64_t)foundersReward,(int64_t)maxMinerSubsidy,(int64_t)maxUncleMinerSubsidy,(int64_t)maxBlockSubsidy);	
+	}
+	file << strprintf("#total %d %d %d %d %d \n", (int64_t)totalMinerSubsidy,(int64_t)totalFoundersReward,(int64_t)totalMaxMinerSubsidy,(int64_t)totalMaxUncleMinerSubsidy,(int64_t)totalMaxBlockSubsidy);	
+	file << "\n";
+    file << "# End of block reward data\n";
+	file.close();
+
+    return "get block reward ok";
+}
+
+/*popchain ghost*/
 // Popchain DevTeam
 UniValue getblocktemplate(const UniValue& params, bool fHelp)
 {
