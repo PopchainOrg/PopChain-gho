@@ -91,6 +91,9 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
     result.push_back(Pair("nonce", blockindex->nNonce.GetHex()));
     result.push_back(Pair("bits", strprintf("%08x", blockindex->nBits)));
+	/*popchain ghost*/
+	result.push_back(Pair("hdifficulty",blockindex->nDifficulty));
+	/*popchain ghost*/
     result.push_back(Pair("difficulty", (double)GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
 
@@ -99,6 +102,7 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     CBlockIndex *pnext = chainActive.Next(blockindex);
     if (pnext)
         result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+
     return result;
 }
 
@@ -117,7 +121,10 @@ void uncleblockheaderToJSON(const CBlockHeader& blockheader,UniValue& entry,int 
 	entry.push_back(Pair("hashUncles", blockheader.hashUncles.GetHex()));
 	//entry.push_back(Pair("coinbase", blockheader.nCoinbase.GetHex()));
 	entry.push_back(Pair("coinbase",CBitcoinAddress(CKeyID(blockheader.nCoinbase)).ToString()));
-	entry.push_back(Pair("difficulty", blockheader.nDifficulty));
+	/*popchain ghost*/
+	entry.push_back(Pair("hdifficulty",blockheader.nDifficulty));
+	/*popchain ghost*/
+	//entry.push_back(Pair("difficulty", blockheader.nDifficulty));
 	entry.push_back(Pair("hashMerkleRoot", blockheader.hashMerkleRoot.GetHex()));
 	entry.push_back(Pair("hashClaimTrie", blockheader.hashClaimTrie.GetHex()));
 	entry.push_back(Pair("time", (int64_t)blockheader.nTime));
@@ -176,7 +183,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 	{
 		coinBaseAddress  = block.vuh[uncleCount].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
-			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue <= (7 * GetMinerSubsidy(blockindex->nHeight,chainparams.GetConsensus()) / 8))){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue <= GetUncleMinerSubsidy(blockindex->nHeight,chainparams.GetConsensus(),(blockindex->nHeight -1)))){
 				if(coinBaseAddress == tmpAddress){
 						tmpAmount += out.nValue;
 				}
@@ -204,6 +211,9 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
 	result.push_back(Pair("unclesize",block.vuh.size()));
     result.push_back(Pair("nonce", block.nNonce.GetHex()));
     result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
+	/*popchain ghost*/
+	result.push_back(Pair("hdifficulty",block.nDifficulty));
+	/*popchain ghost*/
     result.push_back(Pair("difficulty", (double)GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
 
@@ -712,7 +722,7 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 		int addressType;
 		coinBaseAddress  = block.vuh[nIndex].nCoinbase;
 		for (const CTxOut &out: block.vtx[0].vout){
-			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue <= (7 * GetMinerSubsidy(pblockindex->nHeight,chainparams.GetConsensus()) / 8))){
+			if(DecodeAddressHash(out.scriptPubKey, tmpAddress, addressType)&&(out.nValue <= GetUncleMinerSubsidy(pblockindex->nHeight,chainparams.GetConsensus(),(pblockindex->nHeight -1)))){
 				if(coinBaseAddress == tmpAddress){
 					tmpAmount += out.nValue;
 				}

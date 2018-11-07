@@ -26,6 +26,11 @@
 
 #include <stdint.h>
 
+/*popchain ghost*/
+#include <fstream>
+/*popchain ghost*/
+
+
 #include <boost/assign/list_of.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -362,15 +367,7 @@ UniValue getblockrewarddata(const UniValue& params, bool fHelp)
 	CAmount totalMaxBlockSubsidy = 0;
 	
 	//for(int i =2;i<(chainParams.GetConsensus().nSubsidyHalvingInterval * 5 +1 );i++){
-	for(int i= 0;i<(chainParams.GetConsensus().nSubsidyHalvingInterval * 5 +1 );i++){
-		if(i==0){
-			continue;
-		}
-		if(i==1){
-			continue;
-		}
-		
-		
+	for(int i= 0;i<(chainParams.GetConsensus().nSubsidyHalvingInterval * 2 +1 );i++){		
 		CAmount minerSubsidy = GetMinerSubsidy(i,chainParams.GetConsensus());
 		totalMinerSubsidy +=minerSubsidy;
 		CAmount foundersReward = GetFoundersReward(i, chainParams.GetConsensus());
@@ -702,7 +699,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     ssBlockDifficulty << (pblock->nDifficulty);
     std::string strHexDifficulty = HexStr(ssBlockDifficulty.begin(), ssBlockDifficulty.end());
 	//result.push_back(Pair("difficulty", pblock->nDifficulty));
-	result.push_back(Pair("difficulty", strHexDifficulty));
+	result.push_back(Pair("hdifficulty", strHexDifficulty));
     result.push_back(Pair("transactions", transactions));
 	result.push_back(Pair("uncleblockheader", uncleheaders));
     result.push_back(Pair("coinbaseaux", aux));
