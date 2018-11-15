@@ -2759,6 +2759,57 @@ void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 
 /*popchain ghost*/
 
+/*popchain ghost*/
+void ThreadProcFutureBlocks()
+{
+    static bool fOneThread;
+    if(fOneThread) return;
+    fOneThread = true;
+
+    // Make this thread recognisable as the PrivateSend thread
+    RenameThread("pop-procfutureblocks");
+	static int threadCount = 0;
+
+	const CChainParams& chainparams = Params();
+	CValidationState state;
+	
+	lruFutureBlock.purge();
+	
+    while (true)
+    {
+    	MilliSleep(15000);
+		LogPrintf("ThreadProcFutureBlocks count %d\n",threadCount);
+		int len = 0;
+		lruFutureBlock.length(len);
+		if(len > 0){
+			std::vector<uint256> key;
+			lruFutureBlock.keys(key);
+			for(int i =0;i<key.size();i++){
+				LogPrintf("ThreadProcFutureBlocks key[%d]: %s\n",i,key[i].ToString());
+				CBlock block= lruFutureBlock.get(key[i]);
+				if(block.nTime < (GetAdjustedTime() + 45)){
+					LogPrintf("%s :ActivateBestChain block %s doing\n", __func__,block.GetHash().ToString());
+					if (ActivateBestChain(state, chainparams, &block)){
+						popnodeSync.IsBlockchainSynced(true);
+						if(block.hashUncles != uint256()){
+							LogPrintf("%s :block %s has uncle \n", __func__,block.GetHash().ToString());
+						}
+						LogPrintf("%s : ActivateBestChain ACCEPTED\n", __func__);
+					}else{
+						LogPrintf("%s : ActivateBestChain failed %s\n",__func__,block.GetHash().ToString());
+					}
+					lruFutureBlock.remove(block.GetHash());
+					LogPrintf("%s : lruFutureBlock.remove %s \n", __func__,block.GetHash().ToString());
+				}	
+			}
+		}
+		threadCount++;
+    }
+
+}
+
+/*popchain ghost*/
+
 
 /**
  * Threshold condition checker that triggers when unknown versionbits are seen on the network.
@@ -4678,6 +4729,16 @@ static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned 
 
 bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, const CNode* pfrom, const CBlock* pblock, bool fForceProcessing, CDiskBlockPos* dbp)
 {
+	//check is farfuture block or not
+	/*popchain ghost*/
+	if(pblock->nTime > (GetAdjustedTime() + 2*45)){
+		LogPrintf("%s : farfuture block: %s,nTime:%d ,farfuturetime:%d\n", __func__,pblock->GetHash().ToString(),pblock->nTime,(GetAdjustedTime() + 2*45));
+		return false;
+	}
+	/*popchain ghost*/
+
+	
+
     // Preliminary checks
     bool checked = CheckBlock(*pblock, state);
 
@@ -4699,6 +4760,16 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, c
         if (!ret)
             return error("%s: AcceptBlock FAILED", __func__);
     }
+
+	//check is future block or not
+	/*popchain ghost*/
+	if(pblock->nTime >= (GetAdjustedTime() + 45)){
+		LogPrintf("%s : future block: %s,nTime:%d ,farfuturetime:%d\n", __func__,pblock->GetHash().ToString(),pblock->nTime,(GetAdjustedTime() + 45));
+		lruFutureBlock.add(pblock->GetHash(),*pblock);
+		LogPrintf("%s : lruFutureBlock.add %s \n", __func__,pblock->GetHash().ToString());
+		return false;	
+	}
+	/*popchain ghost*/
 
     if (!ActivateBestChain(state, chainparams, pblock))
         return error("%s: ActivateBestChain failed", __func__);

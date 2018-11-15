@@ -1918,6 +1918,10 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     StartNode(threadGroup, scheduler);
 
+	/*popchain ghost*/
+	threadGroup.create_thread(boost::bind(&ThreadProcFutureBlocks));
+	/*popchain ghost*/
+
     // Monitor the chain, and alert if we get blocks much quicker or slower than expected
     // The "bad chain alert" scheduler has been disabled because the current system gives far
     // too many false positives, such that users are starting to ignore them.

@@ -250,6 +250,10 @@ public:
 		}	
 	}
 
+	void length(int &len){
+		len = vmap_.size();
+	}
+
 private:
     struct Cache {
         Cache() = default;
@@ -299,6 +303,7 @@ private:
     std::map<Key, Cache *> vmap_;
 };
 
+//extern LRUCache<uint256,CBlock> lruFutureBlock(DEFAULT_MAXFUTUREBLOCKS, CBlock());
 /*popchain ghost*/
 
 
@@ -1077,6 +1082,7 @@ bool CommitUncle(CBlockHeader uncle);
 void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles);
 
 
+void ThreadProcFutureBlocks();
 
 
 
