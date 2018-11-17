@@ -644,8 +644,8 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
     if (fHelp || params.size() < 2 || params.size() > 3)
         throw runtime_error(
             "getuncleblockheader \"hash\" hashuncle\" ( verbose )\n"
-            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block header 'hash'.\n"
-            "If verbose is true, returns an Object with information about block <hash>.\n"
+            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for uncle block header.\n"
+            "If verbose is true, returns an Object with information about uncle block header.\n"
             "\nArguments:\n"
             "1. \"hash\"          (string, required) The block hash\n"
             "2. \"hashuncle\"     (string, required) The uncle block header hash\n"
@@ -767,8 +767,8 @@ UniValue getalluncleblock(const UniValue& params, bool fHelp)
     if (fHelp || params.size() < 0 || params.size() > 1)
         throw runtime_error(
             "getalluncleblock \n"
-            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
-            "If verbose is true, returns an Object with information about block <hash>.\n"
+            "\nIf verbose is false, returns hex-encoded data for block 'hash' of block in chain contain uncle.\n"
+            "If verbose is true, returns hex-encoded data for block 'hash' of block contain uncle.\n"
             "\nArguments:\n"
             "1. fGetAll           (boolean, optional, default=true) true for get all block contain uncle, false for main chain block cotain uncle \n"
             "\nResult :\n"
