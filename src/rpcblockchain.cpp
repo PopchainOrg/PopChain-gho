@@ -649,12 +649,12 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 3)
         throw runtime_error(
-            "getuncleblockheader \"hash\" hashuncle\" ( verbose )\n"
+            "getuncleblockheader \"hash\" index\" ( verbose )\n"
             "\nIf verbose is false, returns a string that is serialized, hex-encoded data for uncle block header.\n"
             "If verbose is true, returns an Object with information about uncle block header.\n"
             "\nArguments:\n"
             "1. \"hash\"          (string, required) The block hash\n"
-            "2. \"hashuncle\"     (string, required) The uncle block header hash\n"
+            "2. \"index\"         (numeric, required) The index of  uncle block header in block \n"
             "3. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
             "\nResult (for verbose = true):\n"
             "{\n"
@@ -665,7 +665,7 @@ UniValue getuncleblockheader(const UniValue& params, bool fHelp)
             "  \"hashPrevBlock\" :   \"hash\",     (string) the uncle block header hashPrevBlock \n"
             "  \"hashUncles\" :      \"hash\",     (string) the uncle block header hashUncles \n"
             "  \"coinbase\" :       \"hash\",     (string) the uncle block header nCoinbase \n"
-            "  \"difficulty\" :     n,            (numeric) the uncle block header nDifficulty \n"
+            "  \"hdifficulty\" :     n,            (numeric) the uncle block header nDifficulty \n"
             "  \"hashMerkleRoot\" :  \"hash\",     (string) the uncle block header hashMerkleRoot \n"
             "  \"hashClaimTrie\" :   \"hash\",     (string) the uncle block header hashClaimTrie \n"
             "  \"time\" :           n,            (numeric) the uncle block header nTime \n"
