@@ -858,6 +858,7 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"unclesize\" : n,       (numeric) The size of block uncle header\n"
             "  \"nonce\" : n,           (numeric) The nonce\n"
             "  \"bits\" : \"1d00ffff\", (string) The bits\n"
+            "  \"hdifficulty\" : x.xxx, (numeric) The difficulty in the block header\n"
             "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
             "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
             "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
