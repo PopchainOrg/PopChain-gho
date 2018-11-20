@@ -1788,7 +1788,7 @@ CAmount GetMainMinerSubsidy(int height, const Consensus::Params &cp, int uc)
 		return reward;
 	}
 	CAmount ret = (reward* 3 / 4 + (reward * uc / 32));
-	LogPrintf("GetMainMinerSubsidy at height: %d,uc: %d amount: %d \n",height,uc,ret);
+	LogPrint("pop","GetMainMinerSubsidy at height: %d,uc: %d amount: %d \n",height,uc,ret);
 	return ret;
 }
 
@@ -1804,7 +1804,7 @@ CAmount GetUncleMinerSubsidy(int height, const Consensus::Params &cp, int uh)
 		return 0;
 	}
 	CAmount ret = ( diff * reward * 3 / (32 * 7));
-	LogPrintf("GetUncleMinerSubsidy at height: %d,uh: %d amount: %d \n",height,uh,ret);
+	LogPrint("pop","GetUncleMinerSubsidy at height: %d,uh: %d amount: %d \n",height,uh,ret);
 	return ret;
 }
 
@@ -1820,10 +1820,10 @@ CAmount GetFoundersReward(const int height, const Consensus::Params &cp)
     } 
     if (height >= beg && height < end)			// before super block starting
     {
-    	LogPrintf("GetFoundersReward at height: %d, amount: %d \n",height,cp.foundersReward);
+    	LogPrint("pop","GetFoundersReward at height: %d, amount: %d \n",height,cp.foundersReward);
         return cp.foundersReward;
     }
-	LogPrintf("GetFoundersReward at height: %d, amount: 0 \n",height);
+	LogPrint("pop","GetFoundersReward at height: %d, amount: 0 \n",height);
     return 0;
 }
 
@@ -2635,7 +2635,7 @@ bool GetBlockHeight(uint256 hash, int* hight)
 bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vCbi)
 {
 	LOCK(cs_main);
-	LogPrintf("GetAncestorBlocksFromHash \n");
+	LogPrint("pop","GetAncestorBlocksFromHash \n");
 	if(hash == uint256())
 		return false;
 	BlockMap::iterator mi = mapBlockIndex.find(hash);
@@ -2654,7 +2654,7 @@ bool GetAncestorBlocksFromHash(uint256 hash,int n, std::vector<CBlockIndex*>& vC
 
 bool MakeCurrentCycle(uint256 hash)
 {
-	LogPrintf("MakeCurrentCycle \n");
+	LogPrint("pop","MakeCurrentCycle \n");
 	if(hash == uint256())
 		return false;
 	if(currentParenthash == hash)
@@ -2669,7 +2669,7 @@ bool MakeCurrentCycle(uint256 hash)
 	CBlockHeader blockheader;
 	for(std::vector<CBlockIndex*>::iterator it = ancestor.begin(); it != ancestor.end(); ++it){
 		pBlockIndex = *it;
-		LogPrintf("MakeCurrentCycle():ReadBlockFromDisk %s \n", pBlockIndex->GetBlockHash().ToString());
+		LogPrint("pop","MakeCurrentCycle():ReadBlockFromDisk %s \n", pBlockIndex->GetBlockHash().ToString());
 		if(ReadBlockFromDisk(block, pBlockIndex, chainparams.GetConsensus())){
 			for(std::vector<CBlockHeader>::iterator bi = block.vuh.begin(); bi != block.vuh.end(); ++bi){
 				blockheader = *bi;
@@ -2688,7 +2688,7 @@ bool MakeCurrentCycle(uint256 hash)
 
 bool CommitUncle(CBlockHeader uncle)
 {	
-	LogPrintf("CommitUncle \n");
+	LogPrint("pop","CommitUncle \n");
 	uint256 hash = uncle.GetHash();
 	if(setCurrentUncle.count(hash) != 0){
 		return false;
@@ -2707,14 +2707,14 @@ bool CommitUncle(CBlockHeader uncle)
 void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 {	
 	LOCK(cs_main);
-	LogPrintf("FindBlockUncles in \n");
+	LogPrint("pop","FindBlockUncles in \n");
 	if(parenthash == uint256()){
-		LogPrintf("FindBlockUncles out 1 \n");
+		LogPrint("pop","FindBlockUncles out 1 \n");
 		return;
 	}
 	
 	if(parenthash == currentParenthash){
-		LogPrintf("FindBlockUncles out 2 \n");
+		LogPrint("pop","FindBlockUncles out 2 \n");
 		for(BlockSetGho::iterator it = setCurrentUncle.begin(); it != setCurrentUncle.end(); ++it){
 			BlockMapGho::iterator mi = mapPossibleUncles.find(*it);
 			vuncles.push_back((*mi).second);	
@@ -2728,7 +2728,7 @@ void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 	
 
 	if(!MakeCurrentCycle(parenthash)){
-		LogPrintf("FindBlockUncles out 3 \n");
+		LogPrint("pop","FindBlockUncles out 3 \n");
 		return;
 	}	
 
@@ -2752,8 +2752,8 @@ void FindBlockUncles(uint256 parenthash,std::vector<CBlock>& vuncles)
 		BlockMapGho::iterator mi = mapPossibleUncles.find(*it);
 		mapPossibleUncles.erase(mi);
 	}
-	LogPrintf("FindBlockUncles mapPossibleUncles size %d\n",mapPossibleUncles.size());
-	LogPrintf("FindBlockUncles out 4 \n");
+	LogPrint("pop","FindBlockUncles mapPossibleUncles size %d\n",mapPossibleUncles.size());
+	LogPrint("pop","FindBlockUncles out 4 \n");
 	return;
 }
 
@@ -2778,7 +2778,7 @@ void ThreadProcFutureBlocks()
     while (true)
     {
     	MilliSleep(15000);
-		LogPrintf("ThreadProcFutureBlocks count %d\n",threadCount);
+		LogPrint("pop","ThreadProcFutureBlocks count %d\n",threadCount);
 		int len = 0;
 		lruFutureBlock.length(len);
 		if(len > 0){
@@ -2788,11 +2788,11 @@ void ThreadProcFutureBlocks()
 				LogPrintf("ThreadProcFutureBlocks key[%d]: %s\n",i,key[i].ToString());
 				CBlock block= lruFutureBlock.get(key[i]);
 				if(block.nTime < (GetAdjustedTime() + 45)){
-					LogPrintf("%s :ActivateBestChain block %s doing\n", __func__,block.GetHash().ToString());
+					LogPrintf("%s :ThreadProcFutureBlocks ActivateBestChain block %s doing\n", __func__,block.GetHash().ToString());
 					if (ActivateBestChain(state, chainparams, &block)){
 						popnodeSync.IsBlockchainSynced(true);
 						if(block.hashUncles != uint256()){
-							LogPrintf("%s :block %s has uncle \n", __func__,block.GetHash().ToString());
+							LogPrint("pop","%s :block %s has uncle \n", __func__,block.GetHash().ToString());
 						}
 						LogPrintf("%s : ActivateBestChain ACCEPTED\n", __func__);
 					}else{
@@ -4778,7 +4778,7 @@ bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, c
 	/*popchain ghost*/
 	if(pblock->hashUncles != uint256()){
 		CBlock blockhasuncle = *pblock;
-		LogPrintf("%s :block %s has uncle \n", __func__,blockhasuncle.ToString());
+		LogPrint("pop","%s :block %s has uncle \n", __func__,blockhasuncle.ToString());
 	}
 	/*popchain ghost*/
 
